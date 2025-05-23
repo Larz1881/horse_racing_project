@@ -2,9 +2,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.cluster import KMeans
+from config.settings import PAST_STARTS_LONG
 
 # Load the long-format DataFrame
-df = pd.read_parquet('past_starts_long_format.parquet')
+df = pd.read_parquet(PAST_STARTS_LONG)
 
 # Select only Race 7
 df_race7 = df[df['race'] == 7].copy()
