@@ -1,0 +1,188 @@
+In 1991, the book "Modern Pace Handicapping" was published. It was written by Tom Brohamer. James Quinn, another author of handicapping books, wrote the introduction to "Modern Pace Handicapping". He said: "I predict, without hesitation, this book will stand for decades as the final authority on effective pace handicapping." How right he was. In our opinion, "Modern Pace Handicapping" is one of the finest handicapping books ever written. And, Tom Brohamer, in addition to being a first rate handicapper, is one of the nicest people you will ever encounter in this world of horse racing. The pace material in "Modern Pace Handicapping" is largely based on concepts developed by Howard Sartin and his group of dedicated handicappers, which included Tom Brohamer. We are grateful indeed to Tom Brohamer for giving us permission to include the pace methodology described in "Modern Pace Handicapping" in our ALL-Ways handicapping software.
+
+Necessarily, about one half or so of "Modern Pace Handicapping" is devoted to an explanation of how to make all the calculations required to develop the pace figures. This includes calculating track par times, daily track variants, track-to-track adjustments, feet-per-second velocity figures for each race fraction, the all important Compound Pace Ratings and each horse’s running style and energy distribution figures. It also explains how to develop and maintain track bias statistics and the powerful Brohamer Track Decision Model. It was a pretty daunting task. Fortunately, ALL-Ways software handles all of this automatically letting ALL-Ways software handicappers simply focus on employing the Brohamer concepts in their handicapping.
+
+This article is the first of a four part series on the concepts in "Modern Pace Handicapping" that we will be presenting in ALL-Ways Newsletters over the coming months. Each part of this series stands alone, so you can put the material into practice without waiting for the final part to be published. This first part of the series will explain the fundamental pace figures employed by the methodology and will give you some insight into how to use them. The next three articles will cover the Brohamer Track Model, an extensive discussion of Turn Time and how to use Energy Distribution in your handicapping.
+
+Even if you are not an ALL-Ways software handicapper, we suggest you continue to read this and subsequent articles in the series. The concepts presented are fundamental to effective pace handicapping. And, pace handicapping should be, in our opinion, a part of everyone’s analysis of the races. Remember, most races are won by horses that are not the top speed figure horse coming into the race. More often than not, the top speed figure horse loses because it cannot handle the pace match-up in the race.
+
+Internal Fractions
+
+Tom Brohamer calls these "races within the race". There are three internal fractions in a race.
+
+in sprints
+
+fraction #1: gate to 2 furlongs
+fraction #2: 2 furlongs to 4 furlongs
+fraction #3: 4 furlongs to finish
+
+in routes
+
+fraction #1: gate to 4 furlongs
+fraction #2: 4 furlongs to 6 furlongs
+fraction #3: 6 furlongs to finish
+
+After making any required adjustments to a horse’s time, such as applying the daily track variant, the starting point for the Brohamer figures is to calculate the feet-per-second velocity of a horse for each of the three fractions making up the horse’s paceline race. For example, in a sprint, if a horse ran the first fraction in 22.2 seconds, its feet-per-second velocity would be 1,320 feet divided by 22.2 seconds for a velocity of 59.46 feet-per-second. This is the average rate of speed for this horse as it was running fraction #1 of the race. Just as the speedometer in your car shows how fast you are traveling in miles-per-hour, think of the horse’s velocity as what a speedometer hanging on the horse’s neck would show in terms of how fast the horse is traveling in feet-per-second. Also note that there are 660 feet in a furlong and 1,320 feet in two furlongs, the latter being the length of fraction #1 in a sprint.
+
+Let’s look at the calculation of all three fractions for a six furlong race. In the example below, the horse’s actual times have already been adjusted for the daily track variant.
+
+Fraction	 	#1	 	#2	 	#3
+ 	 	 	 	 	 	 
+Furlongs	 	2	 	2	 	2
+Feet	 	1320	 	1320	 	1320
+Horse’s Times	 	22.2	 	45.3	 	70.5
+Fraction Time	 	22.2	 	23.1	 	25.2
+Feet-Per-Second	 	59.46	 	57.14	 	52.38
+Once we have the feet-per-second velocity figures for each fraction, we then move on to calculating the Early Pace Rating and the Compound Pace Ratings of Sustained Pace (SP), Average Pace (AP) and Factor X (FX).
+
+Early Pace (Second Call)
+
+Early Pace is NOT calculated at the end of fraction #1. Early Pace ratings are based on the horse’s time from the gate to the end of fraction #2. In the example above, the horse’s Early Pace Rating is based on the horse’s 45.3 time at the Second Call, which is at the four furlong mark in sprints. Expressed in feet-per-second velocity figures, in the example above, the horse’s Early Pace figure is 58.28 which is 2640 feet divided by 45.3 seconds. (Note that the First Call Position and Quirin Speed Points in ALL-Ways software indicate a horse’s propensity to be on or near the lead at the end of fraction #1, which is the First Call. (See ALL-Ways Newsletter #13.)
+
+So, Early Pace and Second Call are terms that are linked together. The importance of the Second Call cannot be overemphasized. At that point, upwards of two thirds or so of the race has already been run. While the winner may not be specifically identified by the Second Call, the horses capable of winning the race are clearly in focus at that point in the race.
+
+While the Second Call is the most important call in a race, pace handicapping is more than just figuring out which horse will lead at the Second Call. It is not enough to just look at a horse’s Early Pace Rating. So, let’s move on to the Compound Pace Ratings.
+
+Compound Pace Ratings
+
+Horses that exhibit good performance in only a single fraction are generally not good bets. Most horses that win have demonstrated good performance in at least two different fractions of a race. Stated another way, horses that perform well in multiple internal pace segments have an advantage over horses achieving fast final times through a single powerful fraction.
+
+The people who were involved in developing the Sartin Methodology examined 143 race variables. They were looking for variables that would place the winner of a race in the top four horses for that particular variable 67% of the time. They found three such factors as well as one more that qualified only in sprint races. All of these factors involved two or more fractions, not just a single fraction. These factors were Early Pace at the 2nd Call (EP), Average Pace (AP) and Sustained Pace (SP). The fourth factor for sprints only is called Factor X (FX). Remember, all these factors are velocity based and measured in feet-per-second (FPS).
+
+Since ALL-Ways software does all the work to calculate these figures, you do not need to know the formulas for calculation purposes. However, you should know what makes up these numbers so that you understand how to use them in your handicapping.
+
+Here are the formulas ALL-Ways software uses to calculate these pace ratings.
+
+• EP (Early Pace)
+
+EP = 2nd call distance/2nd call time
+
+In our 6 furlong sprint example above, we see that this is 58.28 FPS.
+
+• SP (Sustained Pace)
+
+SP = (EP + 3rd fraction)/2
+
+In our 6 furlong sprint example above, we see this is (58.28 + 52.38)/2 or 55.33 FPS.
+
+• AP (Average Pace)
+
+Average Pace (AP) is different for sprints and routes.
+
+AP in sprints:
+AP = (1st frac + 2nd frac + 3rd frac)/3
+
+In our 6 furlong sprint example above, we see this is (59.46+ 57.14 + 52.38)/3 or 56.33 FPS.
+
+AP in routes:
+AP = (EP+ SP)/2
+
+• FX (Factor X)
+
+The FX figure is for sprints only.
+
+FX = (1st fraction + 3rd fraction)/2
+
+In our 6 furlong sprint example above, we see this is (59.46+ 52.38)/2 or 55.92 FPS.
+
+Using the Brohamer Pace Ratings
+
+EP (Early Pace)
+
+On pace horses have a distinct advantage ... period. This is why the Early Pace velocity figure has a significant influence on both the Average Pace Rating and the Sustained Pace rating. The top Early Pace horses should always be given consideration.
+
+How much weight you give this figure in your handicapping of a particular race depends on the prevailing track bias and the pace match-up in the race. Favor the Early Pace horse(s) if there is a strong Early Pace track bias or if the top Early Pace horse is the dominant or the only front running horse in the race.
+
+Now, here is a very important thought: The actual distance of the race also has a bearing on how much weight you should give to the top Early Pace horses. Look at the chart below.
+
+Total
+Distance	 	Total
+Feet	 	2nd Call
+Feet	 	Percent
+of Total
+ 	 	 	 	 	 	 
+6 furlongs	 	3,960	 	2,640	 	66.6%
+6 1/2 furs	 	4,290	 	2,640	 	62.0%
+7 furlongs	 	4,620	 	2,640	 	57.0%
+one mile	 	5,280	 	3,960	 	75.0%
+1 1/16 mile	 	5,610	 	3,960	 	71.0%
+1 1/8 mile	 	5,940	 	3,960	 	66.0%
+First, this chart shows you one very good reason why the Early Pace figures are so important. Well more than half of the total distance of the race has been run by the Second Call. This may look obvious now, but few handicappers alter their judgement based on the specific length of a race. They tend to generalize their thinking into the two broad categories of sprints and routes.
+
+The chart above makes it clear that Early Pace will be more important in 6 furlong and shorter sprints than 6 1/2 or 7 furlong sprints. After hitting the Second Call where the Early Pace figures are always measured, the Early Pace horse has 1320 feet remaining in a 6 furlong race. However, in a 6 1/2 furlong race, the horse has the 1,320 feet to run plus an additional 330 feet. That 330 feet is longer than a football field. In a 7 furlong race, the horse has the 1,320 feet plus an additional 660 feet or more than two football fields. Likewise, Early Pace will be more important in one mile routes than 1 1/16 or 1 1/8 mile routes. These extra "football fields" explain why the prevailing track bias at most tracks starts shifting from early pace towards sustained pace as the length of the final fraction increases.
+
+SP (Sustained Pace)
+
+The Sustained Pace Rating is the average of a horse’s Early Pace velocity and Final Fraction velocity. It relates the horse’s potential Second Call performance with the horses finishing ability. You should favor this rating if there is a prevailing late bias at the track.
+
+You should also favor the top SP Rating horses if there is a lot of front end speed in the race that may set the race up for a solid closer. Remember, and this is very important, because of the strong influence of Early Pace in the SP rating, the top SP horse will most likely be in touch with the field at the Second Call, within striking distance to pass front running horses that are tiring in the stretch run.
+
+The longer the sprint or the longer the route the more weight you should give the top SP Rating horses. As the races get longer within the sprint and within the route categories, your weighting should gradually move from the top EP Rating horses to the top SP Rating horses.
+
+One last point is that top SP Rating horses tend to have higher payoffs than top EP Rating horses.
+
+AP (Average Pace)
+
+In sprints, the AP Rating is the average of all three race fractions. In routes, it is the average of a horse’s Early Pace and Sustained Pace figures. According to Tom Brohamer, Average Pace is perhaps the best standalone factor identified by the Sartin group in terms of selecting winners. The most powerful use we have discovered for this factor is to use it in combination with either the Early Pace or the Sustained Pace rating, whichever you are giving the most weight to as described above. If you are favoring the Early Pace rating and the top horse is also in the top 2 or 3 of Average Pace ratings, that is a powerful combination. Likewise, if the top Sustained Pace horse is also in the top 2 or 3 of Average Pace ratings and you are favoring Sustained Pace, you have a powerful combination.
+
+FX (Factor X)
+
+The Factor X rating is the average of a horse’s first fraction velocity and third fraction (the Final Fraction) velocity. So, Factor X relates a horse’s probable First Call performance with its finishing ability. The FX pace rating is appreciated by handicappers who place emphasis on how well horses do running to the First Call. ALL-Ways software users can, of course, run an automatic Impact Value Analysis of all the Brohamer figures to judge their effectiveness for virtually any category of races. Remember, the Sartin people tell us the FX pace rating is best used for sprints and not for routes.
+
+Exactas and Trifectas
+
+Everyone who has ever spoken with us or read our newsletters knows that we caution against mechanical play. If there was an area we might temper our advice on this, it would be when using Brohamer pace figures to play Exactas and Trifectas. Including the top Early Pace, Sustained Pace and Average Pace Brohamer figure horses in Exacta and Trifecta wagers can produce some nice results. We still caution you to do this selectively. Make sure there is good value in the wager and look to make sure there is not a reason to discount any of these horses. You might want to test this on paper and refine your thinking before actually placing wagers at the track.
+
+Where to Find the Brohamer Pace Ratings
+
+The Brohamer EP, SP, AP and FX pace ratings are included in ALL-Ways 71 Key Handicapping Factors and can be seen on the All Factors Handicapping Report. The ranking of every horse for these ratings is also shown on the Paceline Report. Finally, in the Professional Edition, you can print out the feet-per-second velocity figures for the individual race fractions using the Custom Report feature.
+
+More to Come
+
+In the next issue of the ALL-Ways Newsletter, we will continue our series on Tom Brohamer’s pace handicapping methods by introducing you to the Brohamer Track Decision Model.
+
+Wagering Tips
+
+10 Ways to Cut Your Losses
+
+We came across an article in the financial section of the Minneapolis newspaper here in Minnesota on how to cut your losses in the stock market. We were struck by the similarity of this advice and the advice we would give to a horse player who is investing at the track and who is in the midst of the inevitable periodic losing streak. The "10 Ways" from the article are shown below along with how we would translate them into meaningful advice at the track.
+
+1. Cut the size of your trades.
+
+Cut the size of your wagers. If you are losing money, you should lower the amounts you wager until you get things straightened out.
+
+2. Limit trading volume.
+
+Make fewer and more selective wagers. It is easy to become overwhelmed by too many wagers. Every wager you make should be constructed carefully and thoughtfully, both in terms of your handicapping and how you structure the wager itself.
+
+3. Preserve capital: Get out of losing positions.
+
+Stop making the kinds of wagers that keep costing you money. If you keep losing money betting Trifectas, then stop betting Trifectas until you figure out how to play them successfully.
+
+4. Lower your profit expectations.
+
+If you are losing money, stop trying to make a killing by "swinging for the fences". When you are losing money, you should focus on just getting back to profitable play even if the profit is very modest.
+
+5. Ring the register at the end of the day. Take your profits.
+
+When you are in a profit position for the day, don’t squander it away. If anything, become more conservative to make sure you leave the track "in the black". Some people, when they get ahead, will say "Well, I am playing with the track’s money." Not so. When the cash is in your pocket, it is your money.
+
+6. Stay calm.
+
+If your losses have you emotionally up tight, stop making bets until you calm down. You should never make wagers unless you are in good mental shape to make intelligent, rational decisions.
+
+7. Develop a set of trading guidelines or trading style, in a calm state of mind. Review the guidelines when losses begin to mount.
+
+Readers of our ALL-Ways Newsletters will certainly recognize this one. This is probably the single best advice we can give anyone for wagering at the track. Away from the track, you should develop and commit to paper what kind of wagers you are looking for and how you will play them when you find them. Having this "blueprint" of your wagering strategies and then following the blueprint will insure that you are wagering in a disciplined manner. Discipline is, in our opinion, the single most important trait of a successful horseplayer.
+
+8. Choose your shots. Get more information before placing a trade.
+
+Be selective in your wagers. Wager only if you thoroughly understand the race and only if there is good value in the wager. Do not make a wager unless it fits with the blueprint you developed in #7 above. Remember, typically there are only a few good wagers on an entire race card. Don’t try to force a lot of marginal wagers.
+
+9. Quit trading for a few hours after a string of losses.
+
+If things are not going well, take a short break. Pick a couple of races in a row that look like good ones to pass. Use the time to go out to the paddock or to watch a couple races at ground level near the finish line.
+
+10. Take the day off.
+
+Same thing .... take the day off. How many times have you handicapped a race card and said to yourself: "This is really a bad card." Well, how about doing something other than going to the track that day, like taking in a movie. It is particularly important to take a break of several days if you are in the midst of a long losing streak. Tom Brohamer, who’s work is the main subject of this newsletter, purposely takes extended periods away from the track and claims this clears his mind so he can really focus and think well when he returns.

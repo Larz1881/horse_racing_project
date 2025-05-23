@@ -1,0 +1,165 @@
+Below is a first-pass sort of every term you supplied.
+Many comments can live in more than one bucket (e.g., **“Drifted”** can be both path and behavioural), but I placed each where it will be most useful for day-to-day trip-note coding.
+Anything that didn’t fit cleanly is parked in **⧉ *outliers*** for follow-up.
+
+---
+
+### 🟡 starting\_trouble
+
+(issues that occur in or just after the gate and immediately compromise position)
+
+* Attempted To Wheel
+* Bobbled
+* Broke In Air
+* Broke In Tangle
+* Broke Slowly / Off Slowly
+* Broke Through Gate
+* Dwelt
+* Flipped In Gate
+* Hit Gate
+* Lunged Start
+* Pinched Back (start)
+* Shuffled Back (start)
+* Squeezed (start)
+* Stumbled (at break)
+* Unprepared Start
+* Wheeled Gate
+* Refused To Break
+* Unruly Gate
+* Wouldn’t Load Gate
+
+---
+
+### 🔵 position\_trouble
+
+(traffic or path problems that cost momentum/ground)
+
+* Altered Course
+* Angled In / Angled Out (forced moves)
+* Between Horses
+* Blocked / Boxed
+* Carried Out
+* Checked / Checked Repeatedly
+* Circled Field (forced very wide)
+* Forced Out / Forced Wide
+* In Tight / Pinched Back (during running)
+* Lost Ground
+* Rough Trip / Roughed
+* Shut Off
+* Steadied / Taken Up
+* Swung Wide
+* Wide Early
+
+---
+
+### 🔴 contact\_trouble
+
+(physical contact with rivals/objects or falls)
+
+* Brushed
+* Bumped
+* Clipped Heels
+* Fell
+* Hit Rail
+* Hit With Rival’s Whip
+* Savaged
+
+---
+
+### 🟠 behavioral\_issues
+
+(self-inflicted antics, pathwarders, immaturity)
+
+* Bolted
+* Bore In / Bore Out
+* Bucked
+* Drifted
+* Erratic / Greenly
+* Fractious In Gate / Fractious Post Parade / Ran Off Post Parade / Washy Post Parade
+* Jumped Tracks / Jumped Shadow
+* Lugged In / Lugged Out
+* Rank
+* Savaged (also contact)
+* Swerved
+
+---
+
+### 🟢 positive\_trip\_comment
+
+(helpful trips or encouraging race shapes/efforts)
+
+* As Rider Pleased
+* Assumed / Gained Command
+* Allowed To Settle / Unhurried Early / Void Early Speed
+* Away Alertly / Broke Sharply
+* Best Stride Late / Finished Well / Late Rally / Late Gain / Closed Fast / Closed With A Rush / Closed Gap / Closed Willingly / Rallied
+* Split Horses / Got Through / Saved Ground / Perfect Trip
+* Came Again / Up In Final Strides / Wore Down Rivals / Just Missed / Up For Place / Second Best
+* Chased / Contended / Close Up / Never Far Back / Good Position / Well Placed
+* Drew Clear / Drew Off / Drew Even
+* Driving / Handily / Easily / Much The Best / Prevailed / Full Of Run / Gamely / Well Handled / Well Rated / Nicely Rated
+* Dueled / Vied For Lead / Set Pace / Set Pressured Pace / Stalked Pace / Pressed Pace
+* Good Early Speed / Quick Move / Long Drive / Loomed Boldly / Middle Move / Mild Bid / Mild Rally / Steady Advance / Speed
+* Lead Between Calls / Led Throughout / Unchallenged
+* Left- or Right-Handed Urging / Roused / Hustled Along / Fully Extended
+
+---
+
+### 🔴 negative\_trip\_comment
+
+(obvious negatives or race-long shortcomings)
+* All Out
+* Bid, Hung / Hung
+* Bled
+* Brief Foot / Brief Speed
+* Dropped Back / Lost Ground / Lost Action
+* Disliked Track
+* Distanced / Far Back / Trailed
+* Dull Effort / Showed Little / No Factor / No Threat / Outrun / No Speed
+* Empty / Evenly / Flattened Out
+* Faded / Weakened / Tired / Faltered / Gave Way / Used Up / Through After Half / Through Early / Stopped / Pulled Up
+* Failed To Menace / Failed To Respond / Failed To Sustain Bid / Lacked Late Response / No Rally / No Excuse / No Match For Winner / Passed Tiring Rivals
+* Hard Used
+* Outfinished
+* Returned Lame / Returned Sore
+
+---
+
+### ⚙️ equipment\_issues
+
+(tack failures or rider mishaps)
+
+* Broken Equipment
+* Fixed Shoe
+* Lost Irons
+* Lost Whip
+* Lost Jockey
+* Saddle Slipped
+
+---
+
+### positive_form
+
+
+
+### negative_form
+
+
+
+### ⧉ outliers / descriptive-only
+
+(these don’t materially describe a *trip* problem or advantage; keep for separate use)
+
+Fast Pace • Moderate Pace • Slow Pace
+Inside • Middle Of Pack • Second Flight
+Lead Between Calls (info, not trip)
+Left/Right Handed Urging (already logged above)
+Jockey Claimed Foul
+Pressed Pace (already above)
+Second Best (already above)
+Well Rated/Handled (already above)
+Any other purely editorial or pace-fig comments you may want to flag separately.
+
+---
+
+If you’d like any term moved, duplicated, or further split (e.g., by severity) just let me know and we can refine the mapping.

@@ -1,0 +1,86 @@
+race,horse_name,sum_net_score,worst_neg,best_pos,trouble_tags
+1,AMAZING BERNIE,-3,negative_moderate,none,position_trouble;uncategorized
+1,BAND TOUR,-7,negative_moderate,positive_slight,contact_trouble;equipment_issues;position_trouble;starting_trouble;uncategorized
+1,BLACKTHORNE BRUSCA,0,none,none,uncategorized
+1,DOOR GUNNER JOE,0,none,none,uncategorized
+1,EFFICACY,0,none,none,position_trouble;uncategorized
+1,FORCED ATTITUDE,-1,negative_slight,none,uncategorized
+1,IMPERIAL SPY,-6,negative_moderate,none,position_trouble;uncategorized
+1,KEVIN OF BLACKROCK,-2,negative_moderate,none,starting_trouble;uncategorized
+1,KUZ IT'S CHILLY,-3,negative_severe,none,uncategorized
+1,MOONFLYER,-5,negative_moderate,positive_moderate,contact_trouble;position_trouble;uncategorized
+1,MYCROFT,0,none,none,uncategorized
+1,MYLUCKEYVALENTINE,-2,negative_moderate,none,contact_trouble;uncategorized
+1,ON SECRET SERVICE,-3,negative_moderate,none,behavioral_issues;position_trouble;uncategorized
+1,OWHATANITE,-7,negative_moderate,none,behavioral_issues;position_trouble;starting_trouble;uncategorized
+1,ROYAL FLUSH HEARTS,0,none,none,uncategorized
+1,SKULL HONOR,-3,negative_moderate,positive_slight,contact_trouble;uncategorized
+2,ABUELO PAPS,-7,negative_severe,positive_moderate,contact_trouble;equipment_issues;position_trouble;uncategorized
+2,ASCENDANCE,-4,negative_moderate,positive_moderate,behavioral_issues;contact_trouble;starting_trouble;uncategorized
+2,BEACH COWBOY,-8,negative_moderate,none,behavioral_issues;contact_trouble;uncategorized
+2,COFFEEWITHCHRIS,-6,negative_moderate,none,behavioral_issues;position_trouble;uncategorized
+2,MIDNIGHT RENEGADE,-3,negative_moderate,none,contact_trouble;position_trouble;starting_trouble;uncategorized
+2,SUMO,-9,negative_severe,positive_moderate,contact_trouble;position_trouble;uncategorized
+2,TOAST TO COAST,-6,negative_severe,positive_slight,contact_trouble;position_trouble;starting_trouble;uncategorized
+3,BARONG,0,none,none,uncategorized
+3,BOX OF ROCKETS,-4,negative_moderate,positive_severe,behavioral_issues;contact_trouble;position_trouble;uncategorized
+3,CHILL BOSS,-5,negative_severe,none,behavioral_issues;uncategorized
+3,CORRECTED PEDIGREE,-3,negative_moderate,positive_moderate,contact_trouble;position_trouble;uncategorized
+3,EL JUNIOR,-1,negative_moderate,positive_slight,position_trouble;uncategorized
+3,ELLINGER,0,none,none,position_trouble;uncategorized
+3,ELUSIVE IMAGE,-2,negative_moderate,none,uncategorized
+3,LOU'S BIRTHDAY,-7,negative_severe,none,behavioral_issues;contact_trouble;position_trouble;uncategorized
+3,MEDAGOOCH,-7,negative_moderate,positive_severe,behavioral_issues;contact_trouble;position_trouble;uncategorized
+3,NIGHT PREACHER,-5,negative_moderate,positive_severe,contact_trouble;position_trouble;starting_trouble;uncategorized
+3,PALLINO,-4,negative_severe,positive_severe,behavioral_issues;uncategorized
+3,ROBERT'S MOON,-3,negative_moderate,positive_moderate,behavioral_issues;contact_trouble;position_trouble;uncategorized
+3,SCRAPPY T LEE,-3,negative_severe,none,position_trouble;uncategorized
+3,SHARP RED EAGLE,-10,negative_severe,positive_slight,contact_trouble;position_trouble;uncategorized
+3,THUNDER LAD,-10,negative_severe,positive_slight,contact_trouble;position_trouble;uncategorized
+3,TWIRLING EXPRESS,1,negative_slight,positive_moderate,position_trouble;starting_trouble;uncategorized
+4,BERMUDA RUN,-7,negative_moderate,none,contact_trouble;starting_trouble;uncategorized
+4,DEWY'S BEAST,-4,negative_moderate,none,position_trouble;uncategorized
+4,IT'LL DO,-10,negative_severe,positive_moderate,contact_trouble;equipment_issues;uncategorized
+4,LITTLE BIT RISKY,-2,negative_moderate,positive_severe,contact_trouble;position_trouble;uncategorized
+4,RAPIDITY,3,negative_moderate,positive_severe,contact_trouble;position_trouble;uncategorized
+4,UNIWINNER,-5,negative_moderate,positive_slight,position_trouble;starting_trouble;uncategorized
+4,WOODLINE,-2,negative_moderate,none,uncategorized
+5,DRIFTING,-2,negative_moderate,none,contact_trouble;position_trouble;uncategorized
+5,IMPETUS ECHO,-2,negative_moderate,positive_slight,contact_trouble;position_trouble;uncategorized
+5,JUDITH'S CROSS,-5,negative_severe,none,contact_trouble;position_trouble;uncategorized
+5,KISSED AT DAWN,-2,negative_moderate,none,position_trouble
+5,LADY LENA,0,none,none,uncategorized
+5,LOVING GAZE,-3,negative_moderate,none,behavioral_issues;contact_trouble;position_trouble;uncategorized
+5,MELANCIA,-4,negative_moderate,none,uncategorized
+5,MY LADY BAE,0,none,none,uncategorized
+5,TEDDY'S LUCKY GIRL,0,none,none,uncategorized
+5,VEOLA,0,none,none,contact_trouble
+6,ANITA BEER,0,none,none,uncategorized
+6,BRIGHTNESS,-3,negative_severe,none,uncategorized
+6,CROSS OF VALOR,-1,negative_slight,none,position_trouble;uncategorized
+6,DANNI'S RHYTHM,-2,negative_moderate,none,contact_trouble;uncategorized
+6,REGAL MISS LILY,-2,negative_moderate,none,starting_trouble
+7,ALVY,1,negative_moderate,positive_severe,contact_trouble;position_trouble;uncategorized
+7,BIG BIG STAR,-5,negative_moderate,none,behavioral_issues;position_trouble;uncategorized
+7,BODE'S MAKER,-4,negative_moderate,none,contact_trouble;position_trouble;uncategorized
+7,FUN LOVIN CRIMINAL,2,negative_moderate,positive_severe,behavioral_issues;contact_trouble;position_trouble;starting_trouble;uncategorized
+7,SAKETUMI,-3,negative_moderate,none,starting_trouble;uncategorized
+7,SELL SOMETHING,-8,negative_moderate,none,contact_trouble;position_trouble;uncategorized
+7,THE LAST SCIP,-4,negative_moderate,positive_moderate,behavioral_issues;contact_trouble;position_trouble;uncategorized
+7,TRANSACTIONAL,-7,negative_severe,none,behavioral_issues;uncategorized
+7,UNINVITED GUEST,-1,negative_moderate,positive_moderate,contact_trouble;position_trouble;uncategorized
+7,WISH ME HOME,-1,negative_moderate,positive_severe,behavioral_issues;position_trouble;uncategorized
+7,YOUR ANALYSIS,-7,negative_moderate,none,contact_trouble;position_trouble;uncategorized
+8,ADE,-4,negative_moderate,none,position_trouble;uncategorized
+8,CHICKIN LICKIN,-6,negative_moderate,positive_moderate,position_trouble;uncategorized
+8,LATE NITE CALL,-7,negative_moderate,none,contact_trouble;position_trouble;starting_trouble;uncategorized
+8,MISCHIEF IN MOTION,-1,negative_slight,none,uncategorized
+8,ROSIEONTHERIVER,-1,negative_slight,none,behavioral_issues;position_trouble;uncategorized
+8,TRES ARIES,-5,negative_moderate,positive_severe,behavioral_issues;contact_trouble;position_trouble;starting_trouble;uncategorized
+9,CASEY N PAP,-2,negative_slight,none,position_trouble;uncategorized
+9,DARK LUTE,0,none,none,uncategorized
+9,GOLD ASPEN,-7,negative_severe,none,behavioral_issues;contact_trouble;equipment_issues;position_trouble;starting_trouble;uncategorized
+9,MAMBA MINDSET,-1,negative_slight,none,position_trouble;uncategorized
+9,PARLAY FOR DESTINY,-5,negative_moderate,none,contact_trouble;position_trouble;uncategorized
+9,REAL TALENTED,0,none,none,uncategorized
+9,TYSON'S DELIVERY,-2,negative_moderate,none,position_trouble;starting_trouble;uncategorized

@@ -1,0 +1,638 @@
+                                                          MAX
+FIELD #    DESCRIPTION                 TYPE      FORMAT   LENGTH COMMENTS
+
+*** Today's Race Data ***
+
+      1 Track                         CHARACTER  XXX       3
+      2 Date                          CHARACTER  XXXXXXXX  8
+      3 Race #                        NUMERIC    99        2
+      4 Post Position                 NUMERIC    99        2
+      5 Entry                         CHARACTER  X         1  A- part of A entry
+                                                              B- part of B entry
+                                                              C- part of C entry
+                                                              F- part of FIELD
+                                                              S- if scratched
+      6 Distance (in yards)           NUMERIC    99999     5  Negative value for
+                                                              about distances
+      7 Surface                       CHARACTER  X         1  D- dirt
+                                                              T- turf
+                                                              d- inner dirt
+
+
+                                                              t- inner turf
+                                                              s- steeplechase
+                                                              h- hunt
+      8 Reserved
+
+      9 Race Type                     CHARACTER  XX      2 G1- Grade I stk/hcp
+                                                           G2- Grade II stk/hcp
+                                                           G3- Grade III stk/hcp
+                                                            N- nongraded stake/
+                                                               handicap
+                                                            A- allowance
+                                                            R- Starter Alw
+                                                            T- Starter Hcp
+                                                            C- claiming
+                                                           CO- Optional Clmg
+                                                            S- mdn sp wt
+                                                            M- mdn claimer
+                                                           AO- Alw Opt Clm
+                                                           MO- Mdn Opt Clm
+                                                           NO- Opt Clm Stk
+     10 Age/Sex Restrictions          CHARACTER  XXX        see codes below
+     11 Today's Race Classification   CHARACTER X(14)       (eg. "Alw44000n2L")
+     12 Purse                         NUMERIC    99999999  8
+     13 Claiming Price                NUMERIC    9999999   7
+     14 Claiming Price (of horse)     NUMERIC    9999999   7   blank if N.A.
+     15 Track Record                  NUMERIC     999.99   6   seconds &
+                                                               hundredths
+     16 Race Conditions               CHARACTER          500 see also
+                                                             field #225-239
+
+     17 Today's Lasix list            CHARACTER          400   (Blank except 1st
+        (see also field #63)                                    horse each race)
+     18 Today's Bute  list            CHARACTER          400     "        "
+     19 Today's Coupled list          CHARACTER          200     "        "
+     20 Today's Mutuel list           CHARACTER          200     "        "
+
+     21 Simulcast host track code     CHARACTER  XXX       3  (actual track
+                                                               code if not
+                                                               a simulcast)
+     22 Simulcast host track race #   NUMERIC    99        2  (actual race # if
+                                                               not a simulcast)
+     23 Breed Type (if available)     CHARACTER  XX        2  Some of the types:
+                                                              AP-Appaloosa
+                                                              AR-Arabian
+                                                              PT-Paint/Pinto
+                                                              QH-Quarter Horse
+                                                              TB-Thoroughbred
+                                                              NB-Non-tbred in
+                                                                 TJC registry
+     24 Today's Nasal Strip Change    NUMERIC    9         1  (0=No Change,
+                                                               1=Nasal Strip ON,
+                                                               2=Nasal Strip OFF,
+                                                               9=Information
+                                                                 Unavailable)
+     25 Today's All-Weather Surface flag         X         1  A- All Weather
+                                                                 Surface flag
+  26-27 Reserved for future use
+
+*** Today's Horse/Trainer/Jockey/Owner ***
+
+     28 Today's Trainer               CHARACTER           30
+     29 Trainer Sts     Current Meet  NUMERIC    9999      4
+     30 Trainer Wins    Current Meet  NUMERIC     999      3
+     31 Trainer Places  Current Meet  NUMERIC     999      3
+     32 Trainer Shows   Cureent Meet  NUMERIC     999      3
+     33 Today's Jockey                CHARACTER           25
+     34 Apprentice wgt allow.(if any) NUMERIC      99      2
+
+
+     35 Jockey  Sts     Current Meet  NUMERIC    9999      4
+     36 Jockey  Wins    Current Meet  NUMERIC     999      3
+     37 Jockey  Places  Current Meet  NUMERIC     999      3
+     38 Jockey  Shows   Current Meet  NUMERIC     999      3
+     39 Today's Owner                 CHARACTER           40
+     40 Owner's Silks                 CHARACTER          100
+     41 Main Track Only/AE Indicator  CHARACTER            1  "M" for MTO
+                                                              "A" for A.E.
+     42 Reserved for possible future expansion
+     43 Program Number (if available) CHARACTER   XXX      3
+     44 Morn. Line Odds(if available) NUMERIC  999.99      6
+
+*** Horse History Data ***
+
+    45 Horse Name                     CHARACTER           25
+    46 Year of Birth                  NUMERIC    99        2
+    47 Horse's Foaling Month          NUMERIC    99        2  (1  for Jan
+                                                               12 for Dec)
+    48 Reserved
+    49 Sex                            CHARACTER  X         1
+    50 Horse's color                  CHARACTER            5
+    51 Weight                         NUMERIC    999       3
+    52 Sire                           CHARACTER           25
+    53 Sire's sire                    CHARACTER           25
+    54 Dam                            CHARACTER           25
+    55 Dam's sire                     CHARACTER           25
+    56 Breeder                        CHARACTER           67
+    57 State/Country abrv. where bred CHARACTER            5
+    58 Program Post Position (if available)      XX        2  Updated Post after
+                                                              early scratches
+                                                              (as displayed on
+                                                              program)
+ 59-61 Blank fields reserved for possible future expansion
+
+*** Current Horse Stats ***
+
+New: 62 Today's Medication            NUMERIC              2  (0=None, 1=Lasix,
+        w/1st time Lasix info                                  2=Bute,
+                                                               3=Bute & Lasix
+        see also fields #17 & #18                          4=1st time Lasix
+                                                               5=Bute & 1st Lasix
+                                                               9=Medication info
+                                                                 unavailable)
+
+Old: 63 Today's Medication            NUMERIC              1  (0=None, 1=Lasix,
+        w/o 1st time Lasix info                                2=Bute,
+                                                               3=Bute & Lasix
+        see also fields #17 & #18                              9=Medication info
+                                                                 unavailable)
+
+     64 Equipment Change              NUMERIC              1  (0=No change,
+                                                               1=Blinkers on,
+                                                               2=Blinkers off
+                                                               9=Equipment info
+                                                                 unavailable)
+
+    Horse's Lifetime Record @ Today's Distance:
+
+     65 Starts                        NUMERIC    999       3
+     66 Wins                          NUMERIC    99        2
+     67 Places                        NUMERIC    99        2
+     68 Shows                         NUMERIC    99        2
+     69 Earnings                      NUMERIC    99999999  8
+
+    Horse's Lifetime Record @ Today's track:
+
+
+     70 Starts                        NUMERIC    999       3
+     71 Wins                          NUMERIC    99        2
+     72 Places                        NUMERIC    99        2
+     73 Shows                         NUMERIC    99        2
+     74 Earnings                      NUMERIC    99999999  8
+
+    Horse's Lifetime Turf Record:
+
+     75 Starts                        NUMERIC    999       3
+     76 Wins                          NUMERIC    99        2
+     77 Places                        NUMERIC    99        2
+     78 Shows                         NUMERIC    99        2
+     79 Earnings                      NUMERIC    99999999  8
+
+    Horse's Lifetime Wet Record:
+
+     80 Starts                        NUMERIC    999       3
+     81 Wins                          NUMERIC    99        2
+     82 Places                        NUMERIC    99        2
+     83 Shows                         NUMERIC    99        2
+     84 Earnings                      NUMERIC    99999999  8
+
+    Horse's Current Year Record:
+
+     85 Year                          NUMERIC    9999      4   (eg. 2005)
+     86 Starts                        NUMERIC    99        2
+     87 Wins                          NUMERIC    99        2
+     88 Places                        NUMERIC    99        2
+     89 Shows                         NUMERIC    99        2
+     90 Earnings                      NUMERIC    99999999  8
+
+    Horse's Previous Year Record:
+
+     91 Year                          NUMERIC    9999      4   (eg. 2004)
+     92 Starts                        NUMERIC    99        2
+     93 Wins                          NUMERIC    99        2
+     94 Places                        NUMERIC    99        2
+     95 Shows                         NUMERIC    99        2
+     96 Earnings                      NUMERIC    99999999  8
+
+    Horse's Lifetime Record:
+
+     97 Starts                        NUMERIC    999       3
+     98 Wins                          NUMERIC    999       3
+     99 Places                        NUMERIC    999       3
+    100 Shows                         NUMERIC    999       3
+    101 Earnings                      NUMERIC    99999999  8
+
+    102 Date of Workout            #1 DATE       99999999  8  CYMD
+    103                            #2
+    104                            #3
+    105                            #4
+    106                            #5
+    107                            #6
+    108                            #7
+    109                            #8
+    110                            #9
+    111                            #10
+    112                            #11
+    113                            #12
+    114 Time of Workout            #1 NUMERIC    9999.99   7  seconds &
+                                                              hundredths
+
+
+    115                            #2                         Negative time if a
+    116                            #3                         "bullet" work
+    117                            #4                         (ie. -34.80 means
+    118                            #5                          a bullet work in
+    119                            #6                          a time of 34 4/5)
+    120                            #7
+    121                            #8
+    122                            #9
+    123                            #10
+    124                            #11
+    125                            #12
+    126 Track of Workout           #1 CHARACTER           10
+    127                            #2
+    128                            #3
+    129                            #4
+    130                            #5
+    131                            #6
+    132                            #7
+    133                            #8
+    134                            #9
+    135                            #10
+    136                            #11
+    137                            #12
+    138 Distance of Workout        #1 NUMERIC   99999      5  (Dist. in yards)
+    139                            #2                         (- value for
+    140                            #3                          about distances)
+    141                            #4
+    142                            #5
+    143                            #6
+    144                            #7
+    145                            #8
+    146                            #9
+    147                            #10
+    148                            #11
+    149                            #12
+    150 Track Condition of Workout #1 CHARACTER  XX        2
+    151                            #2
+    152                            #3
+    153                            #4
+    154                            #5
+    155                            #6
+    156                            #7
+    157                            #8
+    158                            #9
+    159                            #10
+    160                            #11
+    161                            #12
+    162 Description of Workout     #1 CHARACTER  XXX       3
+    163                            #2
+    164                            #3     1st Character: H or B
+    165                            #4     H for Handily   B for Breezing
+    166                            #5
+    167                            #6     2nd Character: g
+    168                            #7     if worked from gate
+    169                            #8
+    170                            #9     3rd Character: D
+    171                            #10    if 'Dogs are up'
+    172                            #11
+    173                            #12
+    174 Main/Inner track indicator #1 CHARACTER  XX        1 MT-main dirt
+    175                            #2                        IM-inner dirt
+    176                            #3                        TT-Training Trk
+
+
+    177                            #4                         T-main turf
+    178                            #5                        IT-inner turf
+    179                            #6                        WC-wood chip
+    180                            #7                        HC-hillside course
+    181                            #8                        TN-trf trn trk
+    182                            #9                        IN-inner trf trn
+                                                                track
+    183                            #10                       TR-training race
+    184                            #11                         -if blank, track
+    185                            #12                          type unknown
+
+          # of Works that
+    186     day/distance           #1
+    187                            #2
+    188                            #3
+    189                            #4
+    190                            #5
+    191                            #6
+    192                            #7
+    193                            #8
+    194                            #9
+    195                            #10
+    196                            #11
+    197                            #12
+
+        "Rank" of the work among
+    198  other works that day/dist #1
+    199                            #2
+    200                            #3
+    201                            #4
+    202                            #5
+    203                            #6
+    204                            #7
+    205                            #8
+    206                            #9
+    207                            #10
+    208                            #11
+    209                            #12
+
+210 BRIS Run Style designation        CHARACTER  XXX      3
+211 "Quirin" style Speed Points       NUMERIC      9      1
+212 Reserved
+213 Reserved
+214 2f BRIS Pace Par for level        NUMERIC     999     3
+215 4f BRIS Pace Par for level        NUMERIC     999     3
+216 6f BRIS Pace Par for level        NUMERIC     999     3
+217 BRIS Speed Par for class level    NUMERIC     999     3
+218 BRIS Late Pace Par for level      NUMERIC     999     3
+219 T/J Combo # Starts (365D)         NUMERIC    9999     4
+220 T/J Combo # Wins (365D)           NUMERIC    9999     4
+221 T/J Combo # Places (365D)         NUMERIC    9999     4
+222 T/J Combo # Shows (365D)          NUMERIC    9999     4
+223 T/J Combo $2 ROI (365D)           NUMERIC    9999     4
+224 # of days since last race         NUMERIC    9999     4
+
+225-230 complete race condition lines CHARACTER          254  Sometimes blank
+                                                              because data is
+                                                              not always
+                                                              available...
+                                                              Use field # 16
+                                                              when necessary
+
+231 Lifetime Starts - All Weather Surface         999     3
+232 Lifetime Wins - All Weather Surface           999     3
+233 Lifetime Places - All Weather Surface         999     3
+234 Lifetime Shows - All Weather Surface          999     3
+235 Lifetime Earnings - All Weather Surface  99999999     8
+236 Best BRIS Speed - All Weather Surface         999     3
+237 Reserved...
+238     "Low" Claiming Price          NUMERIC  9999999     7
+           (for today's race)
+239     Statebred Flag "s"            CHARACTER  X         1
+           (for today's race)
+240-248 Wager Types for this race     CHARACTER  X(50)    50  (if available)
+249     Reserved                      CHARACTER  X(58)    58
+250     Reserved                      CHARACTER  X(12)    12
+
+
+251     BRIS Prime Power Rating       NUMERIC    999.99    6
+252-255 Reserved fields for future use
+
+*** Horse's Past Performace Data for last 10 races ***
+
+    For each of the last 10 races (most recent to furthest back):
+
+ 256- 265 Race Date                     CHARACTER  XXXXXXXX  8
+ 266- 274 # of days since previous race NUMERIC    9999      4 Blank-First timer
+ 275  Reserved (# days since prev. race for 10th race back might not be available)
+ 276- 285 Track Code                    CHARACTER           30
+ 286- 295 BRIS Track Code               CHARACTER  XXX       3
+ 296- 305 Race #                        NUMERIC    99        2
+ 306- 315 Track Condition               CHARACTER  XX        2
+ 316- 325 Distance (in yards)           NUMERIC    99999     5 (- value for
+                                                                about distances)
+ 326- 335 Surface                       CHARACTER  X         1  see field #7
+ 336- 345 Special Chute indicator       CHARACTER  X         1  c - chute
+ 346- 355 # of entrants                 NUMERIC    99        2
+ 356- 365 Post Position                 NUMERIC    99        2
+ 366- 375 Equipment                     CHARACTER  X         1  b - blinkers
+ 376- 385 Racename of previous races
+ 386- 395 Medication                    NUMERIC    9         1  0=None, 1=Lasix,
+          see also field #62                                    2=Bute,
+                                                                3=Bute & Lasix
+ 396- 405 Trip Comment                  CHARACTER          100
+ 406- 415 Winner's Name                 CHARACTER
+ 416- 425 2nd Place finishers Name      CHARACTER
+ 426- 435 3rd Place finishers Name      CHARACTER
+ 436- 445 Winner's Weight carried       NUMERIC    999       3
+ 446- 455 2nd Place Weight carried      NUMERIC    999       3
+ 456- 465 3rd Place Weight carried      NUMERIC    999       3
+ 466- 475 Winner's Margin               NUMERIC    99.99     5 ( 0 if DeadHeat )
+ 476- 485 2nd Place Margin              NUMERIC    99.99     5 ( 0 if DeadHeat )
+ 486- 495 3rd Place Margin              NUMERIC    99.99     5 ( 0 if DeadHeat )
+ 496- 505 Alternate/Extra Comment line  CHARACTER          200 (includes
+                                                               "claimed from"
+                                                                text & misc.
+                                                                other comments)
+ 506- 515 Weight                        NUMERIC    999       3
+ 516- 525 Odds                          NUMERIC    9999.99   7
+ 526- 535 Entry                         CHARACTER  X         1  e - entry
+ 536- 545 Race Classification           CHARACTER           25
+ 546- 555 Claiming Price (of horse)     NUMERIC    9999999   7
+ 556- 565 Purse                         NUMERIC    99999999  8
+ 566- 575 Start Call Position           CHARACTER            2 A- bled B- bolted
+ 576- 585 1st Call Position(if any)     CHARACTER            2 C- broke down
+ 586- 595 2nd Call Position(if any)     CHARACTER            2 D- distanced
+ 596- 605 Gate Call Position(if any)    CHARACTER            2 E- dwelt F- eased
+ 606- 615 Stretch Position (if any)     CHARACTER            2 G- fell  H- lame
+ 616- 625 Finish Position               CHARACTER            2 I- left at post
+ 626- 635 Money Position                CHARACTER            2 J- left course
+                                                             K- lost rider
+                                                             L- running postions
+                                                                omitted because
+                                                                of weather
+                                                                conditions
+                                                             M- propped
+                                                             N- sulked  O- sore
+                                                             P- refused to break
+                                                             Q- pulled up
+                                                             R- wheeled
+
+
+                                                             S- saddle slipped
+                                                             T- lost irons
+                                                             U- beaten off
+                                                             V- reared W- bucked
+                                                             X- did not finish
+                                                             Y- unplaced
+                                                   '?' or '*' - unspecified
+                                                                reason for
+                                                                missed call
+ 636- 645 Start Call BtnLngths/Ldr margin          99.99     5
+ 646- 655 Start Call BtnLngths only                99.99     5
+ 656- 665 1st Call BtnLngths/Ldr margin NUMERIC    99.99     5
+ 666- 675 1st Call BtnLngths only
+ 676- 685 2nd Call BtnLngths/Ldr margin NUMERIC    99.99     5
+ 686- 695 2nd Call BtnLngths only
+ 696- 705 BRIS Race Shape - 1st Call    NUMERIC      999     3
+ 706- 715 Reserved
+ 716- 725 Stretch  BtnLngths/Ldr margin NUMERIC    99.99     5
+ 726- 735 Stretch  BtnLngths only
+ 736- 745 Finish   BtnLngths/Wnrs marginNUMERIC    99.99     5
+ 746- 755 Finish   BtnLngths only
+ 756- 765 BRIS Race Shape - 2nd Call    NUMERIC      999     3
+ 766- 775 BRIS 2f Pace Fig              NUMERIC      999     3
+ 776- 785 BRIS 4f Pace Fig
+ 786- 795 BRIS 6f Pace Fig
+ 796- 805 BRIS 8f Pace Fig
+ 806- 815 BRIS 10f Pace Fig
+ 816- 825 BRIS Late Pace Fig
+ 826- 835 Reserved
+ 836- 845 Reserved
+ 846- 855 BRIS Speed Rating             NUMERIC    999       3
+ 856- 865 Speed Rating                  NUMERIC    999       3
+ 866- 875 Track Variant                 NUMERIC    99        2
+ 876- 885 2f  Fraction (if any)         NUMERIC    999.99    6 seconds &
+                                                               hundredths
+ 886- 895 3f  Fraction (if any)         NUMERIC    999.99    6
+ 896- 905 4f  Fraction (if any)         NUMERIC    999.99    6
+ 906- 915 5f  Fraction (if any)         NUMERIC    999.99    6
+ 916- 925 6f  Fraction (if any)         NUMERIC    999.99    6
+ 926- 935 7f  Fraction (if any)         NUMERIC    999.99    6
+ 936- 945 8f  Fraction (if any)         NUMERIC    999.99    6
+ 946- 955 10f Fraction (if any)         NUMERIC    999.99    6
+ 956- 965 12f Fraction (if any)         NUMERIC    999.99    6
+ 966- 975 14f Fraction (if any)         NUMERIC    999.99    6
+ 976- 985 16f Fraction (if any)         NUMERIC    999.99    6
+ 986- 995 Fraction #1                   NUMERIC    999.99    6
+ 996-1005          #2                   NUMERIC    999.99    6
+1006-1015          #3                   NUMERIC    999.99    6
+1016-1025 Reserved
+1026-1035 Reserved
+1036-1045 Final Time                    NUMERIC    999.99    6  seconds &
+                                                                hundredths
+1046-1055 Claimed code                  CHARACTER  X         1  c - claimed
+1056-1065 Trainer (when available)      CHARACTER  X        30
+1066-1075 Jockey                        CHARACTER           25
+1076-1085 Apprentice Wt allow (if any)  NUMERIC    99        2
+1086-1095 Race Type                     CHARACTER  XX        2 (G1,G2,G3,N,A,
+                                                                 R,T,C,CO,S,M,
+                                                                 AO,MO,NO)
+                                                               see field #9
+
+1096-1105 Age and Sex Restrictions      CHARACTER  XXX       3 see codes below
+1106-1115 Statebred flag                CHARACTER X          1 s- statebred
+
+
+1116-1125 Restricted/Qualifier flag     CHARACTER X          1 R- restricted
+                                                               Q- qualifier
+                                                               O- optional
+                                                                  claimer
+1126-1135 Favorite indicator            NUMERIC   9          1 0- Non-favorite
+                                                               1- Favorite
+1136-1145 Front Bandages indicator      NUMERIC   9          1 0- No front wraps
+                                                               1- front wraps
+1146 Reserved
+1147 Trainer      Sts     Current Year  NUMERIC   9999       4
+1148              Wins                                       4
+1149              Places                                     4
+1150              Shows                                      4
+1151              ROI     Current Year  NUMERIC   999.99     6
+1152 Trainer      Sts     Previous Year NUMERIC   9999       4
+1153              Wins                                       4
+1154              Places                                     4
+1155              Shows                                      4
+1156              ROI     Previous Year NUMERIC   999.99     6
+1157 Jockey       Sts     Current Year  NUMERIC   9999       4
+1158              Wins                                       4
+1159              Places                                     4
+1160              Shows                                      4
+1161              ROI     Current Year  NUMERIC   999.99     6
+1162 Jockey       Sts     Previous Year NUMERIC   9999       4
+1163              Wins                                       4
+1164              Places                                     4
+1165              Shows                                      4
+1166              ROI     Previous Year NUMERIC   999.99     6
+1167-1176 BRIS Speed Par for class level of Last 10 races    3
+1177      Sire Stud Fee (current)       NUMERIC 9999999      7
+1178      Best BRIS Speed - Fast track  NUMERIC     999      3
+1179      Best BRIS Speed - Turf        NUMERIC     999      3
+1180      Best BRIS Speed - Off track   NUMERIC     999      3
+1181      Best BRIS Speed - Distance    NUMERIC     999      3
+1182-1191 Bar shoe                      CHARACTER X          1 r- bar shoe
+1192-1201 Company Line Codes            CHARACTER XXXX       4
+1202-1211 "Low" Claiming Price of race  NUMERIC   9999999    7
+1212-1221 "High" Claiming Price of race NUMERIC   9999999    7
+1222      Auction Price                 NUMERIC   999999999  9
+1223      Where/When Sold at Auction    CHARACTER X(12)     12
+1224-1253 Reserved for future use
+1254-1263 Code for prior 10 starts                           1 "s"-Nasal Strip
+                                                               "x"-Off the turf
+1264      BRIS Dirt Pedigree Rating           CHARACTER XXXX 4 eg. "115*"
+1265      BRIS Mud Pedigree Rating            CHARACTER XXXX 4
+1266      BRIS Turf Pedigree Rating           CHARACTER XXXX 4
+1267      BRIS Dist Pedigree Rating           CHARACTER XXXX 4
+1268-1277 Claimed from and trainer switches.  CHARACTER     10 eg.  "12/30/2000"
+1278-1287 Claimed from and trainer switches.    NUMERIC      4
+1288-1297 Claimed from and trainer switches.    NUMERIC      4
+1298-1307 Claimed from and trainer switches.    NUMERIC      4
+1308-1317 Claimed from and trainer switches.    NUMERIC      4
+1318-1327 Claimed from and trainer switches.    NUMERIC      4
+
+1328      Best BRIS Speed: Life         NUMERIC   999        3
+1329      Best BRIS Speed: Most Recent Yr horse ran          3
+1330      Best BRIS Speed: 2nd Most Recent Yr horse ran      3
+1331      Best BRIS Speed: Today's Track                     3
+1332      # Starts (FAST Dirt)          NUMERIC   999        3
+1333      # Wins   (FAST Dirt)          NUMERIC    99        2
+1334      # Places (FAST Dirt)          NUMERIC    99        2
+1335      # Shows  (FAST Dirt)          NUMERIC    99        2
+1336      Earnings (FAST Dirt)          NUMERIC  999999999   9
+1337      Key Trnr Stat Category #1     CHARACTER  X(16)    16
+1338      # of starts            #1     NUMERIC  9999        4
+1339      Win%                   #1     NUMERIC  999.99      6
+1340      in-the-money (itm) %   #1     NUMERIC  999.99      6
+1341      $2ReturnOnInvestment   #1     NUMERIC  999.99      6
+
+
+1342      Key Trnr Stat Category #2     CHARACTER  X(16)    16
+1343      # of starts            #2     NUMERIC  9999        4
+1344      Win%                   #2     NUMERIC  999.99      6
+1345      in-the-money (itm) %   #2     NUMERIC  999.99      6
+1346      $2ReturnOnInvestment   #2     NUMERIC  999.99      6
+1347      Key Trnr Stat Category #3     CHARACTER  X(16)    16
+1348      # of starts            #3     NUMERIC  9999        4
+1349      Win%                   #3     NUMERIC  999.99      6
+1350      in-the-money (itm) %   #3     NUMERIC  999.99      6
+1351      $2ReturnOnInvestment   #3     NUMERIC  999.99      6
+1352      Key Trnr Stat Category #4     CHARACTER  X(16)    16
+1353      # of starts            #4     NUMERIC  9999        4
+1354      Win%                   #4     NUMERIC  999.99      6
+1355      in-the-money (itm) %   #4     NUMERIC  999.99      6
+1356      $2ReturnOnInvestment   #4     NUMERIC  999.99      6
+1357      Key Trnr Stat Category #5     CHARACTER  X(16)    16
+1358      # of starts            #5     NUMERIC  9999        4
+1359      Win%                   #5     NUMERIC  999.99      6
+1360      in-the-money (itm) %   #5     NUMERIC  999.99      6
+1361      $2ReturnOnInvestment   #5     NUMERIC  999.99      6
+1362      Key Trnr Stat Category #6     CHARACTER  X(16)    16
+1363      # of starts            #6     NUMERIC  9999        4
+1364      Win%                   #6     NUMERIC  999.99      6
+1365      in-the-money (itm) %   #6     NUMERIC  999.99      6
+1366      $2ReturnOnInvestment   #6     NUMERIC  999.99      6
+1367      JKY@Dis/JkyonTurf Label       CHARACTER X(13)     13
+1368      JKY@Dis/JkyonTurf Starts      NUMERIC  9999        4
+1369      JKY@Dis/JkyonTurf Wins        NUMERIC  9999        4
+1370      JKY@Dis/JkyonTurf Places      NUMERIC  9999        4
+1371      JKY@Dis/JkyonTurf Shows       NUMERIC  9999        4
+1372      JKY@Dis/JkyonTurf ROI         NUMERIC  999.99      6
+1373      JKY@Dis/JkyonTurf Earnings    NUMERIC  99999999    8
+1374      Post Times (by region)        CHARACTER  X(50)    50
+1375-1382 Reserved
+1383-1392 Extended Start Comment        CHARACTER  X(90)    90
+1393-1402 "Sealed" track indicator      CHARACTER  X         1 "s"
+1403-1412 Prev. All-Weather Surface flagCHARACTER  X         1 A - All Weather
+                                                                   Surface
+
+1413      T/J Combo # Starts (meet)           NUMERIC 9999        4
+1414      T/J Combo #Wins (meet)              NUMERIC 9999        4
+1415      T/J Combo #Places (meet)            NUMERIC 9999        4
+1416      T/J Combo # Shows (meet)            NUMERIC 9999        4
+1417      T/J Combo $2 ROI (meet)             NUMERIC 999.99      6
+1418      Post Time (Pacific military time)   CHARACTER XXXX      4   "0300" for 3am Pacific Time
+1419-1428 Equibase Abbrev. Race Conditions    CHARACTER(17)      17
+1429	  Today's EQB Abbrev. Race Conditions CHARACTER(17)      17
+
+1430 - 1435  	Reserved
+
+Age/Sex Restriction Codes (3 character sting):
+  1st character
+  -------------
+  A - 2 year olds
+  B - 3 year olds
+  C - 4 year olds
+  D - 5 year olds
+  E - 3 & 4 year olds
+  F - 4 & 5 year olds
+  G - 3, 4, and 5 year olds
+  H - all ages
+
+  2nd character
+  -------------
+  O - That age Only
+  U - That age and Up
+
+  3rd character
+  -------------
+  N - No Sex Restrictions
+  M - Mares and Fillies Only
+  C - Colts and/or Geldings Only
+  F - Fillies Only
+
+  Example: "BON" - means a "3 year olds only" race with no sex restrictions
