@@ -25,17 +25,18 @@ import numpy as np # For potential numeric cleaning
 
 # 1. Define paths relative to the script location
 SCRIPT_DIR: Final[Path] = Path(__file__).parent.resolve()
+PROJECT_ROOT: Final[Path] = SCRIPT_DIR.parent.parent    # .../horse_racing_project/
 
 # 2. Input files
 WIDE_DATA_PARQUET_FILENAME: Final[str] = "parsed_race_data_full.parquet"
 SPEC_CACHE_FILENAME: Final[str] = "bris_spec.pkl"
 
-WIDE_DATA_FILE_PATH: Final[Path] = SCRIPT_DIR / WIDE_DATA_PARQUET_FILENAME
-SPEC_CACHE_FILE_PATH: Final[Path] = SCRIPT_DIR / SPEC_CACHE_FILENAME
+WIDE_DATA_FILE_PATH: Final[Path] = PROJECT_ROOT / "data" / "processed" / WIDE_DATA_PARQUET_FILENAME
+SPEC_CACHE_FILE_PATH: Final[Path] = PROJECT_ROOT / "data" / "cache" / SPEC_CACHE_FILENAME
 
 # 3. Output file for the transformed "long" past performance data
 LONG_PAST_STARTS_FILENAME: Final[str] = "past_starts_long_format.parquet"
-LONG_PAST_STARTS_FILE_PATH: Final[Path] = SCRIPT_DIR / LONG_PAST_STARTS_FILENAME
+LONG_PAST_STARTS_FILE_PATH: Final[Path] = PROJECT_ROOT / "data" / "processed" / LONG_PAST_STARTS_FILENAME
 
 # 4. Define ID variables: Columns identifying the *current* horse/race entry.
 #    *** Based on your confirmation ***

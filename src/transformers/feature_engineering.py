@@ -1,10 +1,24 @@
 import numpy as np
 import pandas as pd
+from pathlib import Path
+from typing import List, Final, Optional
+
+# --- Define standardized paths ---
+SCRIPT_DIR: Path = Path(__file__).parent.resolve() # .../src/transformers/
+PROJECT_ROOT: Path = SCRIPT_DIR.parent.parent    # .../horse_racing_project/
+PROCESSED_DATA_DIR: Path = PROJECT_ROOT / "data" / "processed"
+PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True) # Ensure directory exists
+
+# --- Load your full parsed DataFrame ---
+# Adjust to read from the processed data directory
+INPUT_PARQUET_PATH: Path = PROCESSED_DATA_DIR / "parsed_race_data_full.parquet"
+if not INPUT_PARQUET_PATH.exists():
+    print(f"Error: Input file not found at {INPUT_PARQUET_PATH}")
+    exit()
+print(f"Loading data from: {INPUT_PARQUET_PATH}")
+df = pd.read_parquet(INPUT_PARQUET_PATH)
 
 # ——————————————————————————
-# load your full parsed DataFrame
-df = pd.read_parquet("parsed_race_data_full.parquet")
-
 def compute_fractional_splits(df: pd.DataFrame) -> pd.DataFrame:
     """
     Efficiently build all split columns for races 1–10 without fragmenting df.
@@ -73,9 +87,14 @@ df_perf = df[["race", "post_position", "morn_line_odds_if_available", "horse_nam
 df_splits = compute_fractional_splits(df)
 
 
-# 3. Output to CSV
-df_perf.to_csv("horse_performance.csv", index=False)
-df_splits.to_csv("splits.csv", index=False)
+# 3. Output to CSV in the processed data directory
+output_perf_csv = PROCESSED_DATA_DIR / "horse_performance.csv"
+output_splits_csv = PROCESSED_DATA_DIR / "splits.csv"
+
+print(f"Saving horse_performance.csv to: {output_perf_csv}")
+df_perf.to_csv(output_perf_csv, index=False)
+print(f"Saving splits.csv to: {output_splits_csv}")
+df_splits.to_csv(output_splits_csv, index=False)
 
 # ────────────────────────────────────────────────
 # Ensure all Jockey stats columns are numeric
@@ -109,7 +128,11 @@ df_jockey = pd.DataFrame({
 print(df_splits.head())
 
 # (Optional) save to its own file
-# df_jockey.to_parquet("jockey_performance.parquet", index=False)
+output_jockey_parquet = PROCESSED_DATA_DIR / "jockey_performance.parquet"
+# print(f"Saving jockey_performance.parquet to: {output_jockey_parquet}")
+# df_jockey.to_parquet(output_jockey_parquet, index=False) # Currently commented out
+
+print("\n--- Feature Engineering Script Finished ---")
 
 
 

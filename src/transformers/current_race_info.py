@@ -16,22 +16,23 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 from typing import List, Final, Optional
+import logging # Import logging
 
 # --- Configuration ---
+# These paths correctly point to your data/processed/ directory
+SCRIPT_DIR_CURRENT_INFO: Final[Path] = Path(__file__).parent.resolve()
+PROJECT_ROOT_CURRENT_INFO: Final[Path] = SCRIPT_DIR_CURRENT_INFO.parent.parent
+PROCESSED_DATA_DIR_CURRENT_INFO: Final[Path] = PROJECT_ROOT_CURRENT_INFO / "data" / "processed"
+PROCESSED_DATA_DIR_CURRENT_INFO.mkdir(parents=True, exist_ok=True)
 
-# 1. Define paths relative to the script location
-SCRIPT_DIR: Final[Path] = Path(__file__).parent.resolve()
 
-# 2. Input file (the full data with wide columns)
 WIDE_DATA_PARQUET_FILENAME: Final[str] = "parsed_race_data_full.parquet"
-WIDE_DATA_FILE_PATH: Final[Path] = SCRIPT_DIR / WIDE_DATA_PARQUET_FILENAME
+WIDE_DATA_FILE_PATH: Final[Path] = PROCESSED_DATA_DIR_CURRENT_INFO / WIDE_DATA_PARQUET_FILENAME
 
-# 3. Output file for the static/current race data
 CURRENT_INFO_FILENAME: Final[str] = "current_race_info.parquet"
-CURRENT_INFO_FILE_PATH: Final[Path] = SCRIPT_DIR / CURRENT_INFO_FILENAME
+CURRENT_INFO_FILE_PATH: Final[Path] = PROCESSED_DATA_DIR_CURRENT_INFO / CURRENT_INFO_FILENAME
 
-# 4. Define the EXACT list of columns to drop
-#    (Copied directly from the user-provided list)
+# COLUMNS_TO_DROP and record_groups are defined as before...
 COLUMNS_TO_DROP: Final[List[str]] = [
     # Workout Columns
     'time_of_workout_1', '2_negative_time_if_a', '3_bullet_work', '4_ie_34_80_means',
@@ -61,7 +62,7 @@ COLUMNS_TO_DROP: Final[List[str]] = [
     'of_days_since_previous_race_1', 'of_days_since_previous_race_2', 'of_days_since_previous_race_3',
     'of_days_since_previous_race_4', 'of_days_since_previous_race_5', 'of_days_since_previous_race_6',
     'of_days_since_previous_race_7', 'of_days_since_previous_race_8', 'of_days_since_previous_race_9',
-    # 'reserved_days_since_prev_race_for_10th_race_back_might_not_be_available', # Field 275 - Often reserved, check if actually present
+    # 'reserved_days_since_prev_race_for_10th_race_back_might_not_be_available',
     'track_code_1', 'track_code_2', 'track_code_3', 'track_code_4', 'track_code_5', 'track_code_6',
     'track_code_7', 'track_code_8', 'track_code_9', 'track_code_10', 'bris_track_code_1',
     'bris_track_code_2', 'bris_track_code_3', 'bris_track_code_4', 'bris_track_code_5',
@@ -309,12 +310,8 @@ COLUMNS_TO_DROP: Final[List[str]] = [
     'equibase_abbrev_race_conditions_character_17_17_9', 'equibase_abbrev_race_conditions_character_17_17_10',
     'blank_fields_reserved_for_possible_future_expansion_1', 'blank_fields_reserved_for_possible_future_expansion_2',
     'blank_fields_reserved_for_possible_future_expansion_3'
-    # Add any other workout/pp columns here if missed
 ]
 
-# --- record_groups mapping for record-based metrics ---
-# each key is your record name; each value is a 5-tuple:
-#   (starts_col, wins_col, place_col, show_col, earnings_col)
 record_groups = {
     "distance":     ("starts_pos_65", "wins_pos_66", "places_pos_67", "shows_pos_68", "earnings_pos_69"),
     "track":        ("starts_pos_70", "wins_pos_71", "places_pos_72", "shows_pos_73", "earnings_pos_74"),
@@ -325,37 +322,37 @@ record_groups = {
     "lifetime":     ("starts_pos_97", "wins_pos_98", "places_pos_99", "shows_pos_100", "earnings_pos_101"),
 }
 
-# --- End Configuration ---
-
-# --- Main Execution ---
-if __name__ == "__main__":
-    print(f"--- Creating Current Race Info File ({pd.Timestamp.now(tz='America/New_York').strftime('%Y-%m-%d %H:%M:%S %Z')}) ---")
+# --- Main Function (New) ---
+def main():
+    """
+    Main function to process current race info.
+    This function will be called by run_pipeline.py.
+    """
+    logger = logging.getLogger(__name__) # Get logger instance
+    logger.info(f"--- Creating Current Race Info File ({pd.Timestamp.now(tz='America/New_York').strftime('%Y-%m-%d %H:%M:%S %Z')}) ---")
 
     # 1. Load the full wide-format data
     if not WIDE_DATA_FILE_PATH.exists():
-        print(f"Error: Input Parquet file not found at {WIDE_DATA_FILE_PATH}")
-        exit()
+        logger.error(f"Error: Input Parquet file not found at {WIDE_DATA_FILE_PATH}")
+        # Consider raising an error or returning a status
+        return
     try:
-        print(f"Loading wide format data from: {WIDE_DATA_FILE_PATH}")
+        logger.info(f"Loading wide format data from: {WIDE_DATA_FILE_PATH}")
         wide_df = pd.read_parquet(WIDE_DATA_FILE_PATH, engine='pyarrow')
-        print(f"Loaded wide data with shape: {wide_df.shape}")
+        logger.info(f"Loaded wide data with shape: {wide_df.shape}")
         original_cols = wide_df.columns.tolist()
     except Exception as e:
-        print(f"Error loading Parquet file {WIDE_DATA_FILE_PATH}: {e}")
-        exit()
+        logger.error(f"Error loading Parquet file {WIDE_DATA_FILE_PATH}: {e}", exc_info=True)
+        return
 
     # 2. Identify columns that actually exist in the DataFrame and are in the drop list
     cols_to_actually_drop = [col for col in COLUMNS_TO_DROP if col in original_cols]
     if len(cols_to_actually_drop) < len(COLUMNS_TO_DROP):
          missing_from_df = [col for col in COLUMNS_TO_DROP if col not in original_cols]
-         print(f"\nWarning: {len(missing_from_df)} columns listed in COLUMNS_TO_DROP were not found in the DataFrame.")
-         # Optionally print the missing ones if the list isn't too long
-         # if len(missing_from_df) < 20:
-         #    print(f"  Missing columns: {missing_from_df}")
+         logger.warning(f"\nWarning: {len(missing_from_df)} columns listed in COLUMNS_TO_DROP were not found in the DataFrame.")
 
     # 3. Drop the identified columns
-    print(f"\nDropping {len(cols_to_actually_drop)} wide workout/past performance columns...")
-    # Use errors='ignore' just in case, though we pre-filtered
+    logger.info(f"\nDropping {len(cols_to_actually_drop)} wide workout/past performance columns...")
     current_info_df = wide_df.drop(columns=cols_to_actually_drop, errors='ignore')
 
     # --- Defensive numeric conversion for record columns ---
@@ -367,35 +364,44 @@ if __name__ == "__main__":
         if col in current_info_df.columns:
             current_info_df[col] = pd.to_numeric(current_info_df[col], errors='coerce')
         else:
-            print(f"Warning: Column {col} for record calculation not found in DataFrame.")
+            logger.warning(f"Warning: Column {col} for record calculation not found in DataFrame.")
 
     # --- Build list of metric names ---
     record_group_names = [
         "distance", "track", "turf", "wet",
         "current_year", "previous_year", "lifetime"
     ]
-    metrics = []
-    for name in record_group_names:
-        metrics += [
-            f"{name}_win_pct",
-            f"{name}_itm_pct",
-            f"{name}_earnings_per_start"
-        ]
+    # metrics = [] # This variable is defined but not used later in this block
+    for name_rg in record_group_names: # Renamed 'name' to 'name_rg' to avoid conflict
+        # Check if all necessary columns for the current record group exist
+        group_cols_exist = True
+        if name_rg in record_groups:
+            for col_check in record_groups[name_rg]:
+                if col_check not in current_info_df.columns:
+                    logger.warning(f"Missing column '{col_check}' for record group '{name_rg}'. Skipping this group.")
+                    group_cols_exist = False
+                    break
+        else:
+            logger.warning(f"Record group '{name_rg}' not defined in record_groups. Skipping.")
+            group_cols_exist = False
 
-    for name, (col_start, col_win, col_place, col_show, col_earn) in record_groups.items():
-        starts = current_info_df[col_start].replace({0: np.nan})
-        wins   = current_info_df[col_win]
-        itm    = current_info_df[col_place] + current_info_df[col_show]
-        earnings = current_info_df[col_earn]
+        if group_cols_exist:
+            col_start, col_win, col_place, col_show, col_earn = record_groups[name_rg]
+            starts = current_info_df[col_start].replace({0: np.nan})
+            wins   = current_info_df[col_win]
+            # Assuming 'itm' was intended to be wins + place + show based on typical racing stats for "in the money"
+            # Original code had: itm = current_info_df[col_place] + current_info_df[col_show]
+            # Let's assume ITM = Win, Place, Show counts
+            itm    = current_info_df[col_win] + current_info_df[col_place] + current_info_df[col_show]
+            earnings = current_info_df[col_earn]
 
-        current_info_df[f"{name}_win_pct"]            = wins   / starts
-        current_info_df[f"{name}_itm_pct"]            = itm    / starts
-        current_info_df[f"{name}_earnings_per_start"] = earnings / starts
+            current_info_df[f"{name_rg}_win_pct"] = wins / starts
+            current_info_df[f"{name_rg}_itm_pct"] = itm  / starts # ITM = In The Money (1st, 2nd, or 3rd)
+            current_info_df[f"{name_rg}_earnings_per_start"] = earnings / starts
 
-
-    print(f"DataFrame shape after dropping columns: {current_info_df.shape}")
+    logger.info(f"DataFrame shape after dropping columns: {current_info_df.shape}")
     dropped_count = len(original_cols) - len(current_info_df.columns)
-    print(f"Number of columns actually dropped: {dropped_count}")
+    logger.info(f"Number of columns actually dropped: {dropped_count}")
 
     #4a. Add a furlongs column
     if 'distance_in_yards' in current_info_df.columns:
@@ -403,24 +409,34 @@ if __name__ == "__main__":
             current_info_df['distance_in_yards'], errors='coerce'
         )
     else:
-        print("Warning: 'distance_in_yards' not found; cannot calculate furlongs.")
-        current_info_df['distance_in_yards'] = np.nan
+        logger.warning("Warning: 'distance_in_yards' not found; cannot calculate furlongs.")
+        current_info_df['distance_in_yards'] = np.nan # Create the column to avoid error in next line
 
     current_info_df['furlongs'] = current_info_df['distance_in_yards'] / 220
 
-
-
     # 4b. Save the resulting DataFrame
-    print(f"\nSaving current race info data to: {CURRENT_INFO_FILE_PATH}")
+    logger.info(f"\nSaving current race info data to: {CURRENT_INFO_FILE_PATH}")
     try:
+        CURRENT_INFO_FILE_PATH.parent.mkdir(parents=True, exist_ok=True) # Ensure directory exists
         current_info_df.to_parquet(CURRENT_INFO_FILE_PATH, index=False, engine='pyarrow')
-        print("Save complete.")
-        print("\nOutput DataFrame Info:")
-        current_info_df.info(verbose=False, show_counts=True)
+        logger.info("Save complete.")
+        logger.info("\nOutput DataFrame Info:")
+        # current_info_df.info(verbose=False, show_counts=True) # .info() prints to stdout
     except ImportError:
-        print("\nError: 'pyarrow' library not found. Cannot save to Parquet.")
-        print("Please install it: pip install pyarrow")
+        logger.error("\nError: 'pyarrow' library not found. Cannot save to Parquet.")
+        logger.error("Please install it: pip install pyarrow")
     except Exception as e:
-        print(f"\nError saving final data to Parquet file {CURRENT_INFO_FILE_PATH}: {e}")
+        logger.error(f"\nError saving final data to Parquet file {CURRENT_INFO_FILE_PATH}: {e}", exc_info=True)
 
-    print(f"\n--- Script Finished ({pd.Timestamp.now(tz='America/New_York').strftime('%Y-%m-%d %H:%M:%S %Z')}) ---")
+    logger.info(f"\n--- Script Finished ({pd.Timestamp.now(tz='America/New_York').strftime('%Y-%m-%d %H:%M:%S %Z')}) ---")
+
+# --- Main Execution (for direct script run) ---
+if __name__ == "__main__":
+    # Setup basic logging if this script is run directly
+    if not logging.getLogger().hasHandlers():
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            handlers=[logging.StreamHandler(sys.stdout)] # Use sys for direct runs
+        )
+    main()
