@@ -17,6 +17,8 @@ Outputs:
 from __future__ import annotations
 
 import pandas as pd
+import logging
+import sys
 from pathlib import Path
 from typing import List, Dict, Tuple, Any, Final, Optional, Set
 import numpy as np # For potential numeric cleaning
@@ -515,7 +517,7 @@ def calculate_avg_best2_recent(df: pd.DataFrame,
 def add_class_and_odds_metrics(df: pd.DataFrame) -> pd.DataFrame:
     """
     Add average purse size and betting odds for the most-recent
-    5, 3, and 1 past starts of every horse on today’s card.
+    5, 3, and 1 past starts of every horse on today's card.
 
     Requires:
         • pp_race_date : datetime or yyyymmdd int
@@ -566,28 +568,33 @@ def add_class_and_odds_metrics(df: pd.DataFrame) -> pd.DataFrame:
 # ────────────────────────────────────────────────────────────────────────────
 
 
-
-# --- Main Execution ---
-if __name__ == "__main__":
-    print(f"--- Starting Past Performance Data Reshaping ({pd.Timestamp.now(tz='America/New_York').strftime('%Y-%m-%d %H:%M:%S %Z')}) ---")
+def main():
+    """
+    Main function to transform past performance data.
+    This function will be called by run_pipeline.py.
+    """
+    logger = logging.getLogger(__name__)
+    logger.info(f"--- Starting Past Performance Data Reshaping ({pd.Timestamp.now(tz='America/New_York').strftime('%Y-%m-%d %H:%M:%S %Z')}) ---")
 
     wide_df, spec_df = load_data(WIDE_DATA_FILE_PATH, SPEC_CACHE_FILE_PATH)
 
     if wide_df is None or spec_df is None:
-        print("Failed to load necessary data. Aborting.")
-        exit()
+        logger.error("Failed to load necessary data. Aborting.")
+        return
 
     # Verify ID variables exist
     actual_id_vars = [col for col in ID_VARIABLES if col in wide_df.columns]
     if len(actual_id_vars) != len(ID_VARIABLES):
         missing_ids = [col for col in ID_VARIABLES if col not in actual_id_vars]
-        print(f"Configuration Warning: ID_VARIABLES not found: {missing_ids}")
-        if not actual_id_vars: print("Error: No valid ID variables found. Aborting."); exit()
-    print(f"Using ID Variables: {actual_id_vars}")
+        logger.warning(f"Configuration Warning: ID_VARIABLES not found: {missing_ids}")
+        if not actual_id_vars: 
+            logger.error("Error: No valid ID variables found. Aborting.")
+            return
+    logger.info(f"Using ID Variables: {actual_id_vars}")
 
     # --- Reshaping using Iterative Melting ---
     all_past_races_melted: Dict[str, pd.DataFrame] = {}
-    print("\nReshaping past performance data using specification and pd.melt...")
+    logger.info("Reshaping past performance data using specification and pd.melt...")
 
     # Loop through each defined metric in the map
     for clean_name, base_field in PAST_RACE_METRIC_MAP.items():
@@ -606,7 +613,7 @@ if __name__ == "__main__":
             except KeyError: # Skip if field number not in spec cache (e.g., reserved Field 275)
                 pass
             except Exception as e:
-                print(f"Warning: Error looking up field {field_num}: {e}")
+                logger.warning(f"Warning: Error looking up field {field_num}: {e}")
 
         # Perform melt if we found columns for this metric
         if actual_cols_for_metric:
@@ -624,27 +631,22 @@ if __name__ == "__main__":
                 melted_metric_df.drop(columns=['_actual_col_name'], inplace=True)
                 melted_metric_df.dropna(subset=['past_race_num'], inplace=True)
 
-                # Optional: Drop rows where the metric value itself is null/blank here?
-                # Depends if you want to keep record of the past race even if this specific metric is missing.
-                # Example: melted_metric_df.dropna(subset=[clean_name], inplace=True)
-
                 # Store the result
                 all_past_races_melted[clean_name] = melted_metric_df
             except Exception as e:
-                 print(f"Error melting metric '{clean_name}': {e}")
-                 print(f"  Columns attempted: {actual_cols_for_metric}")
-
+                 logger.error(f"Error melting metric '{clean_name}': {e}")
+                 logger.error(f"  Columns attempted: {actual_cols_for_metric}")
 
     # --- Join Melted DataFrames ---
     long_past_starts_df: Optional[pd.DataFrame] = None
     if all_past_races_melted:
-        print(f"\nJoining {len(all_past_races_melted)} melted metric DataFrames...")
+        logger.info(f"Joining {len(all_past_races_melted)} melted metric DataFrames...")
         # Get the list of metric names successfully melted
         melted_keys = list(all_past_races_melted.keys())
         # Start with the first melted DataFrame
         base_metric = melted_keys[0]
         long_past_starts_df = all_past_races_melted[base_metric]
-        print(f"  Starting join with '{base_metric}' ({len(long_past_starts_df)} rows)")
+        logger.info(f"  Starting join with '{base_metric}' ({len(long_past_starts_df)} rows)")
 
         # Iteratively merge the rest
         join_keys = actual_id_vars + ['past_race_num']
@@ -654,7 +656,7 @@ if __name__ == "__main__":
             # Select only join keys and the metric value to avoid duplicate ID cols
             cols_to_select = join_keys + [metric_name]
             df_to_merge = df_to_merge[cols_to_select]
-            print(f"  Merging with '{metric_name}' ({len(df_to_merge)} rows)")
+            logger.info(f"  Merging with '{metric_name}' ({len(df_to_merge)} rows)")
             try:
                 long_past_starts_df = pd.merge(
                     long_past_starts_df,
@@ -662,13 +664,9 @@ if __name__ == "__main__":
                     on=join_keys,
                     how='outer' # Use outer join to keep all race records even if a metric is missing
                 )
-                print(f"  Shape after merge: {long_past_starts_df.shape}")
+                logger.info(f"  Shape after merge: {long_past_starts_df.shape}")
             except Exception as e:
-                 print(f"Error merging metric '{metric_name}': {e}")
-                 # Consider logging which columns were in each df before merge
-                 # print("Columns in base df:", long_past_starts_df.columns)
-                 # print("Columns in df_to_merge:", df_to_merge.columns)
-
+                 logger.error(f"Error merging metric '{metric_name}': {e}")
 
         if long_past_starts_df is not None:
             # Apply final cleaning and type conversion
@@ -680,9 +678,9 @@ if __name__ == "__main__":
                     long_past_starts_df['pp_distance']
                     .apply(label_dist)
                 )
-                print("  Added 'pp_distance_type' classification to past starts.")
+                logger.info("  Added 'pp_distance_type' classification to past starts.")
             else:
-                print("  Critical: 'pp_distance' missing—cannot create 'pp_distance_type'.")
+                logger.warning("  Critical: 'pp_distance' missing—cannot create 'pp_distance_type'.")
                 long_past_starts_df['pp_distance_type'] = np.nan
 
             # Calculate splits on the cleaned data
@@ -711,7 +709,7 @@ if __name__ == "__main__":
             ]
             long_past_starts_df = calculate_avg_best2_recent(long_past_starts_df, id_vars, metrics)
 
-            long_past_starts_df=add_class_and_odds_metrics(long_past_starts_df)
+            long_past_starts_df = add_class_and_odds_metrics(long_past_starts_df)
             
             long_past_starts_df = long_past_starts_df.copy()
 
@@ -727,25 +725,36 @@ if __name__ == "__main__":
                 on=['track', 'race', 'post_position', 'horse_name'],
                 how='left')
         else:
-             print("Join process resulted in an empty DataFrame.")
+             logger.warning("Join process resulted in an empty DataFrame.")
 
     else:
-        print("\nNo past performance metrics were successfully melted. Cannot proceed.")
-        exit()
+        logger.error("No past performance metrics were successfully melted. Cannot proceed.")
+        return
 
     # --- Save Results ---
     if long_past_starts_df is not None and not long_past_starts_df.empty:
-        print(f"\nSaving long format past performance data to: {LONG_PAST_STARTS_FILE_PATH}")
+        logger.info(f"Saving long format past performance data to: {LONG_PAST_STARTS_FILE_PATH}")
         try:
             long_past_starts_df.to_parquet(LONG_PAST_STARTS_FILE_PATH, index=False, engine='pyarrow')
-            print("Save complete.")
-            print("\nOutput DataFrame Info:")
+            logger.info("Save complete.")
+            logger.info("Output DataFrame Info:")
             long_past_starts_df.info(verbose=False, show_counts=True)
         except ImportError:
-            print("\nError: 'pyarrow' library not found.")
+            logger.error("Error: 'pyarrow' library not found.")
         except Exception as e:
-            print(f"\nError saving final data to Parquet file {LONG_PAST_STARTS_FILE_PATH}: {e}")
+            logger.error(f"Error saving final data to Parquet file {LONG_PAST_STARTS_FILE_PATH}: {e}")
     else:
-        print("\nNo valid past performance data remained after processing. Output file not saved.")
+        logger.warning("No valid past performance data remained after processing. Output file not saved.")
 
-    print(f"\n--- Past Performance Reshaping Script Finished ({pd.Timestamp.now(tz='America/New_York').strftime('%Y-%m-%d %H:%M:%S %Z')}) ---")
+    logger.info(f"--- Past Performance Reshaping Script Finished ({pd.Timestamp.now(tz='America/New_York').strftime('%Y-%m-%d %H:%M:%S %Z')}) ---")
+
+
+if __name__ == "__main__":
+    # Setup basic logging if this script is run directly
+    if not logging.getLogger().hasHandlers():
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            handlers=[logging.StreamHandler(sys.stdout)]
+        )
+    main()

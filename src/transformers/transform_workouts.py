@@ -18,6 +18,8 @@ Outputs:
 from __future__ import annotations
 
 import pandas as pd
+import logging
+import sys
 from pathlib import Path
 from typing import List, Dict, Tuple, Any, Final, Optional, Set
 import numpy as np # For potential numeric cleaning
@@ -154,34 +156,37 @@ def clean_workout_data(df: pd.DataFrame) -> pd.DataFrame:
         else:
              print("Warning: NaNs found in workout_num column before integer conversion.")
 
-
     print(f"Workout data cleaned. Shape after cleaning: {df.shape}")
     return df
 
 
-# --- Main Execution ---
-if __name__ == "__main__":
-    print(f"--- Starting Workout Data Reshaping ({pd.Timestamp.now(tz='America/New_York').strftime('%Y-%m-%d %H:%M:%S %Z')}) ---")
+def main():
+    """
+    Main function to transform workout data.
+    This function will be called by run_pipeline.py.
+    """
+    logger = logging.getLogger(__name__)
+    logger.info(f"--- Starting Workout Data Reshaping ({pd.Timestamp.now(tz='America/New_York').strftime('%Y-%m-%d %H:%M:%S %Z')}) ---")
 
     wide_df, spec_df = load_data(WIDE_DATA_FILE_PATH, SPEC_CACHE_FILE_PATH)
 
     if wide_df is None or spec_df is None:
-        print("Failed to load necessary data. Aborting.")
-        exit()
+        logger.error("Failed to load necessary data. Aborting.")
+        return
 
     # Verify ID variables exist in the loaded wide_df
     actual_id_vars = [col for col in ID_VARIABLES if col in wide_df.columns]
     if len(actual_id_vars) != len(ID_VARIABLES):
         missing_ids = [col for col in ID_VARIABLES if col not in actual_id_vars]
-        print(f"Configuration Warning: The following specified ID_VARIABLES were not found in {WIDE_DATA_PARQUET_FILENAME}: {missing_ids}")
+        logger.warning(f"Configuration Warning: The following specified ID_VARIABLES were not found in {WIDE_DATA_PARQUET_FILENAME}: {missing_ids}")
         if not actual_id_vars:
-            print("Error: No valid ID variables found to identify rows. Aborting.")
-            exit()
-    print(f"Using ID Variables: {actual_id_vars}")
+            logger.error("Error: No valid ID variables found to identify rows. Aborting.")
+            return
+    logger.info(f"Using ID Variables: {actual_id_vars}")
 
     # --- Reshaping Loop ---
     all_workouts_long: List[pd.DataFrame] = []
-    print("\nReshaping workout data using specification (Field# -> Actual Column Label)...")
+    logger.info("Reshaping workout data using specification (Field# -> Actual Column Label)...")
 
     # Loop through potential workouts 1 to 12
     for i in range(12):
@@ -211,7 +216,7 @@ if __name__ == "__main__":
                 pass
             except Exception as e:
                 # Catch other potential lookup errors
-                print(f"Warning: Error looking up field {field_num} label in spec_df: {e}")
+                logger.warning(f"Warning: Error looking up field {field_num} label in spec_df: {e}")
 
         # --- Process data if columns were found for this workout number ---
         if actual_cols_to_select_for_this_num:
@@ -240,30 +245,41 @@ if __name__ == "__main__":
 
     # --- Concatenate and Finalize ---
     if all_workouts_long:
-        print("\nConcatenating data for all workouts...")
+        logger.info("Concatenating data for all workouts...")
         long_workouts_df = pd.concat(all_workouts_long, ignore_index=True, sort=False)
-        print(f"Raw concatenated workout data shape: {long_workouts_df.shape}")
+        logger.info(f"Raw concatenated workout data shape: {long_workouts_df.shape}")
 
         # Apply cleaning and type conversion to the combined DataFrame
         long_workouts_df = clean_workout_data(long_workouts_df)
 
         # --- Save Results ---
         if not long_workouts_df.empty:
-            print(f"\nSaving long format workout data to: {LONG_WORKOUTS_FILE_PATH}")
+            logger.info(f"Saving long format workout data to: {LONG_WORKOUTS_FILE_PATH}")
             try:
                 long_workouts_df.to_parquet(LONG_WORKOUTS_FILE_PATH, index=False, engine='pyarrow')
-                print("Save complete.")
-                print("\nOutput DataFrame Info:")
+                logger.info("Save complete.")
+                logger.info("Output DataFrame Info:")
                 long_workouts_df.info(verbose=False, show_counts=True)
             except ImportError:
-                print("\nError: 'pyarrow' library not found. Cannot save to Parquet.")
-                print("Please install it: pip install pyarrow")
+                logger.error("Error: 'pyarrow' library not found. Cannot save to Parquet.")
+                logger.error("Please install it: pip install pyarrow")
             except Exception as e:
-                print(f"\nError saving final data to Parquet file {LONG_WORKOUTS_FILE_PATH}: {e}")
+                logger.error(f"Error saving final data to Parquet file {LONG_WORKOUTS_FILE_PATH}: {e}")
         else:
-            print("\nNo valid workout data remained after cleaning. Output file not saved.")
+            logger.warning("No valid workout data remained after cleaning. Output file not saved.")
 
     else:
-        print("\nNo workout data columns found or processed based on spec. No output file created.")
+        logger.warning("No workout data columns found or processed based on spec. No output file created.")
 
-    print(f"\n--- Workout Reshaping Script Finished ({pd.Timestamp.now(tz='America/New_York').strftime('%Y-%m-%d %H:%M:%S %Z')}) ---")
+    logger.info(f"--- Workout Reshaping Script Finished ({pd.Timestamp.now(tz='America/New_York').strftime('%Y-%m-%d %H:%M:%S %Z')}) ---")
+
+
+if __name__ == "__main__":
+    # Setup basic logging if this script is run directly
+    if not logging.getLogger().hasHandlers():
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+            handlers=[logging.StreamHandler(sys.stdout)]
+        )
+    main()
