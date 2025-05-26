@@ -12,6 +12,19 @@ import logging
 from datetime import datetime
 import pickle
 
+from sklearn.feature_selection import SelectKBest, mutual_info_classif
+from sklearn.preprocessing import LabelEncoder, RobustScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GroupKFold
+from sklearn.metrics import roc_auc_score, log_loss, brier_score_loss
+from scipy import stats
+
+# Dummy class for holding preprocessing info (pickle can serialize this!)
+class PreprocessingHolder:
+    pass
+
+
 def preprocess_features(self, X: pd.DataFrame, model_name: str, 
                           preprocessing_info: Dict = None, fit: bool = False) -> Tuple[Any, Dict]:
     """Centralized preprocessing to ensure consistency between train and test."""
@@ -294,9 +307,13 @@ class IntegratedHorseRacingModel:
                     X_processed[col] = X_processed[col].fillna('unknown')
                     
                     if fit:
-                        # Fit encoder
+                        # Always ensure 'unknown' is in the data before fitting
+                        fit_values = X_processed[col].tolist()
+                        if 'unknown' not in fit_values:
+                            fit_values.append('unknown')
                         le = LabelEncoder()
-                        X_processed[col] = le.fit_transform(X_processed[col])
+                        le.fit(fit_values)
+                        X_processed[col] = le.transform(X_processed[col])
                         preprocessing_info['encoders'][col] = le
                     else:
                         # Transform using existing encoder
@@ -459,10 +476,7 @@ class IntegratedHorseRacingModel:
         
         # Store all preprocessing info
         if scaler is None:
-            # Create a dummy object to store preprocessing info
-            class PreprocessingHolder:
-                pass
-            scaler = PreprocessingHolder()
+           scaler = PreprocessingHolder()
         
         scaler._preprocessing = preprocessing_info
         scaler._original_features = original_features
