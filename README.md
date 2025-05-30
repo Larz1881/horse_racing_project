@@ -29,6 +29,38 @@ This project provides a complete pipeline for processing Brisnet horse racing da
 * **Pace Ridgeline Plots:** Distribution visualizations for pace analysis
 * **Performance Clustering:** ML-based horse performance grouping
 
+**Advanced Fitness Metrics**
+* **Recovery Rate Index:** Analyzes optimal days between races and current recovery status
+* **Form Momentum Score:** Weights recent performances with exponential decay
+* **Cardiovascular Fitness Proxy:** Uses pace sustainability and deceleration rates
+* **Sectional Improvement Index:** Tracks improvement in 2f sectional times
+* **Energy Distribution Profile:** Analyzes how horses distribute effort throughout races
+
+**Workout Analysis**
+* **Trainer Pattern Recognition:**
+  * Identifies winning workout patterns by trainer
+  * Tracks bullet work timing before wins
+  * Analyzes optimal workout frequency for success
+  * Categorizes patterns (maintenance, sharpening, building)
+
+* **Workout Quality Scoring:**
+  * Evaluates workout times relative to track standards
+  * Scores bullet work frequency
+  * Assesses workout spacing and consistency
+  * Includes gate work and distance variety factors
+
+* **Work-to-Race Translation:**
+  * Correlates workout patterns with race success
+  * Analyzes optimal days from last work
+  * Tracks workout intensity impact on performance
+  * Provides success rate statistics for different patterns
+
+* **Trainer Intent Signals:**
+  * Detects frequency changes (targeting vs maintenance)
+  * Identifies distance progression patterns
+  * Tracks equipment/surface experimentation
+  * Provides confidence scores for intent detection
+
 📁 ## Project Structure
 
 horse_racing_project/
@@ -44,6 +76,10 @@ horse_racing_project/
 ├── data/
 │   ├── raw/                   # Original DRF files and bris_dict.txt
 │   ├── processed/             # Processed parquet files
+│   │   ├── sophisticated_workout_analysis.parquet  # Main workout analysis
+│   │   ├── trainer_workout_patterns.csv           # Trainer-specific patterns
+│   │   ├── workout_race_translation.csv           # Statistical correlations
+│   │   └── workout_analysis_summary.csv           # Quick reference summary
 │   └── cache/                 # Temporary cache files
 │
 ├── src/

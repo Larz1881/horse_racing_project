@@ -130,6 +130,14 @@ def run_complete_pipeline():
         engineer_features_main()
         logger.info("--- Step 5: Engineering features completed ---")
 
+        logger.info("Running advanced fitness metrics...")
+        from src.transformers.advanced_fitness_metrics import main as run_fitness_metrics
+        run_fitness_metrics()
+
+        logger.info("Running sophisticated workout analysis...")
+        from src.transformers.sophisticated_workout_analysis import main as run_workout_analysis
+        run_workout_analysis()
+
         logger.info("=== Pipeline completed successfully! ===")
 
     except FileNotFoundError as fnf_error:
