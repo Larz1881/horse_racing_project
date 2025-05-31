@@ -320,27 +320,6 @@ horse_racing_project/
 * Windows 10/11 (tested on Windows, should work on Mac/Linux)
 * 4GB+ RAM recommended
 * 1GB+ free disk space
-* GPU recommended for ML model training (not required for inference)
-* Modern web browser for dashboard (Chrome/Firefox/Edge recommended)
-
-**Data Dependencies**
-* Brisnet DRF files (.DRF extension)
-* Brisnet dictionary file (bris_dict.txt)
-* Historical race data for ML model training
-* Workout data for pattern analysis
-* Pedigree information for class assessment
-
-**System Requirements**
-* Minimum 8GB RAM for full analysis pipeline
-* 2GB+ free disk space for processed data
-* Stable internet connection for dashboard updates
-* Modern web browser with JavaScript enabled
-* Python packages (see requirements.txt):
-  * pandas, numpy for data processing
-  * scikit-learn for ML models
-  * plotly, dash for visualization
-  * torch for deep learning components
-  * spacy for NLP features
 
 **Setup Steps**
 1.  **Clone or download the project**
@@ -514,45 +493,21 @@ Common Issues
 "No DRF files found"
 Ensure your DRF file is in data/raw/
 Check file extension is .DRF (uppercase)
-
 "Module not found" errors
 Make sure you're in the project root directory
 Activate your virtual environment
 Reinstall requirements: pip install -r requirements.txt
-
 Memory errors with large files
 Close other applications
-Process races individually if needed
+Process races individually if needed (if your scripts support this)
 Consider upgrading RAM for files over 10MB
-
 Dash app won't start
 Check if port 8050 is already in use
-Try: python dashboards/app.py --port 8051
+Try: python dashboards/app_dash.py --port 8051 (if your Dash app is set up to accept port arguments)
+Logging
+The pipeline creates timestamped log files (based on your run_pipeline.py setup):
 
-ML Model Issues
-"Model not found" errors
-Ensure models/ directory exists
-Run model training pipeline if needed
-Check model version compatibility
-
-Dashboard Performance
-Slow loading times
-Clear browser cache
-Reduce number of concurrent analyses
-Check system resources
-
-Data Processing Errors
-Missing columns in DRF file
-Verify DRF file format matches expected schema
-Check bris_dict.txt is up to date
-Contact Brisnet support if format changed
-
-Visualization Issues
-Charts not displaying
-Enable JavaScript in browser
-Check browser console for errors
-Update plotly/dash packages
-
+pipeline_YYYYMMDD_HHMMSS.log Check these for detailed error messages.
 🚧 ## Future Enhancements
 
 [ ] Advanced NLP for trip notes using transformer models
@@ -562,14 +517,6 @@ Update plotly/dash packages
 [ ] Mobile-responsive dashboard design
 [ ] Export functionality for third-party handicapping software
 [ ] Historical performance tracking database
-[ ] Automated model retraining pipeline
-[ ] Additional visualization options
-[ ] Custom metric builder
-[ ] API integration for external data sources
-[ ] Batch processing for multiple race cards
-[ ] Advanced filtering and sorting options
-[ ] User preference saving
-[ ] Automated report generation
 
 🤝 ## Contributing
 While this is a personal project, improvements are welcome:

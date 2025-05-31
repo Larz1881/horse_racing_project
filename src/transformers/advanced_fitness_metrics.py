@@ -307,10 +307,10 @@ class AdvancedFitnessMetrics:
                     })
             
             if cardio_metrics:
-                # Average metrics
-                avg_sustainability = np.nanmean([m['pace_sustainability'] for m in cardio_metrics])
-                avg_deceleration = np.nanmean([m['final_deceleration'] for m in cardio_metrics])
-                avg_stretch_eff = np.nanmean([m['stretch_efficiency'] for m in cardio_metrics])
+                # Average metrics - convert None to np.nan for proper handling
+                avg_sustainability = np.nanmean([m['pace_sustainability'] if m['pace_sustainability'] is not None else np.nan for m in cardio_metrics])
+                avg_deceleration = np.nanmean([m['final_deceleration'] if m['final_deceleration'] is not None else np.nan for m in cardio_metrics])
+                avg_stretch_eff = np.nanmean([m['stretch_efficiency'] if m['stretch_efficiency'] is not None else np.nan for m in cardio_metrics])
                 
                 # Fitness score (0-100, higher is better)
                 fitness_score = 50  # Base score
