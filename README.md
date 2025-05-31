@@ -61,6 +61,150 @@ This project provides a complete pipeline for processing Brisnet horse racing da
   * Tracks equipment/surface experimentation
   * Provides confidence scores for intent detection
 
+**Advanced Pace Projections**
+* **Multi-Factor Pace Model:**
+  * Combines BRIS run style with Quirin speed points
+  * Incorporates historical pace figures (E1, E2, Late)
+  * Adjusts for post position impact
+  * Factors in recent form trends
+  * Projects positions at each call with confidence levels
+
+* **Dynamic Pace Pressure Calculator:**
+  * Counts early speed horses and calculates pressure
+  * Analyzes speed point distribution
+  * Identifies pace setters, pressers, and closers
+  * Classifies scenarios: Hot, Contested, Honest, Slow, Lone Speed
+  * Projects likely fractional times
+
+* **Energy Cost Modeling:**
+  * Models energy expenditure by race phase
+  * Calculates sustainability based on pace differentials
+  * Assesses fade risk with specific fade points
+  * Evaluates energy efficiency for running style
+  * Identifies horses with optimal energy distribution
+
+* **Pace Shape Classification:**
+  * Categorizes races (Fast-Fast-Collapse, Wire-to-Wire, etc.)
+  * Matches horses to pace shapes
+  * Recommends betting strategies
+  * Identifies likely beneficiaries
+
+**Multi-Dimensional Class Assessment**
+* **Earnings-Based Class Metrics:**
+  * Earnings per start analysis (lifetime, current year, by surface)
+  * Earnings velocity (improvement rate)
+  * Percentile rankings within population
+  * Consistency scoring (ITM% × earnings level)
+  * Purse trend analysis
+
+* **Race Classification Hierarchy:**
+  * Proper hierarchy from Maiden Claiming to Grade 1
+  * Dynamic class level calculation with purse adjustments
+  * Class movement tracking (up/down/lateral)
+  * Success pattern analysis at different levels
+  * Class suitability scoring
+
+* **Hidden Class Indicators:**
+  * Sire stud fee analysis (log scale)
+  * Auction price with depreciation modeling
+  * BRIS pedigree ratings parsing
+  * Quality of competition faced
+  * Trainer/stable quality indicators
+
+* **Competitive Level Index:**
+  * Field quality assessment
+  * Quality of horses beaten
+  * Speed figures vs field average
+  * Consistency against quality competition
+  * Margin analysis (dominance indicators)
+
+**Form Cycle Detection**
+* **Beaten Lengths Trajectory Analysis:**
+  * Converts beaten lengths to time using distance-specific factors
+  * Tracks improvement trends with statistical significance
+  * Identifies unlucky performances through trip comments
+  * Calculates ground gained/lost metrics
+
+* **Position Call Analytics:**
+  * Early position vs finish correlation analysis
+  * Optimal position curves by distance (sprint vs route)
+  * Late position gain patterns and consistency
+  * Traffic trouble indicators (wide trips, position losses)
+
+* **Form Cycle Pattern Recognition:**
+  * Bounce Detection: Identifies horses at risk after career-best efforts
+  * Recovery Patterns: Tracks ability to rebound from poor races
+  * Freshening Analysis: Success rates off layoffs
+  * Peak Performance Prediction: Estimates races until peak form
+
+* **Fractional Time Evolution:**
+  * Tracks improvement in each race fraction
+  * Pace sustainability analysis (early vs late splits)
+  * Final time progression curves
+  * Efficiency gain calculations
+
+* **Field Size Adjusted Performance:**
+  * Normalizes for horses beaten percentage
+  * Adjusts for field quality (race type, purse, field size)
+  * Performance vs expectations analysis
+  * Consistency across different field sizes
+
+**Form Cycle States:**
+* **IMPROVING:** Clear upward trajectory
+* **PEAKING:** At or near career best form
+* **BOUNCING:** Risk of regression after peak
+* **RECOVERING:** Rebounding from poor effort
+* **DECLINING:** Downward trajectory
+* **FRESHENING:** Returning from layoff
+* **STABLE:** Consistent performer
+* **ERRATIC:** Inconsistent pattern
+
+**Integrated Analytics System**
+* **Composite Fitness Score:**
+  * Weights all component scores (fitness, workout, pace, class, form)
+  * Time-to-peak predictions based on form state and momentum
+  * Flags horses entering optimal form
+  * Confidence scoring based on data completeness
+
+* **Class-Adjusted Speed Figures:**
+  * Adjusts raw speed figures by class level
+  * Creates pound-for-pound ratings (performance relative to class)
+  * Projects class movement success
+  * Identifies horses that should handle class changes
+
+* **Pace Impact Predictions:**
+  * Individual advantages based on pace scenario
+  * Energy reserve considerations
+  * Race flow positioning
+  * Tactical advantage assessment
+
+* **Machine Learning Enhancements:**
+  * Form Cycle Classifier: Predicts form states using RandomForest
+  * Workout Clustering: Groups horses by training patterns
+  * Class Trajectory Model: Predicts success in class moves
+  * Pace Optimizer: Learns optimal positioning strategies
+  * Performance Predictor: Integrated model for overall predictions
+
+**Key Integrated Metrics:**
+* **Final Rating:** Composite score combining all factors
+* **Overall Rank:** Position within race
+* **Key Angles:** Specific betting angles identified
+* **Prediction Confidence:** Reliability of the assessment
+
+**Key Class Metrics:**
+* **Overall Class Rating:** 0-100 composite score combining all factors
+* **Class Categories:** Low/Claiming/Allowance/Stakes/Elite
+* **Class Edge:** Specific advantages (drop, hidden quality, proven, rising star)
+* **Hidden Class Score:** Based on breeding, auction, pedigree
+* **Competitive Level Index:** Quality of competition faced
+
+**Key Pace Metrics:**
+* **Pace Pressure Score:** 0-200+ scale (50=slow, 100=normal, 150+=hot)
+* **Energy Reserve:** Remaining energy after projected effort (negative = likely to fade)
+* **Fade Risk:** High/Moderate/Low with specific fade points
+* **Energy Efficiency:** How well horse's energy use matches their running style
+* **Pace Advantage Score:** 0-100 composite score for pace scenario fit
+
 📁 ## Project Structure
 
 horse_racing_project/
@@ -79,7 +223,27 @@ horse_racing_project/
 │   │   ├── sophisticated_workout_analysis.parquet  # Main workout analysis
 │   │   ├── trainer_workout_patterns.csv           # Trainer-specific patterns
 │   │   ├── workout_race_translation.csv           # Statistical correlations
-│   │   └── workout_analysis_summary.csv           # Quick reference summary
+│   │   ├── workout_analysis_summary.csv           # Quick reference summary
+│   │   ├── advanced_pace_analysis.parquet         # Complete pace projections
+│   │   ├── pace_pressure_summary.csv              # Race-by-race scenarios
+│   │   ├── pace_shapes_summary.csv                # Pace shape classifications
+│   │   ├── pace_analysis_summary.csv              # Quick reference summary
+│   │   ├── multi_dimensional_class_assessment.parquet  # Complete class analysis
+│   │   ├── class_movements_summary.csv            # Class movement tracking
+│   │   ├── hidden_class_indicators.csv            # Hidden vs apparent class
+│   │   ├── class_assessment_summary.csv           # Quick reference summary
+│   │   ├── form_cycle_analysis.parquet            # Complete form cycle analysis
+│   │   ├── beaten_lengths_trajectory.csv          # Detailed trajectory analysis
+│   │   ├── form_cycle_patterns.csv                # Pattern detection results
+│   │   ├── form_cycle_summary.csv                 # Quick reference summary
+│   │   ├── integrated_analytics_report.parquet    # Complete integrated analysis
+│   │   └── integrated_summary.csv                 # Quick reference summary
+│   ├── models/                 # Saved ML models
+│   │   ├── form_cycle_classifier.pkl
+│   │   ├── workout_cluster_model.pkl
+│   │   ├── class_trajectory_model.pkl
+│   │   ├── pace_optimizer.pkl
+│   │   └── performance_predictor.pkl
 │   └── cache/                 # Temporary cache files
 │
 ├── src/

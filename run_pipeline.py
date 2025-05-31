@@ -138,6 +138,22 @@ def run_complete_pipeline():
         from src.transformers.sophisticated_workout_analysis import main as run_workout_analysis
         run_workout_analysis()
 
+        logger.info("Running advanced pace projection...")
+        from src.transformers.advanced_pace_projection import main as run_pace_analysis
+        run_pace_analysis()
+
+        logger.info("Running multi-dimensional class assessment...")
+        from src.transformers.multi_dimensional_class_assessment import main as run_class_assessment
+        run_class_assessment()
+
+        logger.info("Running form cycle detection...")
+        from src.transformers.form_cycle_detector import main as run_form_cycle
+        run_form_cycle()
+
+        logger.info("Running integrated analytics system...")
+        from src.transformers.integrated_analytics_system import main as run_integrated_analytics
+        run_integrated_analytics()
+
         logger.info("=== Pipeline completed successfully! ===")
 
     except FileNotFoundError as fnf_error:
