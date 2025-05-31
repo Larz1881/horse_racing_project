@@ -733,11 +733,19 @@ def main():
         'race', 'horse_name', 'post_position', 'today_s_trainer',
         'workout_readiness_score', 'workout_readiness_category',
         'workout_quality_score', 'trainer_intent_signals',
-        'bullet_timing', 'works_last_14d', 'pct_fast_works'
+        'bullet_timing', 'works_last_14d', 'pct_fast_works',
+        'workout_rank'
     ]
     
     available_cols = [col for col in summary_cols if col in workout_analysis.columns]
-    summary_df = workout_analysis[available_cols].sort_values(['race', 'workout_rank'])
+    
+    # Check if workout_rank is available for sorting
+    if 'workout_rank' in workout_analysis.columns:
+        summary_df = workout_analysis[available_cols].sort_values(['race', 'workout_rank'])
+    else:
+        # Fallback to sorting by workout_readiness_score if workout_rank doesn't exist
+        summary_df = workout_analysis[available_cols].sort_values(['race', 'workout_readiness_score'], ascending=[True, False])
+    
     summary_df.to_csv(summary_path, index=False)
     print(f"\nSaved workout summary to {summary_path}")
 
