@@ -1,0 +1,288 @@
+2025-05-30 21:11:58,122 - __main__ - INFO - Pipeline started. Project Root: C:\Users\nblza1\OneDrive - NBIM\Documents\Coding\horse_racing_project
+2025-05-30 21:11:58,122 - __main__ - INFO - Using settings: RAW_DATA_DIR=C:\Users\nblza1\OneDrive - NBIM\Documents\Coding\horse_racing_project\data\raw, PROCESSED_DATA_DIR=C:\Users\nblza1\OneDrive - NBIM\Documents\Coding\horse_racing_project\data\processed, CACHE_DIR=C:\Users\nblza1\OneDrive - NBIM\Documents\Coding\horse_racing_project\data\cache
+2025-05-30 21:11:58,122 - __main__ - INFO - === Starting Horse Racing Data Pipeline ===
+2025-05-30 21:11:58,122 - __main__ - INFO - Searching for DRF files in: C:\Users\nblza1\OneDrive - NBIM\Documents\Coding\horse_racing_project\data\raw with pattern: '*DRF'
+2025-05-30 21:11:58,122 - __main__ - INFO - Using DRF file: PIM0509.DRF
+2025-05-30 21:11:58,122 - __main__ - INFO - --- Step 1: Parsing DRF file (using src/parsers/bris_spec_new.py) ---
+2025-05-30 21:11:58,128 - src.parsers.bris_spec_new - INFO - --- bris_spec_new.main() starting ---
+2025-05-30 21:11:58,128 - src.parsers.bris_spec_new - INFO - Processing DRF file provided as argument: C:\Users\nblza1\OneDrive - NBIM\Documents\Coding\horse_racing_project\data\raw\PIM0509.DRF
+2025-05-30 21:11:58,128 - src.parsers.bris_spec_new - INFO - Loading specification cache from: C:\Users\nblza1\OneDrive - NBIM\Documents\Coding\horse_racing_project\data\cache\bris_spec.pkl
+2025-05-30 21:11:58,150 - src.parsers.bris_spec_new - INFO - Parsing field types from: C:\Users\nblza1\OneDrive - NBIM\Documents\Coding\horse_racing_project\data\raw\bris_dict.txt
+2025-05-30 21:11:58,181 - src.parsers.bris_spec_new - INFO - Parsed types for 190 fields from bris_dict.txt.
+2025-05-30 21:11:58,182 - src.parsers.bris_spec_new - INFO - 
+Attempting to parse PIM0509.DRF as comma-delimited...
+2025-05-30 21:11:58,183 - src.parsers.bris_spec_new - INFO - Excluding columns starting with 'reserved'. Using 1321 out of 1435 columns.
+2025-05-30 21:11:58,274 - src.parsers.bris_spec_new - INFO - Parsing successful. Read 92 lines from PIM0509.DRF.
+2025-05-30 21:11:58,275 - src.parsers.bris_spec_new - INFO - 
+Identifying column types using parsed bris_dict.txt info...
+2025-05-30 21:11:58,297 - src.parsers.bris_spec_new - INFO - Identified 123 numeric columns using spec.
+2025-05-30 21:11:58,298 - src.parsers.bris_spec_new - INFO - Identified 21 date columns using spec.
+2025-05-30 21:11:58,298 - src.parsers.bris_spec_new - INFO - 
+Attempting data type conversions...
+2025-05-30 21:11:58,299 - src.parsers.bris_spec_new - INFO - Converting 123 columns to numeric...
+2025-05-30 21:11:58,312 - src.parsers.bris_spec_new - INFO - Successfully converted 123 numeric columns.
+2025-05-30 21:11:58,312 - src.parsers.bris_spec_new - INFO - Converting 21 columns to datetime...
+2025-05-30 21:11:58,322 - src.parsers.bris_spec_new - INFO - Successfully converted 21 date columns.
+2025-05-30 21:11:58,330 - src.parsers.bris_spec_new - INFO - 
+Saving the processed data to Parquet file: C:\Users\nblza1\OneDrive - NBIM\Documents\Coding\horse_racing_project\data\processed\parsed_race_data_full.parquet
+2025-05-30 21:11:58,745 - src.parsers.bris_spec_new - INFO - 
+Successfully saved final data to: C:\Users\nblza1\OneDrive - NBIM\Documents\Coding\horse_racing_project\data\processed\parsed_race_data_full.parquet
+2025-05-30 21:11:58,746 - src.parsers.bris_spec_new - INFO - Final DataFrame shape: (92, 1332)
+2025-05-30 21:11:58,746 - src.parsers.bris_spec_new - INFO - Final DataFrame Info:
+2025-05-30 21:11:58,747 - src.parsers.bris_spec_new - INFO - --- bris_spec_new.main() finished ---
+2025-05-30 21:11:58,748 - __main__ - INFO - --- Step 1: Parsing DRF file completed ---
+2025-05-30 21:11:58,748 - __main__ - INFO - --- Step 2: Creating current race info ---
+2025-05-30 21:12:05,351 - src.transformers.current_race_info - INFO - --- Creating Current Race Info File (2025-05-30 21:12:05 EDT) ---
+2025-05-30 21:12:05,352 - src.transformers.current_race_info - INFO - Loading wide format data from: C:\Users\nblza1\OneDrive - NBIM\Documents\Coding\horse_racing_project\data\processed\parsed_race_data_full.parquet
+2025-05-30 21:12:06,082 - src.transformers.current_race_info - INFO - Loaded wide data with shape: (92, 1332)
+2025-05-30 21:12:06,084 - src.transformers.current_race_info - INFO - 
+Dropping 1018 wide workout/past performance columns...
+2025-05-30 21:12:06,105 - src.transformers.current_race_info - INFO - DataFrame shape after dropping columns: (92, 335)
+2025-05-30 21:12:06,105 - src.transformers.current_race_info - INFO - Number of columns actually dropped: 997
+2025-05-30 21:12:06,105 - src.transformers.current_race_info - INFO - 
+Saving current race info data to: C:\Users\nblza1\OneDrive - NBIM\Documents\Coding\horse_racing_project\data\processed\current_race_info.parquet
+2025-05-30 21:12:06,156 - src.transformers.current_race_info - INFO - Save complete.
+2025-05-30 21:12:06,156 - src.transformers.current_race_info - INFO - 
+Output DataFrame Info:
+2025-05-30 21:12:06,156 - src.transformers.current_race_info - INFO - 
+--- Script Finished (2025-05-30 21:12:06 EDT) ---
+2025-05-30 21:12:06,160 - __main__ - INFO - --- Step 2: Creating current race info completed ---
+2025-05-30 21:12:06,160 - __main__ - INFO - --- Step 3: Transforming workouts ---
+2025-05-30 21:12:06,160 - src.transformers.transform_workouts - INFO - --- Starting Workout Data Reshaping (2025-05-30 21:12:06 EDT) ---
+2025-05-30 21:12:06,256 - src.transformers.transform_workouts - INFO - Using ID Variables: ['track', 'race', 'post_position', 'horse_name']
+2025-05-30 21:12:06,256 - src.transformers.transform_workouts - INFO - Reshaping workout data using specification (Field# -> Actual Column Label)...
+2025-05-30 21:12:06,269 - src.transformers.transform_workouts - INFO - Concatenating data for all workouts...
+2025-05-30 21:12:06,270 - src.transformers.transform_workouts - INFO - Raw concatenated workout data shape: (1104, 14)
+2025-05-30 21:12:06,277 - src.transformers.transform_workouts - INFO - Saving long format workout data to: C:\Users\nblza1\OneDrive - NBIM\Documents\Coding\horse_racing_project\data\processed\workouts_long_format.parquet
+2025-05-30 21:12:06,281 - src.transformers.transform_workouts - INFO - Save complete.
+2025-05-30 21:12:06,281 - src.transformers.transform_workouts - INFO - Output DataFrame Info:
+2025-05-30 21:12:06,286 - src.transformers.transform_workouts - INFO - --- Workout Reshaping Script Finished (2025-05-30 21:12:06 EDT) ---
+2025-05-30 21:12:06,287 - __main__ - INFO - --- Step 3: Transforming workouts completed ---
+2025-05-30 21:12:06,288 - __main__ - INFO - --- Step 4: Transforming past starts ---
+2025-05-30 21:12:06,288 - src.transformers.transform_past_starts - INFO - --- Starting Past Performance Data Reshaping (2025-05-30 21:12:06 EDT) ---
+2025-05-30 21:12:06,374 - src.transformers.transform_past_starts - INFO - Using ID Variables: ['track', 'race', 'post_position', 'horse_name']
+2025-05-30 21:12:06,374 - src.transformers.transform_past_starts - INFO - Reshaping past performance data using specification and pd.melt...
+2025-05-30 21:12:06,626 - src.transformers.transform_past_starts - INFO - Joining 94 melted metric DataFrames...
+2025-05-30 21:12:06,626 - src.transformers.transform_past_starts - INFO -   Starting join with 'pp_race_date' (920 rows)
+2025-05-30 21:12:06,626 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_days_since_prev' (828 rows)
+2025-05-30 21:12:06,634 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 7)
+2025-05-30 21:12:06,634 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_track_code' (920 rows)
+2025-05-30 21:12:06,636 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 8)
+2025-05-30 21:12:06,637 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_track_code_bris' (920 rows)
+2025-05-30 21:12:06,639 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 9)
+2025-05-30 21:12:06,640 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_race_num' (920 rows)
+2025-05-30 21:12:06,642 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 10)
+2025-05-30 21:12:06,643 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_track_condition' (920 rows)
+2025-05-30 21:12:06,645 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 11)
+2025-05-30 21:12:06,645 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_distance' (920 rows)
+2025-05-30 21:12:06,647 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 12)
+2025-05-30 21:12:06,647 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_surface' (920 rows)
+2025-05-30 21:12:06,649 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 13)
+2025-05-30 21:12:06,650 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_chute_indicator' (920 rows)
+2025-05-30 21:12:06,652 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 14)
+2025-05-30 21:12:06,654 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_num_entrants' (920 rows)
+2025-05-30 21:12:06,655 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 15)
+2025-05-30 21:12:06,657 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_post_position' (920 rows)
+2025-05-30 21:12:06,658 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 16)
+2025-05-30 21:12:06,659 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_equipment' (920 rows)
+2025-05-30 21:12:06,661 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 17)
+2025-05-30 21:12:06,662 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_racename' (920 rows)
+2025-05-30 21:12:06,663 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 18)
+2025-05-30 21:12:06,663 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_medication' (920 rows)
+2025-05-30 21:12:06,663 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 19)
+2025-05-30 21:12:06,667 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_trip_comment' (920 rows)
+2025-05-30 21:12:06,668 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 20)
+2025-05-30 21:12:06,669 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_winner_name' (920 rows)
+2025-05-30 21:12:06,671 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 21)
+2025-05-30 21:12:06,673 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_second_name' (920 rows)
+2025-05-30 21:12:06,673 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 22)
+2025-05-30 21:12:06,673 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_third_name' (920 rows)
+2025-05-30 21:12:06,673 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 23)
+2025-05-30 21:12:06,673 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_winner_weight' (920 rows)
+2025-05-30 21:12:06,680 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 24)
+2025-05-30 21:12:06,681 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_second_weight' (920 rows)
+2025-05-30 21:12:06,683 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 25)
+2025-05-30 21:12:06,683 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_third_weight' (920 rows)
+2025-05-30 21:12:06,685 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 26)
+2025-05-30 21:12:06,686 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_winner_margin' (920 rows)
+2025-05-30 21:12:06,686 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 27)
+2025-05-30 21:12:06,686 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_second_margin' (920 rows)
+2025-05-30 21:12:06,691 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 28)
+2025-05-30 21:12:06,692 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_third_margin' (920 rows)
+2025-05-30 21:12:06,693 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 29)
+2025-05-30 21:12:06,694 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_extra_comment' (920 rows)
+2025-05-30 21:12:06,697 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 30)
+2025-05-30 21:12:06,697 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_weight_carried' (920 rows)
+2025-05-30 21:12:06,699 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 31)
+2025-05-30 21:12:06,700 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_odds' (920 rows)
+2025-05-30 21:12:06,702 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 32)
+2025-05-30 21:12:06,703 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_entry_indicator' (920 rows)
+2025-05-30 21:12:06,705 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 33)
+2025-05-30 21:12:06,706 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_race_classification' (920 rows)
+2025-05-30 21:12:06,707 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 34)
+2025-05-30 21:12:06,707 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_claiming_price' (920 rows)
+2025-05-30 21:12:06,707 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 35)
+2025-05-30 21:12:06,707 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_purse' (920 rows)
+2025-05-30 21:12:06,713 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 36)
+2025-05-30 21:12:06,714 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_start_call_pos' (920 rows)
+2025-05-30 21:12:06,717 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 37)
+2025-05-30 21:12:06,717 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_first_call_pos' (920 rows)
+2025-05-30 21:12:06,720 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 38)
+2025-05-30 21:12:06,720 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_second_call_pos' (920 rows)
+2025-05-30 21:12:06,722 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 39)
+2025-05-30 21:12:06,723 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_gate_call_pos' (920 rows)
+2025-05-30 21:12:06,725 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 40)
+2025-05-30 21:12:06,726 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_stretch_pos' (920 rows)
+2025-05-30 21:12:06,728 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 41)
+2025-05-30 21:12:06,728 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_finish_pos' (920 rows)
+2025-05-30 21:12:06,731 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 42)
+2025-05-30 21:12:06,731 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_money_pos' (920 rows)
+2025-05-30 21:12:06,733 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 43)
+2025-05-30 21:12:06,733 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_start_lengths_leader' (920 rows)
+2025-05-30 21:12:06,736 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 44)
+2025-05-30 21:12:06,736 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_start_lengths_behind' (920 rows)
+2025-05-30 21:12:06,739 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 45)
+2025-05-30 21:12:06,739 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_first_call_lengths_leader' (920 rows)
+2025-05-30 21:12:06,741 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 46)
+2025-05-30 21:12:06,742 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_first_call_lengths_behind' (920 rows)
+2025-05-30 21:12:06,745 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 47)
+2025-05-30 21:12:06,745 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_second_call_lengths_leader' (920 rows)
+2025-05-30 21:12:06,749 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 48)
+2025-05-30 21:12:06,749 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_second_call_lengths_behind' (920 rows)
+2025-05-30 21:12:06,751 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 49)
+2025-05-30 21:12:06,752 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_bris_shape_1st_call' (920 rows)
+2025-05-30 21:12:06,754 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 50)
+2025-05-30 21:12:06,755 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_stretch_lengths_leader' (920 rows)
+2025-05-30 21:12:06,757 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 51)
+2025-05-30 21:12:06,758 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_stretch_lengths_behind' (920 rows)
+2025-05-30 21:12:06,760 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 52)
+2025-05-30 21:12:06,761 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_finish_lengths_winner' (920 rows)
+2025-05-30 21:12:06,763 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 53)
+2025-05-30 21:12:06,764 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_finish_lengths_behind' (920 rows)
+2025-05-30 21:12:06,766 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 54)
+2025-05-30 21:12:06,767 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_bris_shape_2nd_call' (920 rows)
+2025-05-30 21:12:06,768 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 55)
+2025-05-30 21:12:06,770 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_bris_2f_pace' (920 rows)
+2025-05-30 21:12:06,772 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 56)
+2025-05-30 21:12:06,772 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_bris_4f_pace' (920 rows)
+2025-05-30 21:12:06,775 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 57)
+2025-05-30 21:12:06,775 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_bris_6f_pace' (920 rows)
+2025-05-30 21:12:06,779 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 58)
+2025-05-30 21:12:06,779 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_bris_8f_pace' (920 rows)
+2025-05-30 21:12:06,781 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 59)
+2025-05-30 21:12:06,782 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_bris_10f_pace' (920 rows)
+2025-05-30 21:12:06,784 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 60)
+2025-05-30 21:12:06,785 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_bris_late_pace' (920 rows)
+2025-05-30 21:12:06,787 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 61)
+2025-05-30 21:12:06,788 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_bris_speed_rating' (920 rows)
+2025-05-30 21:12:06,789 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 62)
+2025-05-30 21:12:06,791 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_speed_rating_alt' (920 rows)
+2025-05-30 21:12:06,793 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 63)
+2025-05-30 21:12:06,794 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_track_variant' (920 rows)
+2025-05-30 21:12:06,795 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 64)
+2025-05-30 21:12:06,797 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_frac_2f' (920 rows)
+2025-05-30 21:12:06,799 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 65)
+2025-05-30 21:12:06,800 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_frac_3f' (920 rows)
+2025-05-30 21:12:06,802 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 66)
+2025-05-30 21:12:06,803 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_frac_4f' (920 rows)
+2025-05-30 21:12:06,806 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 67)
+2025-05-30 21:12:06,806 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_frac_5f' (920 rows)
+2025-05-30 21:12:06,807 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 68)
+2025-05-30 21:12:06,807 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_frac_6f' (920 rows)
+2025-05-30 21:12:06,807 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 69)
+2025-05-30 21:12:06,807 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_frac_7f' (920 rows)
+2025-05-30 21:12:06,814 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 70)
+2025-05-30 21:12:06,814 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_frac_8f' (920 rows)
+2025-05-30 21:12:06,817 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 71)
+2025-05-30 21:12:06,818 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_frac_10f' (920 rows)
+2025-05-30 21:12:06,821 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 72)
+2025-05-30 21:12:06,821 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_frac_12f' (920 rows)
+2025-05-30 21:12:06,824 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 73)
+2025-05-30 21:12:06,824 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_frac_14f' (920 rows)
+2025-05-30 21:12:06,828 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 74)
+2025-05-30 21:12:06,829 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_frac_16f' (920 rows)
+2025-05-30 21:12:06,831 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 75)
+2025-05-30 21:12:06,831 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_fraction_1' (920 rows)
+2025-05-30 21:12:06,834 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 76)
+2025-05-30 21:12:06,834 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_fraction_2' (920 rows)
+2025-05-30 21:12:06,837 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 77)
+2025-05-30 21:12:06,837 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_fraction_3' (920 rows)
+2025-05-30 21:12:06,841 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 78)
+2025-05-30 21:12:06,841 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_final_time' (920 rows)
+2025-05-30 21:12:06,844 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 79)
+2025-05-30 21:12:06,844 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_claimed_code' (920 rows)
+2025-05-30 21:12:06,847 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 80)
+2025-05-30 21:12:06,847 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_trainer' (920 rows)
+2025-05-30 21:12:06,851 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 81)
+2025-05-30 21:12:06,851 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_jockey' (920 rows)
+2025-05-30 21:12:06,855 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 82)
+2025-05-30 21:12:06,855 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_apprentice_allow' (920 rows)
+2025-05-30 21:12:06,859 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 83)
+2025-05-30 21:12:06,860 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_race_type' (920 rows)
+2025-05-30 21:12:06,863 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 84)
+2025-05-30 21:12:06,864 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_age_sex_restrict' (920 rows)
+2025-05-30 21:12:06,868 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 85)
+2025-05-30 21:12:06,869 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_statebred_flag' (920 rows)
+2025-05-30 21:12:06,873 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 86)
+2025-05-30 21:12:06,873 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_restricted_flag' (920 rows)
+2025-05-30 21:12:06,877 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 87)
+2025-05-30 21:12:06,878 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_favorite_indicator' (920 rows)
+2025-05-30 21:12:06,882 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 88)
+2025-05-30 21:12:06,883 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_front_bandages' (920 rows)
+2025-05-30 21:12:06,887 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 89)
+2025-05-30 21:12:06,888 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_bris_speed_par' (920 rows)
+2025-05-30 21:12:06,893 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 90)
+2025-05-30 21:12:06,893 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_bar_shoe' (920 rows)
+2025-05-30 21:12:06,898 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 91)
+2025-05-30 21:12:06,899 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_company_line' (920 rows)
+2025-05-30 21:12:06,902 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 92)
+2025-05-30 21:12:06,902 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_low_claiming' (920 rows)
+2025-05-30 21:12:06,908 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 93)
+2025-05-30 21:12:06,908 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_high_claiming' (920 rows)
+2025-05-30 21:12:06,912 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 94)
+2025-05-30 21:12:06,912 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_misc_code' (920 rows)
+2025-05-30 21:12:06,915 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 95)
+2025-05-30 21:12:06,916 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_ext_start_comment' (920 rows)
+2025-05-30 21:12:06,921 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 96)
+2025-05-30 21:12:06,921 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_sealed_track' (920 rows)
+2025-05-30 21:12:06,928 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 97)
+2025-05-30 21:12:06,929 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_aw_surface_flag' (920 rows)
+2025-05-30 21:12:06,933 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 98)
+2025-05-30 21:12:06,934 - src.transformers.transform_past_starts - INFO -   Merging with 'pp_eqb_conditions' (920 rows)
+2025-05-30 21:12:06,940 - src.transformers.transform_past_starts - INFO -   Shape after merge: (920, 99)
+2025-05-30 21:12:06,961 - src.transformers.transform_past_starts - INFO -   Added 'pp_distance_type' classification to past starts.
+2025-05-30 21:12:07,137 - src.transformers.transform_past_starts - INFO - Saving long format past performance data to: C:\Users\nblza1\OneDrive - NBIM\Documents\Coding\horse_racing_project\data\processed\past_starts_long_format.parquet
+2025-05-30 21:12:07,155 - src.transformers.transform_past_starts - INFO - Save complete.
+2025-05-30 21:12:07,155 - src.transformers.transform_past_starts - INFO - Output DataFrame Info:
+2025-05-30 21:12:07,160 - src.transformers.transform_past_starts - INFO - --- Past Performance Reshaping Script Finished (2025-05-30 21:12:07 EDT) ---
+2025-05-30 21:12:07,162 - __main__ - INFO - --- Step 4: Transforming past starts completed ---
+2025-05-30 21:12:07,162 - __main__ - INFO - --- Step 5: Engineering features ---
+2025-05-30 21:12:07,618 - __main__ - INFO - --- Step 5: Engineering features completed ---
+2025-05-30 21:12:07,618 - __main__ - INFO - Running advanced fitness metrics...
+2025-05-30 21:12:07,712 - src.transformers.advanced_fitness_metrics - INFO - Calculating all advanced fitness metrics...
+2025-05-30 21:12:07,712 - src.transformers.advanced_fitness_metrics - INFO - Calculating Recovery Rate Index...
+2025-05-30 21:12:07,756 - src.transformers.advanced_fitness_metrics - INFO - Calculating Form Momentum Score...
+2025-05-30 21:12:07,835 - src.transformers.advanced_fitness_metrics - INFO - Calculating Cardiovascular Fitness Proxy...
+2025-05-30 21:12:07,837 - __main__ - ERROR - Pipeline failed with an unexpected error: unsupported operand type(s) for +: 'float' and 'NoneType'
+Traceback (most recent call last):
+  File "c:\Users\nblza1\OneDrive - NBIM\Documents\Coding\horse_racing_project\run_pipeline.py", line 135, in run_complete_pipeline
+    run_fitness_metrics()
+  File "C:\Users\nblza1\OneDrive - NBIM\Documents\Coding\horse_racing_project\src\transformers\advanced_fitness_metrics.py", line 716, in main
+    fitness_df = calculator.calculate_all_metrics()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nblza1\OneDrive - NBIM\Documents\Coding\horse_racing_project\src\transformers\advanced_fitness_metrics.py", line 615, in calculate_all_metrics
+    cardio_df = self.calculate_cardiovascular_fitness()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nblza1\OneDrive - NBIM\Documents\Coding\horse_racing_project\src\transformers\advanced_fitness_metrics.py", line 311, in calculate_cardiovascular_fitness
+    avg_sustainability = np.nanmean([m['pace_sustainability'] for m in cardio_metrics])
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nblza1\AppData\Roaming\Python\Python312\site-packages\numpy\lib\_nanfunctions_impl.py", line 1047, in nanmean
+    tot = np.sum(arr, axis=axis, dtype=dtype, out=out, keepdims=keepdims,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nblza1\AppData\Roaming\Python\Python312\site-packages\numpy\_core\fromnumeric.py", line 2466, in sum
+    return _wrapreduction(
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\nblza1\AppData\Roaming\Python\Python312\site-packages\numpy\_core\fromnumeric.py", line 86, in _wrapreduction
+    return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for +: 'float' and 'NoneType'

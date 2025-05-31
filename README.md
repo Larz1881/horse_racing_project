@@ -191,19 +191,61 @@ This project provides a complete pipeline for processing Brisnet horse racing da
 * **Key Angles:** Specific betting angles identified
 * **Prediction Confidence:** Reliability of the assessment
 
-**Key Class Metrics:**
-* **Overall Class Rating:** 0-100 composite score combining all factors
-* **Class Categories:** Low/Claiming/Allowance/Stakes/Elite
-* **Class Edge:** Specific advantages (drop, hidden quality, proven, rising star)
-* **Hidden Class Score:** Based on breeding, auction, pedigree
-* **Competitive Level Index:** Quality of competition faced
+**Interactive Dashboard**
+* **Race Summary Tab:**
+  * Complete race header with distance, surface, class, and purse
+  * Summary table with all requested metrics (ML odds, days off, Prime Power, E1/E2/LP averages and bests)
+  * Clean, sortable format for quick reference
 
-**Key Pace Metrics:**
-* **Pace Pressure Score:** 0-200+ scale (50=slow, 100=normal, 150+=hot)
-* **Energy Reserve:** Remaining energy after projected effort (negative = likely to fade)
-* **Fade Risk:** High/Moderate/Low with specific fade points
-* **Energy Efficiency:** How well horse's energy use matches their running style
-* **Pace Advantage Score:** 0-100 composite score for pace scenario fit
+* **Integrated Analytics Tab:**
+  * Overall rankings visualization
+  * Multi-factor radar chart showing all component scores
+  * Key betting angles identification
+  * Color-coded by performance levels
+
+* **Fitness Analysis Tab:**
+  * Fitness components heatmap
+  * Energy distribution pie charts showing running style
+  * Performance trends over recent races
+  * Visual identification of improving/declining horses
+
+* **Pace Projections Tab:**
+  * Race pace scenario display with color coding
+  * Projected running positions throughout race
+  * Energy reserve vs efficiency scatter plot
+  * Fade risk identification
+
+* **Class Assessment Tab:**
+  * Earnings vs Hidden vs Overall class comparison
+  * Class movement distribution
+  * Hidden class indicators (sire quality, pedigree, competition)
+  * Visual identification of class droppers
+
+* **Form Cycles Tab:**
+  * Form cycle state visualization with intuitive colors
+  * Form trajectory scatter plot
+  * Position gains/losses bar chart
+  * Easy identification of horses in optimal form windows
+
+* **Workout Analysis Tab:**
+  * Workout readiness scores with categories
+  * Pattern analysis (bullets, frequency, fast works)
+  * Trainer intent signals table
+  * Clear visual of workout quality
+
+**Dashboard Design Features:**
+* Dark theme for easy viewing
+* Color-coded metrics (green=good, red=bad)
+* Interactive charts with hover details
+* Responsive layout
+* Single race filter for focused analysis
+
+**Dashboard Usage:**
+* Select a race from the dropdown
+* Navigate through tabs to view different analyses
+* Look for convergence of positive factors
+* Identify horses with multiple green indicators
+* Note any red flags in form cycles or pace scenarios
 
 📁 ## Project Structure
 
@@ -263,7 +305,7 @@ horse_racing_project/
 │       └── data_utils.py
 │
 ├── dashboards/                # Web dashboards
-│   ├── app_dash.py           # Main Dash application
+│   ├── app.py                # Main dashboard application
 │   └── assets/               # CSS/JS assets
 │
 ├── notebooks/                 # Jupyter notebooks
@@ -278,6 +320,27 @@ horse_racing_project/
 * Windows 10/11 (tested on Windows, should work on Mac/Linux)
 * 4GB+ RAM recommended
 * 1GB+ free disk space
+* GPU recommended for ML model training (not required for inference)
+* Modern web browser for dashboard (Chrome/Firefox/Edge recommended)
+
+**Data Dependencies**
+* Brisnet DRF files (.DRF extension)
+* Brisnet dictionary file (bris_dict.txt)
+* Historical race data for ML model training
+* Workout data for pattern analysis
+* Pedigree information for class assessment
+
+**System Requirements**
+* Minimum 8GB RAM for full analysis pipeline
+* 2GB+ free disk space for processed data
+* Stable internet connection for dashboard updates
+* Modern web browser with JavaScript enabled
+* Python packages (see requirements.txt):
+  * pandas, numpy for data processing
+  * scikit-learn for ML models
+  * plotly, dash for visualization
+  * torch for deep learning components
+  * spacy for NLP features
 
 **Setup Steps**
 1.  **Clone or download the project**
@@ -451,21 +514,45 @@ Common Issues
 "No DRF files found"
 Ensure your DRF file is in data/raw/
 Check file extension is .DRF (uppercase)
+
 "Module not found" errors
 Make sure you're in the project root directory
 Activate your virtual environment
 Reinstall requirements: pip install -r requirements.txt
+
 Memory errors with large files
 Close other applications
-Process races individually if needed (if your scripts support this)
+Process races individually if needed
 Consider upgrading RAM for files over 10MB
+
 Dash app won't start
 Check if port 8050 is already in use
-Try: python dashboards/app_dash.py --port 8051 (if your Dash app is set up to accept port arguments)
-Logging
-The pipeline creates timestamped log files (based on your run_pipeline.py setup):
+Try: python dashboards/app.py --port 8051
 
-pipeline_YYYYMMDD_HHMMSS.log Check these for detailed error messages.
+ML Model Issues
+"Model not found" errors
+Ensure models/ directory exists
+Run model training pipeline if needed
+Check model version compatibility
+
+Dashboard Performance
+Slow loading times
+Clear browser cache
+Reduce number of concurrent analyses
+Check system resources
+
+Data Processing Errors
+Missing columns in DRF file
+Verify DRF file format matches expected schema
+Check bris_dict.txt is up to date
+Contact Brisnet support if format changed
+
+Visualization Issues
+Charts not displaying
+Enable JavaScript in browser
+Check browser console for errors
+Update plotly/dash packages
+
 🚧 ## Future Enhancements
 
 [ ] Advanced NLP for trip notes using transformer models
@@ -475,6 +562,14 @@ pipeline_YYYYMMDD_HHMMSS.log Check these for detailed error messages.
 [ ] Mobile-responsive dashboard design
 [ ] Export functionality for third-party handicapping software
 [ ] Historical performance tracking database
+[ ] Automated model retraining pipeline
+[ ] Additional visualization options
+[ ] Custom metric builder
+[ ] API integration for external data sources
+[ ] Batch processing for multiple race cards
+[ ] Advanced filtering and sorting options
+[ ] User preference saving
+[ ] Automated report generation
 
 🤝 ## Contributing
 While this is a personal project, improvements are welcome:
