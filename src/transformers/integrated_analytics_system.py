@@ -28,6 +28,42 @@ warnings.filterwarnings('ignore')
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+def convert_odds_to_decimal(odds_value):
+    """
+    Convert various odds formats to decimal
+    
+    Args:
+        odds_value: Can be string (fractional like "9/2"), float, or int
+        
+    Returns:
+        float: Decimal odds value, or 0 if conversion fails
+    """
+    if pd.isna(odds_value) or odds_value == '':
+        return 0
+        
+    if isinstance(odds_value, (int, float)):
+        return float(odds_value)
+    
+    if isinstance(odds_value, str):
+        odds_value = odds_value.strip()
+        
+        try:
+            # Handle fractional odds like "9/2", "10/1"
+            if '/' in odds_value:
+                parts = odds_value.split('/')
+                if len(parts) == 2:
+                    num, denom = parts
+                    # Convert fractional to decimal odds
+                    # Note: In horse racing, "9/2" means 4.5-to-1, so we return 4.5
+                    return float(num) / float(denom)
+            # Handle decimal odds like "4.5"
+            else:
+                return float(odds_value)
+        except (ValueError, ZeroDivisionError, TypeError):
+            return 0
+    
+    return 0
+
 class IntegratedAnalyticsSystem:
     """Unified system combining all analytical components"""
     
@@ -46,6 +82,7 @@ class IntegratedAnalyticsSystem:
         # Initialize ML models
         self.models = {}
         self.scalers = {}
+        self.feature_names = {}  # Store feature names for each model
         
     def _load_all_data(self):
         """Load all previously calculated metrics"""
@@ -86,6 +123,9 @@ class IntegratedAnalyticsSystem:
         # Start with base data
         composite_df = self.current_df[['race', 'horse_name', 'post_position',
                                         'morn_line_odds_if_available']].copy()
+        
+        # Convert odds to numeric format
+        composite_df['morn_line_odds_if_available'] = composite_df['morn_line_odds_if_available'].apply(convert_odds_to_decimal)
         
         # Merge all component scores
         score_columns = {}
@@ -411,7 +451,7 @@ class IntegratedAnalyticsSystem:
                 
                 # Calculate scenario-specific advantages
                 if pace_scenario == 'Hot':
-                    if run_style in ['S', 'SS']:
+                    if run_style == 'S':
                         impact_data['pace_advantage'] = 'Major_beneficiary'
                         impact_data['advantage_score'] = 85
                     elif run_style in ['E', 'E/P']:
@@ -578,6 +618,7 @@ class IntegratedAnalyticsSystem:
         # Store model
         self.models['form_cycle_classifier'] = model
         self.scalers['form_cycle_classifier'] = scaler
+        self.feature_names['form_cycle_classifier'] = feature_names
         
         return {
             'train_accuracy': train_score,
@@ -658,6 +699,7 @@ class IntegratedAnalyticsSystem:
         # Store clustering model
         self.models['workout_clustering'] = kmeans
         self.scalers['workout_clustering'] = scaler
+        self.feature_names['workout_clustering'] = feature_names
         
         # Add cluster profiles to results
         cluster_df = cluster_df.merge(
@@ -760,6 +802,11 @@ class IntegratedAnalyticsSystem:
         # Store model
         self.models['class_trajectory'] = model
         self.scalers['class_trajectory'] = scaler
+        feature_names = [
+            'class_change', 'current_speed', 'previous_speed',
+            'finish_position', 'field_size', 'odds'
+        ]
+        self.feature_names['class_trajectory'] = feature_names
         
         return {
             'train_accuracy': train_score,
@@ -834,6 +881,11 @@ class IntegratedAnalyticsSystem:
         # Store model
         self.models['pace_optimizer'] = model
         self.scalers['pace_optimizer'] = scaler
+        feature_names = [
+            'e1_pace', 'e2_pace', 'late_pace', 
+            'first_call_pos', 'field_size', 'position_gain'
+        ]
+        self.feature_names['pace_optimizer'] = feature_names
         
         return {
             'train_r2': train_score,
@@ -855,18 +907,26 @@ class IntegratedAnalyticsSystem:
             logger.warning("No integrated data for performance predictor")
             return None
         
-        # Prepare features
+        # Define specific features to use for the model
+        # This ensures consistency between training and prediction
         feature_cols = [
-            'integrated_fitness_score', 'composite_fitness_score',
-            'workout_readiness_score', 'pace_advantage_score',
-            'overall_class_rating', 'composite_form_score'
+            'integrated_fitness_score',
+            'composite_fitness_score',
+            'workout_readiness_score',
+            'pace_advantage_score',
+            'overall_class_rating',
+            'composite_form_score'
         ]
         
+        # Only use features that are actually available
         available_features = [col for col in feature_cols if col in integrated_df.columns]
         
         if len(available_features) < 3:
             logger.warning("Insufficient features for performance predictor")
             return None
+        
+        # Store the feature names that will be used
+        self.feature_names['performance_predictor'] = available_features
         
         # For training, we need historical outcomes
         # This is a placeholder - in production, you'd have actual race results
@@ -913,12 +973,15 @@ class IntegratedAnalyticsSystem:
         self.models['performance_predictor'] = model
         self.scalers['performance_predictor'] = scaler
         
+        logger.info(f"Performance predictor trained with {len(available_features)} features: {available_features}")
+        
         return {
             'train_r2': train_score,
             'test_r2': test_score,
             'feature_importance': feature_importance,
             'model': model,
-            'scaler': scaler
+            'scaler': scaler,
+            'features_used': available_features
         }
     
     def generate_integrated_report(self) -> pd.DataFrame:
@@ -954,16 +1017,26 @@ class IntegratedAnalyticsSystem:
             )
         
         # Apply ML predictions if models are trained
-        if 'performance_predictor' in self.models:
-            feature_cols = [col for col in report.columns 
-                           if col.endswith('_score') or col.endswith('_rating')]
+        if 'performance_predictor' in self.models and 'performance_predictor' in self.feature_names:
+            # Use the exact features that were used during training
+            feature_names = self.feature_names['performance_predictor']
             
-            if feature_cols:
-                X = report[feature_cols].fillna(50).values
+            # Check if all required features are available
+            missing_features = [f for f in feature_names if f not in report.columns]
+            if missing_features:
+                logger.warning(f"Missing features for ML prediction: {missing_features}")
+            else:
+                # Extract features in the same order as training
+                X = report[feature_names].fillna(50).values
+                
+                # Apply scaling
                 X_scaled = self.scalers['performance_predictor'].transform(X)
                 
+                # Make predictions
                 report['ml_performance_prediction'] = self.models['performance_predictor'].predict(X_scaled)
                 report['ml_performance_prediction'] = report['ml_performance_prediction'].clip(0, 100)
+                
+                logger.info(f"Applied ML predictions using features: {feature_names}")
         
         # Calculate final rankings
         ranking_factors = ['integrated_fitness_score']
@@ -990,6 +1063,7 @@ class IntegratedAnalyticsSystem:
         
         return report
     
+    # Updated _identify_key_angles method
     def _identify_key_angles(self, row) -> str:
         """Identify key betting angles for each horse"""
         angles = []
@@ -1012,9 +1086,11 @@ class IntegratedAnalyticsSystem:
             row.get('workout_readiness_score', 0) > 70):
             angles.append('Fresh_and_working')
         
-        # Hidden value
-        if (row.get('morn_line_odds_if_available', 0) > 10 and 
-            row.get('overall_rank', 99) <= 3):
+        # Hidden value - Use the utility function
+        morn_line_odds = convert_odds_to_decimal(row.get('morn_line_odds_if_available', 0))
+        
+        # Now safely compare
+        if (morn_line_odds > 10 and row.get('overall_rank', 99) <= 3):
             angles.append('Value_play')
         
         # Peak form
@@ -1028,11 +1104,16 @@ class IntegratedAnalyticsSystem:
         model_path = Path(model_dir)
         model_path.mkdir(exist_ok=True)
         
+        # Save models
         for name, model in self.models.items():
             joblib.dump(model, model_path / f'{name}.pkl')
-            
+        
+        # Save scalers
         for name, scaler in self.scalers.items():
             joblib.dump(scaler, model_path / f'{name}_scaler.pkl')
+        
+        # Save feature names
+        joblib.dump(self.feature_names, model_path / 'feature_names.pkl')
         
         logger.info(f"Saved {len(self.models)} models to {model_path}")
     
@@ -1044,12 +1125,18 @@ class IntegratedAnalyticsSystem:
             logger.warning(f"Model directory {model_path} not found")
             return
         
+        # Load feature names first
+        feature_names_path = model_path / 'feature_names.pkl'
+        if feature_names_path.exists():
+            self.feature_names = joblib.load(feature_names_path)
+            logger.info(f"Loaded feature names for {len(self.feature_names)} models")
+        
         # Load models
         for model_file in model_path.glob('*.pkl'):
             if '_scaler' in model_file.stem:
                 name = model_file.stem.replace('_scaler', '')
                 self.scalers[name] = joblib.load(model_file)
-            else:
+            elif model_file.stem != 'feature_names':
                 name = model_file.stem
                 self.models[name] = joblib.load(model_file)
         
@@ -1076,11 +1163,22 @@ def main():
         if isinstance(results, dict):
             for key, value in results.items():
                 if key not in ['model', 'scaler', 'feature_importance']:
-                    print(f"  {key}: {value:.3f}")
+                    # Handle different value types appropriately
+                    if isinstance(value, (int, float)):
+                        print(f"  {key}: {value:.3f}")
+                    elif isinstance(value, list):
+                        print(f"  {key}: {value}")
+                    elif isinstance(value, np.ndarray):
+                        print(f"  {key}: {value.tolist()}")
+                    else:
+                        print(f"  {key}: {value}")
             
             if 'feature_importance' in results and isinstance(results['feature_importance'], pd.DataFrame):
                 print("\n  Feature Importance:")
                 print(results['feature_importance'].head().to_string(index=False))
+            
+            if 'features_used' in results:
+                print(f"\n  Features used: {results['features_used']}")
     
     # Generate integrated report
     integrated_report = analytics.generate_integrated_report()

@@ -26,15 +26,13 @@ logger = logging.getLogger(__name__)
 class AdvancedPaceProjection:
     """Project and analyze race pace scenarios"""
     
-    # BRIS Run Style mappings
+    # BRIS Run Style mappings - Updated to match actual Brisnet codes
     RUN_STYLE_CATEGORIES = {
         'E': 'Early',
         'E/P': 'Early/Presser', 
         'P': 'Presser',
-        'P/S': 'Presser/Stalker',
-        'S': 'Stalker',
-        'SS': 'Sustained',
-        'U': 'Unknown'
+        'S': 'Sustain',
+        'NA': 'Not Available'
     }
     
     # Expected position ranges by style
@@ -42,9 +40,8 @@ class AdvancedPaceProjection:
         'E': {'early': (1, 2), 'mid': (1, 3), 'late': (1, 5)},
         'E/P': {'early': (1, 3), 'mid': (2, 4), 'late': (2, 6)},
         'P': {'early': (2, 5), 'mid': (2, 5), 'late': (2, 6)},
-        'P/S': {'early': (3, 6), 'mid': (3, 5), 'late': (2, 5)},
         'S': {'early': (4, 8), 'mid': (3, 6), 'late': (1, 4)},
-        'SS': {'early': (6, 12), 'mid': (5, 10), 'late': (1, 5)}
+        'NA': {'early': (3, 6), 'mid': (3, 6), 'late': (3, 6)}  # Default middle positions for unknown
     }
     
     def __init__(self, current_race_path: str, past_starts_path: str):
@@ -205,7 +202,7 @@ class AdvancedPaceProjection:
         if run_style in ['E', 'E/P']:
             adjustment = -normalized_post * 0.5  # Negative = harder from outside
         # Closers might prefer outside to avoid traffic
-        elif run_style in ['S', 'SS']:
+        elif run_style == 'S':
             adjustment = normalized_post * 0.2  # Slight positive for outside
         else:
             adjustment = 0
@@ -238,11 +235,16 @@ class AdvancedPaceProjection:
         """Project positions at each call"""
         projections = {}
         
-        # Base projections from run style
+        # Handle missing or unknown run styles
         if pd.isna(run_style) or run_style not in self.STYLE_POSITION_RANGES:
-            style_ranges = self.STYLE_POSITION_RANGES['U']
+            # Default to middle positions for unknown styles
+            style_ranges = self.STYLE_POSITION_RANGES.get('NA', {
+                'early': (3, 6),
+                'mid': (3, 6), 
+                'late': (3, 6)
+            })
         else:
-            style_ranges = self.STYLE_POSITION_RANGES.get(run_style, self.STYLE_POSITION_RANGES['U'])
+            style_ranges = self.STYLE_POSITION_RANGES[run_style]
         
         # Early position (1st call)
         early_base = np.mean(style_ranges['early'])
@@ -376,7 +378,7 @@ class AdvancedPaceProjection:
             if pace_scenario in ['Hot', 'Contested']:
                 # Closers benefit from hot pace
                 closers = race_projections[
-                    race_projections['run_style'].isin(['S', 'SS', 'P/S'])
+                    race_projections['run_style'].isin(['S'])
                 ]['horse_name'].tolist()
                 beneficiaries = closers
             elif pace_scenario == 'Lone Speed':
@@ -558,9 +560,8 @@ class AdvancedPaceProjection:
             'E': {'early': 35, 'middle': 35, 'late': 30},
             'E/P': {'early': 30, 'middle': 35, 'late': 35},
             'P': {'early': 25, 'middle': 40, 'late': 35},
-            'P/S': {'early': 20, 'middle': 40, 'late': 40},
             'S': {'early': 15, 'middle': 35, 'late': 50},
-            'SS': {'early': 10, 'middle': 30, 'late': 60}
+            'NA': {'early': 25, 'middle': 35, 'late': 40}
         }
         
         ideal = ideal_distributions.get(run_style, {'early': 25, 'middle': 35, 'late': 40})
@@ -612,7 +613,7 @@ class AdvancedPaceProjection:
             
             # Analyze energy distribution of field
             early_types = race_energy[race_energy['run_style'].isin(['E', 'E/P'])]
-            late_types = race_energy[race_energy['run_style'].isin(['S', 'SS'])]
+            late_types = race_energy[race_energy['run_style'] == 'S']
             
             avg_early_energy = race_energy['early_energy_cost'].mean()
             avg_late_energy = race_energy['late_energy_required'].mean()
@@ -652,7 +653,7 @@ class AdvancedPaceProjection:
             if 'Collapse' in pace_shape or 'Sprint' in pace_shape:
                 # Closers benefit
                 suited = race_energy[
-                    (race_energy['run_style'].isin(['S', 'SS', 'P/S'])) &
+                    (race_energy['run_style'] == 'S') &
                     (race_energy['sustainability_factor'] > 50)
                 ]['horse_name'].tolist()
                 suited_horses.extend(suited)
@@ -773,7 +774,7 @@ class AdvancedPaceProjection:
             score -= 10
         
         # Pace scenario fit
-        if row.get('pace_scenario') == 'Hot' and row.get('run_style') in ['S', 'SS']:
+        if row.get('pace_scenario') == 'Hot' and row.get('run_style') == 'S':
             score += 15  # Closers in hot pace
         elif row.get('pace_scenario') == 'Lone Speed' and row.get('projected_1st_call_position') == 1:
             score += 20  # Lone leader
