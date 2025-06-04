@@ -15,6 +15,7 @@ from datetime import datetime
 from pathlib import Path
 import logging
 from typing import Dict, List, Tuple, Optional
+from config.settings import PROCESSED_DATA_DIR, CURRENT_RACE_INFO, PAST_STARTS_LONG
 from scipy import stats
 import re
 import warnings
@@ -725,9 +726,9 @@ def main():
     """Main function to run class assessment"""
     
     # Set up paths
-    base_path = Path('data/processed')
-    current_race_path = base_path / 'current_race_info.parquet'
-    past_starts_path = base_path / 'past_starts_long_format.parquet'
+    base_path = PROCESSED_DATA_DIR
+    current_race_path = CURRENT_RACE_INFO
+    past_starts_path = PAST_STARTS_LONG
     
     # Check if files exist
     for path in [current_race_path, past_starts_path]:

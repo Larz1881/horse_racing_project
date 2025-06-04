@@ -16,6 +16,12 @@ from datetime import datetime, timedelta
 from pathlib import Path
 import logging
 from typing import Dict, Tuple, Optional
+from config.settings import (
+    PROCESSED_DATA_DIR,
+    CURRENT_RACE_INFO,
+    PAST_STARTS_LONG,
+    WORKOUTS_LONG,
+)
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -691,10 +697,10 @@ def main():
     """Main function to run fitness calculations"""
     
     # Set up paths
-    base_path = Path('data/processed')
-    current_race_path = base_path / 'current_race_info.parquet'
-    past_starts_path = base_path / 'past_starts_long_format.parquet'
-    workouts_path = base_path / 'workouts_long_format.parquet'
+    base_path = PROCESSED_DATA_DIR
+    current_race_path = CURRENT_RACE_INFO
+    past_starts_path = PAST_STARTS_LONG
+    workouts_path = WORKOUTS_LONG
     
     # Check if files exist
     if not current_race_path.exists():

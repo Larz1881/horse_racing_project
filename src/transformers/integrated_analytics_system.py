@@ -15,6 +15,7 @@ from datetime import datetime
 from pathlib import Path
 import logging
 from typing import Dict, List, Tuple, Optional
+from config.settings import PROCESSED_DATA_DIR, CURRENT_RACE_INFO, PAST_STARTS_LONG
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
@@ -67,7 +68,7 @@ def convert_odds_to_decimal(odds_value):
 class IntegratedAnalyticsSystem:
     """Unified system combining all analytical components"""
     
-    def __init__(self, base_path: str = 'data/processed'):
+    def __init__(self, base_path: Path = PROCESSED_DATA_DIR):
         """
         Initialize with path to processed data
         
@@ -89,8 +90,8 @@ class IntegratedAnalyticsSystem:
         logger.info("Loading all analytical components...")
         
         # Core data
-        self.current_df = pd.read_parquet(self.base_path / 'current_race_info.parquet')
-        self.past_df = pd.read_parquet(self.base_path / 'past_starts_long_format.parquet')
+        self.current_df = pd.read_parquet(CURRENT_RACE_INFO)
+        self.past_df = pd.read_parquet(PAST_STARTS_LONG)
         
         # Component analyses (check if exist)
         components = {
@@ -1231,7 +1232,7 @@ def main():
     integrated_report = analytics.generate_integrated_report()
     
     # Save results
-    output_path = Path('data/processed/integrated_analytics_report.parquet')
+    output_path = PROCESSED_DATA_DIR / 'integrated_analytics_report.parquet'
     integrated_report.to_parquet(output_path, index=False)
     logger.info(f"Saved integrated report to {output_path}")
     
@@ -1272,7 +1273,7 @@ def main():
                   f"{horse['key_angles']}")
     
     # Save summary CSV
-    summary_path = Path('data/processed/integrated_summary.csv')
+    summary_path = PROCESSED_DATA_DIR / 'integrated_summary.csv'
     summary_cols = [
         'race', 'horse_name', 'post_position', 'morn_line_odds_if_available',
         'final_rating', 'overall_rank', 'integrated_fitness_score',

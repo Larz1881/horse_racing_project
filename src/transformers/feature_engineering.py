@@ -2,6 +2,11 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional
+from config.settings import (
+    PROCESSED_DATA_DIR,
+    PAST_STARTS_LONG,
+    PARSED_RACE_DATA,
+)
 import warnings
 from scipy import stats
 from sklearn.preprocessing import StandardScaler
@@ -17,8 +22,8 @@ class HorseRacingFeatureEngineer:
     
     def __init__(self, processed_data_path: Path):
         self.processed_data_path = processed_data_path
-        self.past_starts_path = processed_data_path / "past_starts_long_format.parquet"
-        self.current_race_path = processed_data_path / "parsed_race_data_full.parquet"
+        self.past_starts_path = processed_data_path / PAST_STARTS_LONG.name
+        self.current_race_path = processed_data_path / PARSED_RACE_DATA.name
         
     def load_data(self) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """Load past starts and current race data."""
@@ -423,7 +428,7 @@ class HorseRacingFeatureEngineer:
 def main():
     """Example usage of the feature engineering system."""
     # Initialize feature engineer
-    processed_data_path = Path("data/processed")
+    processed_data_path = PROCESSED_DATA_DIR
     engineer = HorseRacingFeatureEngineer(processed_data_path)
     
     # Engineer all features
