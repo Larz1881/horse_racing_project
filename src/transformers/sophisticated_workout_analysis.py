@@ -54,95 +54,7 @@ class SophisticatedWorkoutAnalysis:
             how='left'
         )
     
-    def analyze_trainer_workout_patterns(self) -> pd.DataFrame:
-        """
-        Identify trainer-specific workout patterns for winning horses
-        
-        Returns:
-            DataFrame with trainer pattern analysis
-        """
-        logger.info("Analyzing trainer-specific workout patterns...")
-        
-        # First, identify winning performances from past starts
-        winners = self.past_df[self.past_df['pp_finish_pos'] == 1].copy()
-        
-        if len(winners) == 0:
-            logger.warning("No winning performances found in past data")
-            return pd.DataFrame()
-        
-        # For each winner, look at their workout pattern before the win
-        trainer_patterns = []
-        
-        for idx, win_row in winners.iterrows():
-            horse = win_row['horse_name']
-            race_date = win_row['pp_race_date']
-            
-            # Get workouts for this horse before the winning race
-            horse_works = self.workouts_df[
-                (self.workouts_df['horse_name'] == horse) &
-                (self.workouts_df['work_date'] < race_date) &
-                (self.workouts_df['work_date'] >= race_date - timedelta(days=60))  # 60 days before
-            ].sort_values('work_date', ascending=False)
-            
-            if len(horse_works) == 0:
-                continue
-            
-            trainer = horse_works['today_s_trainer'].iloc[0] if 'today_s_trainer' in horse_works.columns else 'Unknown'
-            
-            # Analyze workout pattern
-            pattern_data = {
-                'trainer': trainer,
-                'days_to_race': (race_date - horse_works['work_date'].iloc[0]).days if len(horse_works) > 0 else None,
-                'num_works_30_days': len(horse_works[horse_works['work_date'] >= race_date - timedelta(days=30)]),
-                'num_works_14_days': len(horse_works[horse_works['work_date'] >= race_date - timedelta(days=14)]),
-                'num_works_7_days': len(horse_works[horse_works['work_date'] >= race_date - timedelta(days=7)]),
-                'had_bullet_work': (horse_works['work_rank'] == 1).any(),
-                'bullet_days_before': None,
-                'avg_work_distance': horse_works['work_distance'].mean(),
-                'longest_work': horse_works['work_distance'].max(),
-                'had_gate_work': horse_works['work_description'].str.contains('g', na=False).any(),
-                'work_pattern_type': None
-            }
-            
-            # Days before race of bullet work
-            bullet_works = horse_works[horse_works['work_rank'] == 1]
-            if len(bullet_works) > 0:
-                pattern_data['bullet_days_before'] = (race_date - bullet_works['work_date'].iloc[0]).days
-            
-            # Classify workout pattern
-            if pattern_data['num_works_7_days'] >= 1:
-                pattern_data['work_pattern_type'] = 'maintenance'
-            elif pattern_data['num_works_14_days'] >= 2:
-                pattern_data['work_pattern_type'] = 'sharpening'
-            elif pattern_data['num_works_30_days'] >= 3:
-                pattern_data['work_pattern_type'] = 'building'
-            else:
-                pattern_data['work_pattern_type'] = 'light'
-            
-            trainer_patterns.append(pattern_data)
-        
-        # Aggregate by trainer
-        patterns_df = pd.DataFrame(trainer_patterns)
-        
-        if len(patterns_df) == 0:
-            return pd.DataFrame()
-        
-        trainer_summary = patterns_df.groupby('trainer').agg({
-            'days_to_race': ['mean', 'std'],
-            'num_works_30_days': 'mean',
-            'num_works_14_days': 'mean',
-            'had_bullet_work': ['sum', 'mean'],  # count and percentage
-            'bullet_days_before': 'mean',
-            'avg_work_distance': 'mean',
-            'had_gate_work': 'mean',
-            'work_pattern_type': lambda x: x.mode()[0] if len(x.mode()) > 0 else 'unknown'
-        }).round(2)
-        
-        trainer_summary.columns = ['_'.join(col).strip() for col in trainer_summary.columns.values]
-        trainer_summary = trainer_summary.reset_index()
-        trainer_summary['win_count'] = patterns_df.groupby('trainer').size().values
-        
-        return trainer_summary
+
     
     def calculate_workout_quality_score(self) -> pd.DataFrame:
         """
@@ -366,135 +278,7 @@ class SophisticatedWorkoutAnalysis:
         
         return pd.DataFrame(correlation_summary)
     
-    def identify_trainer_intent_signals(self) -> pd.DataFrame:
-        """
-        Identify trainer intent signals from workout patterns
-        
-        Returns:
-            DataFrame with trainer intent analysis
-        """
-        logger.info("Identifying trainer intent signals...")
-        
-        intent_signals = []
-        
-        for (race, horse), works in self.workouts_df.groupby(['race', 'horse_name']):
-            if len(works) == 0:
-                continue
-            
-            # Sort by date
-            works = works.sort_values('work_date', ascending=False)
-            trainer = works['today_s_trainer'].iloc[0] if 'today_s_trainer' in works.columns else 'Unknown'
-            
-            # Get current race info
-            current_info = self.current_df[
-                (self.current_df['race'] == race) & 
-                (self.current_df['horse_name'] == horse)
-            ]
-            
-            if len(current_info) == 0:
-                continue
-            
-            current_info = current_info.iloc[0]
-            
-            # Analyze workout patterns for intent
-            intent_data = {
-                'race': race,
-                'horse_name': horse,
-                'trainer': trainer,
-                'post_position': current_info['post_position'],
-                'morning_line_odds': current_info['morn_line_odds_if_available']
-            }
-            
-            # 1. Workout frequency change
-            if len(works) >= 4:
-                recent_dates = pd.to_datetime(works['work_date'].iloc[:2])
-                older_dates = pd.to_datetime(works['work_date'].iloc[2:4])
-                
-                recent_interval = abs((recent_dates.iloc[0] - recent_dates.iloc[1]).days) if len(recent_dates) > 1 else None
-                older_interval = abs((older_dates.iloc[0] - older_dates.iloc[1]).days) if len(older_dates) > 1 else None
-                
-                if recent_interval and older_interval:
-                    if recent_interval < older_interval - 2:
-                        intent_data['frequency_signal'] = 'increasing'
-                    elif recent_interval > older_interval + 2:
-                        intent_data['frequency_signal'] = 'decreasing'
-                    else:
-                        intent_data['frequency_signal'] = 'stable'
-                else:
-                    intent_data['frequency_signal'] = 'unknown'
-            else:
-                intent_data['frequency_signal'] = 'insufficient_data'
-            
-            # 2. Distance progression
-            recent_distances = works['work_distance'].iloc[:3].values
-            if len(recent_distances) >= 2:
-                if all(recent_distances[i] >= recent_distances[i+1] for i in range(len(recent_distances)-1)):
-                    intent_data['distance_pattern'] = 'lengthening'
-                elif all(recent_distances[i] <= recent_distances[i+1] for i in range(len(recent_distances)-1)):
-                    intent_data['distance_pattern'] = 'shortening'
-                else:
-                    intent_data['distance_pattern'] = 'mixed'
-            else:
-                intent_data['distance_pattern'] = 'unknown'
-            
-            # 3. Bullet work timing
-            bullet_works = works[works['work_rank'] == 1]
-            if len(bullet_works) > 0:
-                days_since_bullet = (datetime.now() - pd.to_datetime(bullet_works['work_date'].iloc[0])).days
-                intent_data['days_since_bullet'] = days_since_bullet
-                
-                if days_since_bullet <= 7:
-                    intent_data['bullet_timing'] = 'recent_sharp'
-                elif days_since_bullet <= 14:
-                    intent_data['bullet_timing'] = 'maintaining_form'
-                else:
-                    intent_data['bullet_timing'] = 'past_peak'
-            else:
-                intent_data['days_since_bullet'] = None
-                intent_data['bullet_timing'] = 'no_bullets'
-            
-            # 4. Equipment/surface changes
-            surface_changes = works['work_surface_type'].nunique()
-            intent_data['surface_experimentation'] = surface_changes > 1
-            
-            # 5. Gate work presence
-            gate_works = works['work_description'].str.contains('g', na=False).sum()
-            intent_data['gate_work_count'] = gate_works
-            
-            # Overall intent classification
-            signals = []
-            
-            if intent_data['frequency_signal'] == 'increasing' and intent_data['bullet_timing'] in ['recent_sharp', 'maintaining_form']:
-                signals.append('targeting_race')
-            
-            if intent_data['distance_pattern'] == 'lengthening':
-                signals.append('building_stamina')
-            elif intent_data['distance_pattern'] == 'shortening':
-                signals.append('sharpening_speed')
-            
-            if gate_works >= 2:
-                signals.append('improving_break')
-            
-            if surface_changes > 1:
-                signals.append('surface_uncertain')
-            
-            intent_data['trainer_intent_signals'] = ', '.join(signals) if signals else 'maintenance'
-            
-            # Confidence score based on data quality
-            confidence = 50
-            if len(works) >= 4:
-                confidence += 20
-            if intent_data['frequency_signal'] != 'unknown':
-                confidence += 15
-            if intent_data['bullet_timing'] != 'no_bullets':
-                confidence += 15
-            
-            intent_data['intent_confidence'] = min(100, confidence)
-            
-            intent_signals.append(intent_data)
-        
-        return pd.DataFrame(intent_signals)
-    
+
     def calculate_all_workout_metrics(self) -> pd.DataFrame:
         """
         Calculate all workout metrics and combine into single DataFrame
@@ -583,50 +367,7 @@ class SophisticatedWorkoutAnalysis:
         
         return workout_analysis
     
-    def generate_trainer_pattern_report(self) -> pd.DataFrame:
-        """
-        Generate detailed trainer pattern report
-        
-        Returns:
-            DataFrame with trainer-specific winning patterns
-        """
-        logger.info("Generating trainer pattern report...")
-        
-        trainer_patterns = self.analyze_trainer_workout_patterns()
-        
-        if trainer_patterns.empty:
-            logger.warning("No trainer patterns found")
-            return pd.DataFrame()
-        
-        # Add success metrics
-        trainer_success = []
-        
-        for trainer in trainer_patterns['trainer'].unique():
-            # Get all horses for this trainer
-            trainer_horses = self.current_df[self.current_df['today_s_trainer'] == trainer]['horse_name'].unique()
-            
-            # Calculate historical success rate
-            trainer_past = self.past_df[self.past_df['horse_name'].isin(trainer_horses)]
-            
-            if len(trainer_past) > 0:
-                win_rate = (trainer_past['pp_finish_pos'] == 1).mean() * 100
-                itm_rate = (trainer_past['pp_finish_pos'] <= 3).mean() * 100
-                avg_odds = trainer_past['pp_odds'].mean()
-                
-                trainer_success.append({
-                    'trainer': trainer,
-                    'historical_win_rate': win_rate,
-                    'historical_itm_rate': itm_rate,
-                    'avg_winning_odds': avg_odds
-                })
-        
-        if trainer_success:
-            success_df = pd.DataFrame(trainer_success)
-            trainer_patterns = trainer_patterns.merge(success_df, on='trainer', how='left')
-        
-        return trainer_patterns
-
-
+    
 def main():
     """Main function to run workout analysis"""
     
@@ -652,18 +393,10 @@ def main():
     # Calculate all metrics
     workout_analysis = analyzer.calculate_all_workout_metrics()
     
-    # Generate trainer pattern report
-    trainer_report = analyzer.generate_trainer_pattern_report()
-    
     # Save results
     output_path = base_path / 'sophisticated_workout_analysis.parquet'
     workout_analysis.to_parquet(output_path, index=False)
     logger.info(f"Saved workout analysis to {output_path}")
-    
-    if not trainer_report.empty:
-        trainer_path = base_path / 'trainer_workout_patterns.csv'
-        trainer_report.to_csv(trainer_path, index=False)
-        logger.info(f"Saved trainer patterns to {trainer_path}")
     
     # Display summary
     print("\n" + "="*60)
@@ -682,13 +415,6 @@ def main():
              'workout_quality_score']
         ]
         print(top_horses.to_string(index=False))
-    
-    # Print trainer patterns if available
-    if not trainer_report.empty:
-        print(f"\n" + "="*60)
-        print("TOP TRAINER PATTERNS FOR WINNERS")
-        print("="*60)
-        print(trainer_report.head(10).to_string(index=False))
     
     # Save detailed summary report
     summary_path = base_path / 'workout_analysis_summary.csv'

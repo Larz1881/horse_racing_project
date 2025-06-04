@@ -147,7 +147,7 @@ class IntegratedAnalyticsSystem:
         # Workout readiness
         if not self.component_data['workout'].empty:
             workout_cols = ['race', 'horse_name', 'workout_readiness_score',
-                           'workout_quality_score', 'trainer_intent_signals']
+                           'workout_quality_score']
             available_cols = [col for col in workout_cols if col in self.component_data['workout'].columns]
             composite_df = composite_df.merge(
                 self.component_data['workout'][available_cols],
@@ -195,10 +195,10 @@ class IntegratedAnalyticsSystem:
         
         # Calculate integrated fitness score
         weights = {
-            'fitness': 0.25,
-            'workout': 0.15,
-            'pace': 0.20,
-            'class': 0.20,
+            'fitness': 0.40,
+            'workout': 0.05,
+            'pace': 0.25,
+            'class': 0.10,
             'form': 0.20
         }
         
@@ -1129,7 +1129,8 @@ class IntegratedAnalyticsSystem:
         
         # Fresh and working well
         if (row.get('form_cycle_state') == 'FRESHENING' and 
-            row.get('workout_readiness_score', 0) > 70):
+            row.get('workout_readiness_score', 0) > 85 and
+            row.get('bullet_work_count', 0) > 0):
             angles.append('Fresh_and_working')
         
         # Hidden value - Use the utility function

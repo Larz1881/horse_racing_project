@@ -573,7 +573,7 @@ class FormCycleDetector:
         layoff_performances = []
         
         for i in range(len(days_between)):
-            if pd.notna(days_between[i]) and days_between[i] >= 30:
+            if pd.notna(days_between[i]) and days_between[i] >= 45:
                 if i < len(speed_ratings):
                     layoff_performances.append({
                         'days_off': days_between[i],
@@ -610,7 +610,7 @@ class FormCycleDetector:
             result['handles_layoffs_well'] = False
         
         # Check if currently freshening
-        if len(days_between) > 0 and pd.notna(days_between[0]) and days_between[0] >= 30:
+        if len(days_between) > 0 and pd.notna(days_between[0]) and days_between[0] >= 45:
             result['currently_freshening'] = True
             result['freshening_days'] = days_between[0]
         else:

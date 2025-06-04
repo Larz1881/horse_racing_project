@@ -925,36 +925,6 @@ def update_workout_view(selected_race):
         
         charts.append(dcc.Graph(figure=fig_patterns))
     
-    # 3. Trainer Intent Signals
-    if 'trainer_intent_signals' in race_data.columns:
-        intent_data = race_data[['horse_name', 'trainer_intent_signals', 
-                                'bullet_timing', 'frequency_signal']].copy()
-        
-        table = dash_table.DataTable(
-            data=intent_data.to_dict('records'),
-            columns=[
-                {'name': 'Horse', 'id': 'horse_name'},
-                {'name': 'Intent Signals', 'id': 'trainer_intent_signals'},
-                {'name': 'Bullet Timing', 'id': 'bullet_timing'},
-                {'name': 'Frequency', 'id': 'frequency_signal'}
-            ],
-            style_cell={
-                'textAlign': 'left',
-                'backgroundColor': COLORS['card_bg'],
-                'color': COLORS['text']
-            },
-            style_header={
-                'backgroundColor': COLORS['primary'],
-                'color': COLORS['background'],
-                'fontWeight': 'bold'
-            }
-        )
-        
-        charts.append(html.Div([
-            html.H4("Trainer Intent Analysis", style={'color': COLORS['primary']}),
-            table
-        ]))
-    
     return html.Div(charts)
 
 # Run the app
