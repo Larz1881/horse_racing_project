@@ -11,8 +11,8 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 import pandas as pd
 import numpy as np
-from pathlib import Path
 import logging
+from config.settings import PROCESSED_DATA_DIR, CURRENT_RACE_INFO, PAST_STARTS_LONG
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -50,13 +50,13 @@ FORM_STATE_COLORS = {
 # Load all data
 def load_all_data():
     """Load all analytical data files"""
-    base_path = Path('data/processed')
+    base_path = PROCESSED_DATA_DIR
     
     data = {}
     
     # Core data
-    data['current'] = pd.read_parquet(base_path / 'current_race_info.parquet')
-    data['past'] = pd.read_parquet(base_path / 'past_starts_long_format.parquet')
+    data['current'] = pd.read_parquet(CURRENT_RACE_INFO)
+    data['past'] = pd.read_parquet(PAST_STARTS_LONG)
     
     # Component analyses
     files_to_load = {
