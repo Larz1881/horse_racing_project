@@ -843,122 +843,6 @@ class FormCycleDetector:
         
         return 0
     
-    def calculate_field_adjusted_performance(self) -> pd.DataFrame:
-        """
-        Adjust performance for field size and quality
-        
-        Returns:
-            DataFrame with field-adjusted metrics
-        """
-        logger.info("Calculating field-adjusted performance...")
-        
-        adjusted_data = []
-        
-        for (race, horse), group in self.past_df.groupby(['race', 'horse_name']):
-            if len(group) < 3:
-                continue
-            
-            recent = group.head(10)
-            
-            analysis = {
-                'race': race,
-                'horse_name': horse
-            }
-            
-            # Collect performance data
-            performances = []
-            
-            for idx, row in recent.iterrows():
-                finish_pos = row.get('pp_finish_pos')
-                field_size = row.get('pp_num_entrants')
-                speed_rating = row.get('pp_bris_speed_rating')
-                race_type = row.get('pp_race_type')
-                purse = row.get('pp_purse')
-                
-                if all(pd.notna(x) for x in [finish_pos, field_size, speed_rating]):
-                    # Calculate horses beaten percentage
-                    beaten_pct = ((field_size - finish_pos) / (field_size - 1)) * 100 if field_size > 1 else 0
-                    
-                    # Estimate field quality
-                    quality_score = 50  # Base
-                    
-                    # Adjust for race type
-                    if race_type in ['G1', 'G2', 'G3']:
-                        quality_score += 30
-                    elif race_type in ['N', 'A']:
-                        quality_score += 15
-                    elif race_type in ['C']:
-                        quality_score -= 10
-                    
-                    # Adjust for purse
-                    if pd.notna(purse):
-                        if purse > 100000:
-                            quality_score += 10
-                        elif purse < 20000:
-                            quality_score -= 10
-                    
-                    # Adjust for field size
-                    if field_size >= 10:
-                        quality_score += 5
-                    elif field_size <= 5:
-                        quality_score -= 10
-                    
-                    performances.append({
-                        'finish_pos': finish_pos,
-                        'field_size': field_size,
-                        'beaten_pct': beaten_pct,
-                        'speed_rating': speed_rating,
-                        'field_quality': quality_score,
-                        'quality_adjusted_rating': speed_rating * (quality_score / 100)
-                    })
-            
-            if performances:
-                # Calculate averages
-                analysis['avg_beaten_pct'] = np.mean([p['beaten_pct'] for p in performances])
-                analysis['avg_field_size'] = np.mean([p['field_size'] for p in performances])
-                analysis['avg_field_quality'] = np.mean([p['field_quality'] for p in performances])
-                
-                # Performance vs expectations
-                # Expected finish based on consistent random performance
-                expected_finish_pct = 50  # Middle of field
-                actual_finish_pct = 100 - analysis['avg_beaten_pct']
-                analysis['performance_vs_expected'] = expected_finish_pct - actual_finish_pct
-                
-                # Quality-adjusted speed rating
-                analysis['quality_adjusted_speed'] = np.mean([p['quality_adjusted_rating'] 
-                                                             for p in performances])
-                
-                # Consistency in different field sizes
-                small_fields = [p for p in performances if p['field_size'] <= 7]
-                large_fields = [p for p in performances if p['field_size'] >= 10]
-                
-                if small_fields:
-                    analysis['small_field_beaten_pct'] = np.mean([p['beaten_pct'] 
-                                                                  for p in small_fields])
-                if large_fields:
-                    analysis['large_field_beaten_pct'] = np.mean([p['beaten_pct'] 
-                                                                  for p in large_fields])
-                
-                # Improvement against quality
-                if len(performances) >= 6:
-                    recent_quality = np.mean([p['field_quality'] for p in performances[:3]])
-                    older_quality = np.mean([p['field_quality'] for p in performances[3:6]])
-                    
-                    recent_performance = np.mean([p['beaten_pct'] for p in performances[:3]])
-                    older_performance = np.mean([p['beaten_pct'] for p in performances[3:6]])
-                    
-                    # If facing better competition but maintaining performance = improvement
-                    quality_change = recent_quality - older_quality
-                    performance_change = recent_performance - older_performance
-                    
-                    analysis['quality_improvement_score'] = performance_change + (quality_change * 0.5)
-                else:
-                    analysis['quality_improvement_score'] = 0
-            
-            adjusted_data.append(analysis)
-        
-        return pd.DataFrame(adjusted_data)
-    
     def generate_form_cycle_report(self) -> pd.DataFrame:
         """
         Generate comprehensive form cycle report
@@ -973,14 +857,13 @@ class FormCycleDetector:
         position_calls = self.analyze_position_calls()
         cycle_patterns = self.detect_form_cycle_patterns()
         fractionals = self.analyze_fractional_evolution()
-        field_adjusted = self.calculate_field_adjusted_performance()
         
         # Start with base info
         form_report = self.current_df[['race', 'horse_name', 'post_position',
                                        'morn_line_odds_if_available']].copy()
         
         # Merge all analyses
-        for df in [trajectory, position_calls, cycle_patterns, fractionals, field_adjusted]:
+        for df in [trajectory, position_calls, cycle_patterns, fractionals]:
             if not df.empty:
                 merge_cols = [col for col in df.columns if col not in ['race', 'horse_name']]
                 form_report = form_report.merge(
@@ -1010,16 +893,16 @@ class FormCycleDetector:
         """Calculate overall form score"""
         score = 50  # Base
         
-        # Beaten lengths trajectory (20%)
+        # Beaten lengths trajectory (25% - increased from 20%)
         if pd.notna(row.get('beaten_time_trend')):
             # Positive trend = improvement
             trend_score = 50 + (row['beaten_time_trend'] * 10)
-            score += (np.clip(trend_score, 0, 100) - 50) * 0.2
+            score += (np.clip(trend_score, 0, 100) - 50) * 0.25
         
-        # Position gains (15%)
+        # Position gains (20% - increased from 15%)
         if pd.notna(row.get('avg_position_gain')):
             gain_score = 50 + (row['avg_position_gain'] * 5)
-            score += (np.clip(gain_score, 0, 100) - 50) * 0.15
+            score += (np.clip(gain_score, 0, 100) - 50) * 0.20
         
         # Form cycle state (25%)
         state_scores = {
@@ -1035,15 +918,10 @@ class FormCycleDetector:
         state = row.get('form_cycle_state', 'STABLE')
         score += (state_scores.get(state, 50) - 50) * 0.25
         
-        # Fractional improvements (15%)
+        # Fractional improvements (20% - increased from 15%)
         if pd.notna(row.get('final_time_improvement')):
             time_score = 50 + (row['final_time_improvement'] * 5)
-            score += (np.clip(time_score, 0, 100) - 50) * 0.15
-        
-        # Field-adjusted performance (15%)
-        if pd.notna(row.get('quality_improvement_score')):
-            quality_score = 50 + row['quality_improvement_score']
-            score += (np.clip(quality_score, 0, 100) - 50) * 0.15
+            score += (np.clip(time_score, 0, 100) - 50) * 0.20
         
         # Late kick bonus (10%)
         if row.get('strong_late_kick'):

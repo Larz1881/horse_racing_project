@@ -611,167 +611,6 @@ class MultiDimensionalClassAssessment:
         
         return np.clip(score, 0, 100)
     
-    def calculate_competitive_level_index(self) -> pd.DataFrame:
-        """
-        Calculate index based on quality of competition faced
-        
-        Returns:
-            DataFrame with competitive level analysis
-        """
-        logger.info("Calculating competitive level index...")
-        
-        competitive_data = []
-        
-        for idx, horse in self.current_df.iterrows():
-            comp_metrics = {
-                'race': horse['race'],
-                'horse_name': horse['horse_name']
-            }
-            
-            # Get horse's past performances
-            horse_past = self.past_df[
-                (self.past_df['race'] == horse['race']) & 
-                (self.past_df['horse_name'] == horse['horse_name'])
-            ].head(10)
-            
-            if len(horse_past) == 0:
-                comp_metrics['competitive_level_index'] = 50
-                comp_metrics['avg_field_quality'] = 50
-                competitive_data.append(comp_metrics)
-                continue
-            
-            # Analyze each past race
-            race_qualities = []
-            horses_beaten_quality = []
-            
-            for idx_past, past in horse_past.iterrows():
-                # Field size and quality
-                field_size = past.get('pp_num_entrants', 8)
-                purse = past.get('pp_purse', 0)
-                race_type = past.get('pp_race_type', '')
-                
-                # Base quality from race level
-                if race_type in self.RACE_TYPE_HIERARCHY:
-                    base_quality = self.RACE_TYPE_HIERARCHY[race_type] * 10
-                else:
-                    base_quality = 50
-                
-                # Adjust for purse
-                if purse > 100000:
-                    base_quality += 10
-                elif purse > 50000:
-                    base_quality += 5
-                elif purse < 20000:
-                    base_quality -= 10
-                
-                # Adjust for field size
-                if field_size >= 10:
-                    base_quality += 5
-                elif field_size <= 5:
-                    base_quality -= 5
-                
-                race_qualities.append(base_quality)
-                
-                # Quality of horses beaten
-                finish_pos = past.get('pp_finish_pos', 99)
-                if finish_pos < 99:
-                    horses_beaten = max(0, field_size - finish_pos)
-                    beaten_quality = base_quality * (horses_beaten / max(1, field_size - 1))
-                    horses_beaten_quality.append(beaten_quality)
-            
-            # Calculate metrics
-            comp_metrics['avg_field_quality'] = np.mean(race_qualities) if race_qualities else 50
-            comp_metrics['best_field_quality'] = max(race_qualities) if race_qualities else 50
-            comp_metrics['consistency_of_competition'] = 100 - np.std(race_qualities) if len(race_qualities) > 1 else 75
-            
-            # Average quality of horses beaten
-            if horses_beaten_quality:
-                comp_metrics['avg_beaten_quality'] = np.mean(horses_beaten_quality)
-            else:
-                comp_metrics['avg_beaten_quality'] = 0
-            
-            # Speed figure analysis
-            speed_figs = horse_past['pp_bris_speed_rating'].dropna()
-            if len(speed_figs) >= 3:
-                comp_metrics['avg_speed_figure'] = speed_figs.mean()
-                comp_metrics['best_speed_figure'] = speed_figs.max()
-                
-                # Compare to fields faced
-                field_avg_speeds = []
-                for idx_past, past in horse_past.iterrows():
-                    # Estimate field average (would need all horses' data for accuracy)
-                    # Using heuristic based on race class
-                    race_type = past.get('pp_race_type', '')
-                    if race_type in ['G1', 'G2']:
-                        field_avg = 95
-                    elif race_type in ['G3', 'N']:
-                        field_avg = 90
-                    elif race_type in ['A', 'AO']:
-                        field_avg = 85
-                    else:
-                        field_avg = 80
-                    field_avg_speeds.append(field_avg)
-                
-                # How horse compares to field average
-                comp_metrics['speed_vs_field_avg'] = (
-                    comp_metrics['avg_speed_figure'] - np.mean(field_avg_speeds)
-                )
-            else:
-                comp_metrics['avg_speed_figure'] = 80
-                comp_metrics['best_speed_figure'] = 85
-                comp_metrics['speed_vs_field_avg'] = 0
-            
-            # Margins analysis
-            margins = horse_past['pp_finish_lengths_behind'].fillna(0)
-            winning_margins = horse_past[horse_past['pp_finish_pos'] == 1]['pp_winner_margin'].fillna(0)
-            
-            if len(margins) > 0:
-                comp_metrics['avg_beaten_lengths'] = margins.mean()
-                comp_metrics['improving_margins'] = margins.iloc[0] < margins.mean() if len(margins) > 1 else False
-            
-            if len(winning_margins) > 0:
-                comp_metrics['avg_winning_margin'] = winning_margins.mean()
-            else:
-                comp_metrics['avg_winning_margin'] = 0
-            
-            # Calculate competitive level index
-            comp_metrics['competitive_level_index'] = self._calculate_competitive_index(comp_metrics)
-            
-            competitive_data.append(comp_metrics)
-        
-        return pd.DataFrame(competitive_data)
-    
-    def _calculate_competitive_index(self, metrics: Dict) -> float:
-        """Calculate overall competitive level index"""
-        score = 0
-        
-        # Average field quality (30%)
-        field_quality = metrics.get('avg_field_quality', 50)
-        score += (field_quality / 100) * 30
-        
-        # Quality of horses beaten (25%)
-        beaten_quality = metrics.get('avg_beaten_quality', 0)
-        score += (beaten_quality / 100) * 25
-        
-        # Speed figure performance (25%)
-        speed_vs_field = metrics.get('speed_vs_field_avg', 0)
-        speed_score = 50 + (speed_vs_field * 2)  # Scale difference
-        score += (np.clip(speed_score, 0, 100) / 100) * 25
-        
-        # Consistency against quality (10%)
-        consistency = metrics.get('consistency_of_competition', 75)
-        score += (consistency / 100) * 10
-        
-        # Margins/dominance (10%)
-        if metrics.get('avg_winning_margin', 0) > 0:
-            margin_score = min(100, metrics['avg_winning_margin'] * 20)
-        else:
-            beaten_lengths = metrics.get('avg_beaten_lengths', 5)
-            margin_score = max(0, 100 - beaten_lengths * 10)
-        score += (margin_score / 100) * 10
-        
-        return np.clip(score * 100 / 100, 0, 100)  # Ensure 0-100 scale
-    
     def generate_comprehensive_class_report(self) -> pd.DataFrame:
         """
         Generate comprehensive class assessment report
@@ -785,7 +624,6 @@ class MultiDimensionalClassAssessment:
         earnings_metrics = self.calculate_earnings_based_metrics()
         classification = self.build_race_classification_hierarchy()
         hidden_indicators = self.calculate_hidden_class_indicators()
-        competitive_level = self.calculate_competitive_level_index()
         
         # Start with base horse info
         class_report = self.current_df[[
@@ -794,7 +632,7 @@ class MultiDimensionalClassAssessment:
         ]].copy()
         
         # Merge all components
-        for df in [earnings_metrics, classification, hidden_indicators, competitive_level]:
+        for df in [earnings_metrics, classification, hidden_indicators]:
             if not df.empty:
                 merge_cols = [col for col in df.columns if col not in ['race', 'horse_name']]
                 class_report = class_report.merge(
@@ -832,25 +670,20 @@ class MultiDimensionalClassAssessment:
         components = []
         weights = []
         
-        # Earnings class (30%)
+        # Earnings class (45% - increased from 30%)
         if pd.notna(row.get('earnings_class_score')):
             components.append(row['earnings_class_score'])
-            weights.append(0.30)
+            weights.append(0.45)
         
-        # Classification suitability (20%)
+        # Classification suitability (25% - increased from 20%)
         if pd.notna(row.get('class_suitability_score')):
             components.append(row['class_suitability_score'])
-            weights.append(0.20)
+            weights.append(0.25)
         
-        # Hidden class indicators (25%)
+        # Hidden class indicators (30% - increased from 25%)
         if pd.notna(row.get('hidden_class_score')):
             components.append(row['hidden_class_score'])
-            weights.append(0.25)
-        
-        # Competitive level (25%)
-        if pd.notna(row.get('competitive_level_index')):
-            components.append(row['competitive_level_index'])
-            weights.append(0.25)
+            weights.append(0.30)
         
         if components:
             total_weight = sum(weights)
@@ -878,7 +711,7 @@ class MultiDimensionalClassAssessment:
             edges.append('Proven_class')
         
         # Rising star
-        if row.get('earnings_velocity', 0) > 50 and row.get('competitive_level_index', 0) > 70:
+        if row.get('earnings_velocity', 0) > 50:
             edges.append('Rising_star')
         
         # Faces easier

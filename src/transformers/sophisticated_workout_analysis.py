@@ -169,11 +169,11 @@ class SophisticatedWorkoutAnalysis:
             total_works = len(works)
             recent_works = works.head(5)  # Last 5 workouts
             
-            # 1. Bullet work score
+            # 1. Bullet work score (0-50)
             bullet_count = (recent_works['work_rank'] == 1).sum()
-            bullet_score = (bullet_count / len(recent_works)) * 30 if len(recent_works) > 0 else 0
+            bullet_score = (bullet_count / 5) * 50 if len(recent_works) > 0 else 0
             
-            # 2. Work time quality (compare to track standard)
+            # 2. Work time quality (0-25)
             time_scores = []
             for idx, work in recent_works.iterrows():
                 if pd.notna(work['work_time']) and pd.notna(work['work_distance']):
@@ -200,7 +200,7 @@ class SophisticatedWorkoutAnalysis:
             
             avg_time_score = np.mean(time_scores) if time_scores else 15
             
-            # 3. Work frequency score
+            # 3. Work frequency score (0-10)
             if len(works) >= 2:
                 work_dates = pd.to_datetime(works['work_date'])
                 intervals = work_dates.diff().abs().dt.days.dropna()
@@ -208,34 +208,34 @@ class SophisticatedWorkoutAnalysis:
                 
                 # Optimal is 5-7 days between works
                 if 5 <= avg_interval <= 7:
-                    frequency_score = 20
-                elif 4 <= avg_interval <= 10:
-                    frequency_score = 15
-                else:
                     frequency_score = 10
+                elif 4 <= avg_interval <= 10:
+                    frequency_score = 7
+                else:
+                    frequency_score = 5
             else:
-                frequency_score = 10
+                frequency_score = 5
             
-            # 4. Distance variety score
+            # 4. Distance variety score (0-5)
             unique_distances = works['work_distance'].nunique()
             if unique_distances >= 3:
-                variety_score = 10
-            elif unique_distances >= 2:
-                variety_score = 7
-            else:
                 variety_score = 5
+            elif unique_distances >= 2:
+                variety_score = 3
+            else:
+                variety_score = 1
             
-            # 5. Gate work score
+            # 5. Gate work score (0-5)
             gate_works = works['work_description'].str.contains('g', na=False).sum()
-            gate_score = min(10, gate_works * 5)
+            gate_score = min(5, gate_works)
             
-            # 6. Surface consistency
+            # 6. Surface consistency (0-5)
             work_surfaces = works['work_surface_type'].value_counts()
             if len(work_surfaces) > 0:
                 dominant_surface_pct = work_surfaces.iloc[0] / len(works)
-                surface_score = dominant_surface_pct * 10
+                surface_score = dominant_surface_pct * 5
             else:
-                surface_score = 5
+                surface_score = 2.5
             
             # Calculate composite score
             total_score = (
@@ -508,25 +508,13 @@ class SophisticatedWorkoutAnalysis:
         workout_analysis = self.current_df[['race', 'horse_name', 'post_position', 
                                            'today_s_trainer', 'morn_line_odds_if_available']].copy()
         
-        # Calculate individual components
+        # Calculate quality scores
         quality_scores = self.calculate_workout_quality_score()
-        intent_signals = self.identify_trainer_intent_signals()
         
         # Merge quality scores
         if not quality_scores.empty:
             workout_analysis = workout_analysis.merge(
                 quality_scores,
-                on=['race', 'horse_name'],
-                how='left'
-            )
-        
-        # Merge intent signals
-        if not intent_signals.empty:
-            intent_cols = ['race', 'horse_name', 'frequency_signal', 'distance_pattern',
-                          'bullet_timing', 'days_since_bullet', 'gate_work_count',
-                          'trainer_intent_signals', 'intent_confidence']
-            workout_analysis = workout_analysis.merge(
-                intent_signals[intent_cols],
                 on=['race', 'horse_name'],
                 how='left'
             )
@@ -569,12 +557,9 @@ class SophisticatedWorkoutAnalysis:
         if 'workout_quality_score' in workout_analysis.columns:
             score_components.append(workout_analysis['workout_quality_score'].fillna(50))
         
-        if 'intent_confidence' in workout_analysis.columns:
-            score_components.append(workout_analysis['intent_confidence'].fillna(50))
-        
         if 'pct_fast_works' in workout_analysis.columns:
-            # Scale percentage to 0-100 score
-            score_components.append(workout_analysis['pct_fast_works'].fillna(0) * 2)
+            # Use raw percentage
+            score_components.append(workout_analysis['pct_fast_works'].fillna(0))
         
         if score_components:
             workout_analysis['workout_readiness_score'] = np.mean(score_components, axis=0)
@@ -670,9 +655,6 @@ def main():
     # Generate trainer pattern report
     trainer_report = analyzer.generate_trainer_pattern_report()
     
-    # Analyze work-to-race translation
-    translation_analysis = analyzer.analyze_work_to_race_translation()
-    
     # Save results
     output_path = base_path / 'sophisticated_workout_analysis.parquet'
     workout_analysis.to_parquet(output_path, index=False)
@@ -682,11 +664,6 @@ def main():
         trainer_path = base_path / 'trainer_workout_patterns.csv'
         trainer_report.to_csv(trainer_path, index=False)
         logger.info(f"Saved trainer patterns to {trainer_path}")
-    
-    if not translation_analysis.empty:
-        translation_path = base_path / 'workout_race_translation.csv'
-        translation_analysis.to_csv(translation_path, index=False)
-        logger.info(f"Saved translation analysis to {translation_path}")
     
     # Display summary
     print("\n" + "="*60)
@@ -702,14 +679,9 @@ def main():
     if 'workout_readiness_score' in workout_analysis.columns:
         top_horses = workout_analysis.nlargest(10, 'workout_readiness_score')[
             ['race', 'horse_name', 'post_position', 'workout_readiness_score', 
-             'workout_quality_score', 'trainer_intent_signals']
+             'workout_quality_score']
         ]
         print(top_horses.to_string(index=False))
-    
-    print(f"\nTrainer Intent Signals Distribution:")
-    if 'trainer_intent_signals' in workout_analysis.columns:
-        intent_counts = workout_analysis['trainer_intent_signals'].value_counts()
-        print(intent_counts.head(10))
     
     # Print trainer patterns if available
     if not trainer_report.empty:
@@ -718,23 +690,13 @@ def main():
         print("="*60)
         print(trainer_report.head(10).to_string(index=False))
     
-    # Print translation insights if available
-    if not translation_analysis.empty:
-        print(f"\n" + "="*60)
-        print("WORKOUT-TO-RACE TRANSLATION INSIGHTS")
-        print("="*60)
-        # Sort by success rate
-        best_patterns = translation_analysis.nlargest(10, 'success_rate')
-        print(best_patterns.to_string(index=False))
-    
     # Save detailed summary report
     summary_path = base_path / 'workout_analysis_summary.csv'
     summary_cols = [
         'race', 'horse_name', 'post_position', 'today_s_trainer',
         'workout_readiness_score', 'workout_readiness_category',
-        'workout_quality_score', 'trainer_intent_signals',
-        'bullet_timing', 'works_last_14d', 'pct_fast_works',
-        'workout_rank'
+        'workout_quality_score', 'bullet_work_count', 'works_last_14d', 
+        'pct_fast_works', 'workout_rank'
     ]
     
     available_cols = [col for col in summary_cols if col in workout_analysis.columns]
