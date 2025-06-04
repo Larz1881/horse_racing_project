@@ -578,12 +578,39 @@ class IntegratedAnalyticsSystem:
             return None
         
         # Convert to arrays
-        X = np.array(features)
-        y = np.array(labels)
+        X_np = np.array(features) # Renamed to avoid conflict if filtered
+        y_np = np.array(labels)   # Renamed to avoid conflict if filtered
+
+        # --- START MODIFICATION ---
+        logger.info(f"Original class distribution for Form Cycle Classifier (y): {pd.Series(y_np).value_counts().to_dict()}")
+        unique_classes, counts = np.unique(y_np, return_counts=True)
         
-        # Split data
+        min_samples_for_stratification = 2 # For train_test_split, n_splits is effectively 2 for a single split
+
+        classes_to_keep_mask = np.isin(y_np, unique_classes[counts >= min_samples_for_stratification])
+        
+        if not np.all(classes_to_keep_mask):
+            removed_classes = unique_classes[counts < min_samples_for_stratification]
+            logger.warning(
+                f"Stratification issue: Removing samples from classes with < {min_samples_for_stratification} instances: {removed_classes}. "
+                f"Number of samples removed: {len(y_np) - np.sum(classes_to_keep_mask)}"
+            )
+            X_np = X_np[classes_to_keep_mask]
+            y_np = y_np[classes_to_keep_mask]
+            
+            if len(y_np) == 0:
+                logger.error("No data left after filtering for stratification in form cycle classifier. Aborting training for this model.")
+                return None
+            logger.info(f"New class distribution after filtering: {pd.Series(y_np).value_counts().to_dict()}")
+        # --- END MODIFICATION ---
+
+        if len(X_np) < 50: # Check if enough samples remain
+            logger.warning(f"Insufficient samples ({len(X_np)}) for form cycle classifier after filtering. Skipping model.")
+            return None
+
+        # Split data - use the filtered X_np and y_np
         X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.2, random_state=42, stratify=y
+            X_np, y_np, test_size=0.2, random_state=42, stratify=y_np # Use filtered y_np for stratification
         )
         
         # Scale features
@@ -656,18 +683,37 @@ class IntegratedAnalyticsSystem:
             workout_features.append(features)
             horse_ids.append((row['race'], row['horse_name']))
         
+        # ... (after workout_features are collected) ...
+
         if len(workout_features) < 10:
             logger.warning("Insufficient samples for workout clustering")
             return None
         
-        # Scale features
+        # Convert to arrays
         X = np.array(workout_features)
+        
+        # --- START MODIFICATION ---
+        # Impute NaN values before scaling
+        # Check if X contains any NaN values
+        if np.isnan(X).any():
+            logger.info("NaNs found in workout clustering features. Imputing with median.")
+            from sklearn.impute import SimpleImputer
+            imputer = SimpleImputer(strategy='median') # or 'mean', 'most_frequent'
+            X = imputer.fit_transform(X)
+        # --- END MODIFICATION ---
+        
         scaler = StandardScaler()
         X_scaled = scaler.fit_transform(X)
         
         # Perform clustering
-        n_clusters = min(5, len(X) // 10)  # Adaptive number of clusters
-        kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+        # Determine number of clusters, ensuring it's not more than samples
+        n_samples = X_scaled.shape[0]
+        n_clusters = min(5, n_samples) 
+        if n_clusters < 2 : # KMeans requires at least 1 cluster, but practically 2
+             logger.warning(f"Too few samples ({n_samples}) for meaningful workout clustering. Skipping.")
+             return None
+
+        kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init='auto') # Set n_init to 'auto' or 10
         clusters = kmeans.fit_predict(X_scaled)
         
         # Analyze clusters
