@@ -6,6 +6,7 @@ Visualizes all advanced handicapping metrics using Plotly Dash
 
 import dash
 from dash import dcc, html, dash_table, Input, Output, State
+import dash_bootstrap_components as dbc
 import plotly.graph_objs as go
 import plotly.express as px
 from plotly.subplots import make_subplots
@@ -13,13 +14,15 @@ import pandas as pd
 import numpy as np
 import logging
 from config.settings import PROCESSED_DATA_DIR, CURRENT_RACE_INFO, PAST_STARTS_LONG
+from horse_racing.transformers.simple_pace import PaceAnalyzer, create_horse_best_race_card
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Initialize Dash app
-app = dash.Dash(__name__, suppress_callback_exceptions=True)
+app = dash.Dash(__name__, suppress_callback_exceptions=True,
+                external_stylesheets=[dbc.themes.DARKLY])
 app.title = "Horse Racing Analytics Dashboard"
 
 # Define color schemes
@@ -82,6 +85,134 @@ def load_all_data():
 # Load data on startup
 DATA = load_all_data()
 
+# Initialize simple pace analyzer for additional dashboard tab
+analyzer = PaceAnalyzer()
+
+# Layout for the Simple Pace tab
+def get_simple_pace_layout():
+    return html.Div([
+        dbc.Container([
+            dbc.Row([
+                dbc.Col([
+                    html.H1("Simple Pace Analysis", className="text-center mb-4"),
+                    html.Hr()
+                ], width=12)
+            ]),
+
+            dbc.Row([
+                dbc.Col([
+                    html.Label("Select Race:", className="fw-bold"),
+                    dcc.Dropdown(
+                        id='race-dropdown',
+                        options=[],
+                        value=None,
+                        className="mb-3",
+                        style={'backgroundColor': 'rgb(50, 50, 50)', 'color': 'white'}
+                    )
+                ], width=4),
+
+                dbc.Col([
+                    dbc.Button(
+                        "Load Data",
+                        id="load-data-btn",
+                        color="primary",
+                        size="lg",
+                        className="mt-4",
+                        style={
+                            'backgroundColor': '#007bff',
+                            'borderColor': '#007bff',
+                            'color': 'white',
+                            'fontWeight': 'bold'
+                        }
+                    )
+                ], width=2),
+
+                dbc.Col([
+                    html.Div(id="data-status", className="mt-4")
+                ], width=3),
+
+                dbc.Col([
+                    html.A(
+                        "Go to Best Race Analysis ↓",
+                        href="#best-race-header",
+                        className="btn btn-info mt-4",
+                        style={'color': 'white', 'textDecoration': 'none'}
+                    )
+                ], width=3)
+            ]),
+
+            html.Hr(),
+
+            dbc.Tabs([
+                dbc.Tab(label="Pace Results", tab_id="results-tab", children=[
+                    dbc.Row([
+                        dbc.Col([
+                            html.H3("Pace Analysis Results", className="mb-3"),
+                            html.Div(id="pace-table-container")
+                        ], width=12)
+                    ]),
+
+                    html.Hr(),
+
+                    dbc.Row([
+                        dbc.Col([
+                            html.H3("Best Race Analysis", className="mb-3", id="best-race-header"),
+                            dbc.Button(
+                                "Analyze Best Races",
+                                id="analyze-best-races-btn",
+                                color="success",
+                                className="mb-3",
+                                style={
+                                    'backgroundColor': '#28a745',
+                                    'borderColor': '#28a745',
+                                    'color': 'white',
+                                    'fontWeight': 'bold',
+                                    'padding': '10px 20px',
+                                    'fontSize': '16px'
+                                }
+                            ),
+                            html.Div(
+                                id="best-race-container",
+                                children=[
+                                    html.P(
+                                        "Click 'Analyze Best Races' to identify patterns in each horse's best performances.",
+                                        className="text-muted"
+                                    )
+                                ],
+                                style={'minHeight': '200px', 'paddingBottom': '100px'}
+                            )
+                        ], width=12)
+                    ])
+                ]),
+
+                dbc.Tab(label="Pace Visualizations", tab_id="viz-tab", children=[
+                    dbc.Row([
+                        dbc.Col([
+                            html.H3("Visualizations", className="mb-3"),
+                            dcc.Graph(id="pace-visualization")
+                        ], width=12)
+                    ])
+                ])
+            ], id="main-tabs", active_tab="results-tab"),
+
+            html.Hr(),
+
+            dbc.Row([
+                dbc.Col([
+                    html.Hr(),
+                    html.H5("Debug: If you can see this, scrolling works!", className="text-warning"),
+                    html.P("This is a test section at the bottom of the page.", className="text-muted"),
+                    html.Div(style={'height': '200px', 'backgroundColor': 'rgba(255,255,255,0.1)', 'border': '1px dashed white'})
+                ], width=12)
+            ])
+
+        ], fluid=True)
+    ], style={
+        'minHeight': '100vh',
+        'paddingBottom': '100px',
+        'overflow': 'visible',
+        'position': 'relative'
+    })
 # Get unique races for dropdown
 RACE_OPTIONS = [{'label': f'Race {r}', 'value': r} 
                 for r in sorted(DATA['current']['race'].unique())]
@@ -122,6 +253,10 @@ app.layout = html.Div([
         ]),
         dcc.Tab(label='Pace Projections', children=[
             html.Div(id='pace-content', style={'padding': '20px'})
+        ]),
+        dcc.Tab(label='Simple Pace', children=[
+            html.Div(id='simple-pace-content', children=get_simple_pace_layout(),
+                     style={'padding': '20px'})
         ]),
         dcc.Tab(label='Class Assessment', children=[
             html.Div(id='class-content', style={'padding': '20px'})
@@ -966,6 +1101,343 @@ def update_betting_view(selected_race):
         yaxis_title='System Rating'
     )
     return dcc.Graph(figure=fig)
+
+
+# ------- Simple Pace Callbacks -------
+
+@app.callback(
+    [Output('race-dropdown', 'options'),
+     Output('race-dropdown', 'value'),
+     Output('data-status', 'children')],
+    Input('load-data-btn', 'n_clicks'),
+    prevent_initial_call=True
+)
+def load_data(n_clicks):
+    """Load data and populate race dropdown"""
+    if analyzer.load_data():
+        if analyzer.validate_columns():
+            races = analyzer.get_race_list()
+            options = [{'label': f'Race {r}', 'value': r} for r in races]
+            value = races[0] if races else None
+
+            status = dbc.Alert(
+                f"Data loaded successfully! Found {len(races)} race{'s' if len(races) != 1 else ''}.",
+                color="success",
+                dismissable=True
+            )
+
+            return options, value, status
+        else:
+            status = dbc.Alert(
+                "Data loaded but some columns are missing. Check logs.",
+                color="warning",
+                dismissable=True
+            )
+            return [], None, status
+    else:
+        status = dbc.Alert(
+            "Failed to load data. Check file paths.",
+            color="danger",
+            dismissable=True
+        )
+        return [], None, status
+
+
+@app.callback(
+    [Output('pace-table-container', 'children'),
+     Output('pace-visualization', 'figure')],
+    Input('race-dropdown', 'value'),
+    prevent_initial_call=True
+)
+def update_display(selected_race):
+    """Update table and visualization based on selected race"""
+    if selected_race is None or analyzer.current_race_df is None:
+        return html.Div("No race selected"), go.Figure()
+
+    # Calculate pace metrics
+    results_df = analyzer.calculate_pace_metrics()
+
+    # Filter for selected race
+    race_df = results_df[results_df['race'] == selected_race].copy()
+
+    if race_df.empty:
+        return html.Div("No data for selected race"), go.Figure()
+
+    # Round numeric columns for display
+    numeric_cols = ['e1_consistency', 'lp_consistency', 'average_e1', 'first_call_mean',
+                   'average_lp', 'pace_vol', 'e1_trend', 'lp_trend',
+                   'latest_energy_dist', 'latest_accel_pct', 'latest_finish_pct']
+
+    for col in numeric_cols:
+        if col in race_df.columns:
+            race_df[col] = race_df[col].round(2)
+
+    # Create display dataframe with key columns
+    display_columns = [
+        'post_position', 'horse_name', 'bris_run_style_designation',
+        'quirin_style_speed_points', 'e1_consistency', 'lp_consistency',
+        'average_e1', 'first_call_mean', 'average_lp', 'lead_abundance_flag',
+        'pace_vol', 'e1_trend', 'lp_trend', 'latest_energy_dist',
+        'latest_accel_pct', 'latest_finish_pct'
+    ]
+
+    display_columns = [col for col in display_columns if col in race_df.columns]
+
+    display_df = race_df[display_columns].copy()
+
+    column_rename = {
+        'post_position': 'PP',
+        'horse_name': 'Horse',
+        'bris_run_style_designation': 'Style',
+        'quirin_style_speed_points': 'SP',
+        'e1_consistency': 'E1 SD',
+        'lp_consistency': 'LP SD',
+        'average_e1': 'Avg E1',
+        'first_call_mean': 'Top3 E1',
+        'average_lp': 'Avg LP',
+        'lead_abundance_flag': 'Lead Count',
+        'pace_vol': 'Pace Vol',
+        'e1_trend': 'E1 Trend',
+        'lp_trend': 'LP Trend',
+        'latest_energy_dist': 'Energy Dist',
+        'latest_accel_pct': 'Accel %',
+        'latest_finish_pct': 'Finish %'
+    }
+
+    display_df = display_df.rename(columns=column_rename)
+
+    table = dash_table.DataTable(
+        data=display_df.to_dict('records'),
+        columns=[{"name": col, "id": col} for col in display_df.columns],
+        style_cell={
+            'textAlign': 'left',
+            'backgroundColor': 'rgb(30, 30, 30)',
+            'color': 'white',
+            'fontSize': '12px',
+            'padding': '5px'
+        },
+        style_header={
+            'backgroundColor': 'rgb(50, 50, 50)',
+            'fontWeight': 'bold',
+            'fontSize': '13px'
+        },
+        style_data_conditional=[
+            {
+                'if': {'row_index': 'odd'},
+                'backgroundColor': 'rgb(40, 40, 40)'
+            },
+            {
+                'if': {
+                    'filter_query': '{Style} = "E" || {Style} = "E/P"',
+                    'column_id': 'Style'
+                },
+                'backgroundColor': 'rgb(70, 30, 30)',
+                'color': 'white',
+            },
+            {
+                'if': {
+                    'filter_query': '{SP} >= 6',
+                    'column_id': 'SP'
+                },
+                'color': 'rgb(255, 200, 100)',
+                'fontWeight': 'bold'
+            },
+            {
+                'if': {
+                    'filter_query': '{E1 Trend} < 0',
+                    'column_id': 'E1 Trend'
+                },
+                'color': 'rgb(100, 255, 100)'
+            },
+            {
+                'if': {
+                    'filter_query': '{E1 SD} < 2',
+                    'column_id': 'E1 SD'
+                },
+                'color': 'rgb(100, 255, 100)'
+            }
+        ],
+        sort_action="native",
+        page_size=20
+    )
+
+    fig = make_subplots(
+        rows=4, cols=1,
+        subplot_titles=(
+            'E1 Pace Analysis', 'Late Pace Analysis',
+            'Energy Distribution Profile', 'Pace Trends'
+        ),
+        vertical_spacing=0.1
+    )
+
+    race_df = race_df.sort_values('post_position')
+
+    fig.add_trace(
+        go.Bar(
+            x=race_df['post_position'],
+            y=race_df['average_e1'],
+            name='Avg E1',
+            text=race_df['horse_name'],
+            textposition='outside',
+            marker_color='lightblue'
+        ),
+        row=1, col=1
+    )
+
+    fig.add_trace(
+        go.Scatter(
+            x=race_df['post_position'],
+            y=race_df['e1_consistency'],
+            name='E1 Consistency',
+            mode='lines+markers',
+            line=dict(color='red', width=2),
+            yaxis='y2'
+        ),
+        row=1, col=1
+    )
+
+    fig.add_trace(
+        go.Bar(
+            x=race_df['post_position'],
+            y=race_df['average_lp'],
+            name='Avg LP',
+            text=race_df['horse_name'],
+            textposition='outside',
+            marker_color='lightgreen'
+        ),
+        row=2, col=1
+    )
+
+    if 'latest_energy_dist' in race_df.columns:
+        energy_dist_size = race_df['latest_energy_dist'].fillna(0) * 20
+        energy_dist_size = energy_dist_size.clip(lower=5)
+
+        fig.add_trace(
+            go.Scatter(
+                x=race_df['latest_accel_pct'].fillna(0),
+                y=race_df['latest_finish_pct'].fillna(0),
+                mode='markers+text',
+                text=race_df['horse_name'],
+                textposition='top center',
+                marker=dict(
+                    size=energy_dist_size,
+                    color=race_df['quirin_style_speed_points'].fillna(0),
+                    colorscale='Viridis',
+                    showscale=True,
+                    colorbar=dict(title="Speed Points")
+                ),
+                name='Energy Profile'
+            ),
+            row=3, col=1
+        )
+
+    if 'e1_trend' in race_df.columns and 'lp_trend' in race_df.columns:
+        valid_trends = race_df[['e1_trend', 'lp_trend', 'horse_name', 'post_position']].dropna()
+
+        if len(valid_trends) > 0:
+            fig.add_trace(
+                go.Scatter(
+                    x=valid_trends['e1_trend'],
+                    y=valid_trends['lp_trend'],
+                    mode='markers+text',
+                    text=valid_trends['horse_name'],
+                    textposition='top center',
+                    marker=dict(
+                        size=12,
+                        color=valid_trends['post_position'],
+                        colorscale='Rainbow'
+                    ),
+                    name='Pace Trends'
+                ),
+                row=4, col=1
+            )
+
+    fig.update_layout(
+        title=f"Race {selected_race} - Comprehensive Pace Analysis",
+        template="plotly_dark",
+        height=1600,
+        showlegend=False,
+        margin=dict(l=50, r=50, t=50, b=50)
+    )
+
+    fig.update_xaxes(title_text="Post Position", row=1, col=1)
+    fig.update_xaxes(title_text="Post Position", row=2, col=1)
+    fig.update_xaxes(title_text="Acceleration %", row=3, col=1)
+    fig.update_xaxes(title_text="E1 Trend", row=4, col=1)
+
+    fig.update_yaxes(title_text="E1 Pace", row=1, col=1)
+    fig.update_yaxes(title_text="Late Pace", row=2, col=1)
+    fig.update_yaxes(title_text="Finish %", row=3, col=1)
+    fig.update_yaxes(title_text="LP Trend", row=4, col=1)
+
+    lead_count = race_df['lead_abundance_flag'].iloc[0] if 'lead_abundance_flag' in race_df.columns else 0
+    pace_vol = race_df['pace_vol'].iloc[0] if 'pace_vol' in race_df.columns else 'N/A'
+
+    summary_div = html.Div([
+        html.H5("Race Summary:", className="mt-3"),
+        html.P(f"Lead Abundance: {lead_count} horses with E/E-P style and 6+ speed points"),
+        html.P(f"Pace Volatility: {pace_vol}")
+    ])
+
+    return [summary_div, table], fig
+
+
+@app.callback(
+    Output('best-race-container', 'children'),
+    Input('analyze-best-races-btn', 'n_clicks'),
+    State('race-dropdown', 'value'),
+    prevent_initial_call=False
+)
+def analyze_best_races(n_clicks, selected_race):
+    """Analyze and display best race patterns"""
+    if n_clicks is None:
+        return html.P(
+            "Click 'Analyze Best Races' to identify patterns in each horse's best performances.",
+            className="text-muted"
+        )
+
+    if analyzer.past_starts_df is None:
+        return html.Div("Please load data first", className="text-warning")
+
+    report = analyzer.analyze_best_races()
+
+    if not report or not report['race_reports']:
+        return html.Div("No best race patterns found", className="text-warning")
+
+    components = []
+    components.append(html.H5("Analysis Complete!", className="text-success mb-3"))
+
+    if report['consistent_factors']:
+        insights_div = html.Div([
+            html.H5("Key Factors in Best Performances:", className="text-info mb-3"),
+            html.Ul([
+                html.Li([
+                    html.Strong(f"{factor['factor'].replace('pp_', '').replace('_', ' ').title()}: "),
+                    f"{factor['direction']} by {abs(factor['avg_change']):.1f} on average ",
+                    f"({factor['consistency']:.0%} of horses)"
+                ])
+                for factor in report['consistent_factors'][:5]
+            ])
+        ])
+        components.append(insights_div)
+
+    if selected_race and selected_race in report['race_reports']:
+        race_data = report['race_reports'][selected_race]
+
+        if race_data['patterns']:
+            race_div = html.Div([
+                html.Hr(),
+                html.H5(f"Race {selected_race} - Best Race Analysis", className="mb-3"),
+                html.Div([
+                    create_horse_best_race_card(pattern)
+                    for pattern in race_data['patterns']
+                ])
+            ])
+            components.append(race_div)
+
+    components.append(html.Div(style={'height': '100px'}))
+
+    return html.Div(components)
 
 # Run the app
 if __name__ == '__main__':
