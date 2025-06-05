@@ -16,21 +16,13 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 from typing import List, Final, Optional
-import logging # Import logging
+import logging  # Import logging
 
-# --- Configuration ---
-# These paths correctly point to your data/processed/ directory
-SCRIPT_DIR_CURRENT_INFO: Final[Path] = Path(__file__).parent.resolve()
-PROJECT_ROOT_CURRENT_INFO: Final[Path] = SCRIPT_DIR_CURRENT_INFO.parent.parent
-PROCESSED_DATA_DIR_CURRENT_INFO: Final[Path] = PROJECT_ROOT_CURRENT_INFO / "data" / "processed"
-PROCESSED_DATA_DIR_CURRENT_INFO.mkdir(parents=True, exist_ok=True)
+from config.settings import PARSED_RACE_DATA, CURRENT_RACE_INFO, PROCESSED_DATA_DIR
 
-
-WIDE_DATA_PARQUET_FILENAME: Final[str] = "parsed_race_data_full.parquet"
-WIDE_DATA_FILE_PATH: Final[Path] = PROCESSED_DATA_DIR_CURRENT_INFO / WIDE_DATA_PARQUET_FILENAME
-
-CURRENT_INFO_FILENAME: Final[str] = "current_race_info.parquet"
-CURRENT_INFO_FILE_PATH: Final[Path] = PROCESSED_DATA_DIR_CURRENT_INFO / CURRENT_INFO_FILENAME
+# --- Centralized Path Configuration ---
+WIDE_DATA_FILE_PATH: Final[Path] = PARSED_RACE_DATA
+CURRENT_INFO_FILE_PATH: Final[Path] = CURRENT_RACE_INFO
 
 # COLUMNS_TO_DROP and record_groups are defined as before...
 COLUMNS_TO_DROP: Final[List[str]] = [

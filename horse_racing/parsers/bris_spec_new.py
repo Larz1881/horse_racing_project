@@ -12,23 +12,23 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 from typing import List, Dict, Tuple, Any, Final, Optional, Set
-import re # For parsing bris_dict.txt
-import logging # Import logging
+import re  # For parsing bris_dict.txt
+import logging  # Import logging
 
-# --- Global Path Configurations (derived from script location) ---
-SCRIPT_DIR_BRIS: Final[Path] = Path(__file__).parent.resolve()
-PROJECT_ROOT_BRIS: Final[Path] = SCRIPT_DIR_BRIS.parent.parent # Assumes src/parsers structure
+from config.settings import (
+    BRIS_SPEC_CACHE,
+    BRIS_DICT,
+    PARSED_RACE_DATA,
+    PROCESSED_DATA_DIR,
+    CACHE_DIR,
+)
 
-SPEC_CACHE_FILENAME: Final[str] = "bris_spec.pkl"
-BRIS_DICT_FILENAME: Final[str] = "bris_dict.txt"
 # Default DRF if run directly and no argument is passed, can be overridden by main's argument
-# RACE_DATA_FILENAME_DEFAULT: Final[str] = "PIM0509.DRF" 
+# RACE_DATA_FILENAME_DEFAULT: Final[str] = "PIM0509.DRF"
 
-SPEC_CACHE_FILE_PATH_BRIS: Final[Path] = PROJECT_ROOT_BRIS / "data" / "cache" / SPEC_CACHE_FILENAME
-BRIS_DICT_FILE_PATH_BRIS: Final[Path] = PROJECT_ROOT_BRIS / "data" / "raw" / BRIS_DICT_FILENAME
-
-OUTPUT_PARQUET_FILENAME: Final[str] = "parsed_race_data_full.parquet"
-OUTPUT_PARQUET_FILE_PATH_BRIS: Final[Path] = PROJECT_ROOT_BRIS / "data" / "processed" / OUTPUT_PARQUET_FILENAME
+SPEC_CACHE_FILE_PATH_BRIS: Final[Path] = BRIS_SPEC_CACHE
+BRIS_DICT_FILE_PATH_BRIS: Final[Path] = BRIS_DICT
+OUTPUT_PARQUET_FILE_PATH_BRIS: Final[Path] = PARSED_RACE_DATA
 
 # --- Helper Functions (load_specification_cache, parse_bris_dict_types, etc. remain the same) ---
 def load_specification_cache(spec_cache_path: Path) -> Optional[pd.DataFrame]:
@@ -173,8 +173,8 @@ def main(drf_file_path_arg: Optional[Path] = None):
     logger = logging.getLogger(__name__) # Ensures this main function uses logging
 
     # Ensure parent directories for output exist (moved from global scope for clarity)
-    (PROJECT_ROOT_BRIS / "data" / "processed").mkdir(parents=True, exist_ok=True)
-    (PROJECT_ROOT_BRIS / "data" / "cache").mkdir(parents=True, exist_ok=True) # Cache dir might be for reading too
+    PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)  # Cache dir might be for reading too
 
     logger.info("--- bris_spec_new.main() starting ---")
 
