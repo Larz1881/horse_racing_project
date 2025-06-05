@@ -257,7 +257,8 @@ horse_racing_project/
 ├── dev_workflow.md             # Development workflow guide
 │
 ├── config/                     # Configuration files
-│   └── settings.py            # Project settings and paths
+│   ├── settings.py            # Loads options from config.yaml
+│   └── config.yaml            # User-modifiable paths and settings
 │
 ├── data/
 │   ├── raw/                   # Original DRF files and bris_dict.txt
@@ -414,17 +415,16 @@ Specialized DataFrames → feature_engineering.py → Enhanced Features
     * Speed and pace figures
 Enhanced Data → dashboards/ → Interactive Visualizations
 ⚙️ ## Configuration
-Edit config/settings.py to customize:
+Edit `config/config.yaml` to customize settings:
 
-# Data directories (usually no need to change)
-RAW_DATA_DIR = DATA_DIR / "raw"
-PROCESSED_DATA_DIR = DATA_DIR / "processed"
-
-# Add custom columns to drop from wide format
-WORKOUT_PAST_PERF_COLUMNS = [
-    # Add any additional columns you want to exclude
-]
-
+```yaml
+# example
+data_dir: data
+raw_data_dir: data/raw
+processed_data_dir: data/processed
+cache_dir: data/cache
+```
+You can adjust these paths or define `workout_past_perf_columns` to drop additional columns during processing.
 🔧 ## Development Workflow
 See dev_workflow.md for detailed development practices. Quick reference:
 
@@ -463,7 +463,7 @@ verify_id_variables(): Check for required ID columns
 
 ### `dashboards/app.py`
 Interactive Plotly Dash dashboard for exploring the processed racing data.
-The app loads parquet files defined in `config/settings.py` and presents
+The app loads parquet files defined in `config/config.yaml` and presents
 analytics across multiple tabs:
 
 * **Race Summary** – sortable table with averages and best figures
