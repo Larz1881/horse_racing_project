@@ -366,7 +366,7 @@ horse_racing_project/
     ```
 3.  **Launch the dashboard**
     ```bash
-    python dashboards/app_dash.py
+    python dashboards/app.py
     ```
     Then open `http://localhost:8050` in your browser
 
@@ -433,7 +433,7 @@ See dev_workflow.md for detailed development practices. Quick reference:
 2. venv\Scripts\activate
 3. # Add new DRF to data/raw/
 4. python run_pipeline.py
-5. python dashboards/app_dash.py
+5. python dashboards/app.py
 
 📚 ## Module Documentation
 
@@ -460,6 +460,26 @@ src/utils/data_utils.py
 check_parquet_columns(): Verify parquet file structure
 quick_eda(): Quick exploratory data analysis
 verify_id_variables(): Check for required ID columns
+
+### `dashboards/app.py`
+Interactive Plotly Dash dashboard for exploring the processed racing data.
+The app loads parquet files defined in `config/settings.py` and presents
+analytics across multiple tabs:
+
+* **Race Summary** – sortable table with averages and best figures
+* **Integrated Analytics** – rankings bar chart, radar comparisons and key angles
+* **Fitness Analysis** – heatmap of conditioning metrics and energy profiles
+* **Pace Projections** – projected running positions and energy reserve scatter
+* **Class Assessment** – earnings vs hidden class comparisons
+* **Form Cycles** – state visualization and trajectory charts
+* **Workout Analysis** – readiness scores and trainer patterns
+* **Betting Intelligence** – value finder scatter plot highlighting overlays
+
+Run the dashboard with:
+```bash
+python dashboards/app.py
+```
+By default it listens on port 8050.
 🎯 ## Common Use Cases
 
 Analyze a Specific Race
@@ -503,7 +523,7 @@ Process races individually if needed (if your scripts support this)
 Consider upgrading RAM for files over 10MB
 Dash app won't start
 Check if port 8050 is already in use
-Try: python dashboards/app_dash.py --port 8051 (if your Dash app is set up to accept port arguments)
+Try: python dashboards/app.py --port 8051 (if your Dash app is set up to accept port arguments)
 Logging
 The pipeline creates timestamped log files (based on your run_pipeline.py setup):
 

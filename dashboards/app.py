@@ -11,8 +11,8 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 import pandas as pd
 import numpy as np
-from pathlib import Path
 import logging
+from config.settings import PROCESSED_DATA_DIR, CURRENT_RACE_INFO, PAST_STARTS_LONG
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -50,13 +50,13 @@ FORM_STATE_COLORS = {
 # Load all data
 def load_all_data():
     """Load all analytical data files"""
-    base_path = Path('data/processed')
+    base_path = PROCESSED_DATA_DIR
     
     data = {}
     
     # Core data
-    data['current'] = pd.read_parquet(base_path / 'current_race_info.parquet')
-    data['past'] = pd.read_parquet(base_path / 'past_starts_long_format.parquet')
+    data['current'] = pd.read_parquet(CURRENT_RACE_INFO)
+    data['past'] = pd.read_parquet(PAST_STARTS_LONG)
     
     # Component analyses
     files_to_load = {
@@ -131,6 +131,9 @@ app.layout = html.Div([
         ]),
         dcc.Tab(label='Workout Analysis', children=[
             html.Div(id='workout-content', style={'padding': '20px'})
+        ]),
+        dcc.Tab(label='Betting Intelligence', children=[
+            html.Div(id='betting-content', style={'padding': '20px'})
         ])
     ], style={'backgroundColor': COLORS['background']})
     
@@ -158,11 +161,20 @@ def update_race_header(selected_race):
     classification = race_data.get('today_s_race_classification', '')
     purse = race_data.get('purse', 0)
     
+    field_size = race_data.get('field_size', None)
+
+    stats_bar = html.Div([
+        html.Span(f"Horses: {field_size}", style={'marginRight': '20px'}),
+        html.Span(f"Distance: {furlongs:.1f}f", style={'marginRight': '20px'}),
+        html.Span(f"Surface: {surface_text}", style={'marginRight': '20px'}),
+        html.Span(f"Purse: ${purse:,}")
+    ], style={'color': COLORS['text'], 'fontSize': '18px'})
+
     header = html.Div([
-        html.H2(f"Race {selected_race} - {furlongs:.1f}f {surface_text}", 
-                style={'color': COLORS['primary']}),
-        html.P(f"Classification: {classification} | Type: {race_type} | Purse: ${purse:,}",
-               style={'color': COLORS['text'], 'fontSize': '18px'})
+        html.H2(f"Race {selected_race}", style={'color': COLORS['primary']}),
+        stats_bar,
+        html.P(f"Classification: {classification} | Type: {race_type}",
+               style={'color': COLORS['text'], 'fontSize': '16px', 'marginTop': '5px'})
     ])
     
     return header
@@ -926,6 +938,34 @@ def update_workout_view(selected_race):
         charts.append(dcc.Graph(figure=fig_patterns))
     
     return html.Div(charts)
+
+@app.callback(
+    Output('betting-content', 'children'),
+    Input('race-selector', 'value')
+)
+def update_betting_view(selected_race):
+    """Update betting intelligence view"""
+    if not selected_race or DATA['integrated'].empty:
+        return html.Div("No data")
+
+    race_data = DATA['integrated'][DATA['integrated']['race'] == selected_race].copy()
+    if race_data.empty:
+        return html.Div("No data")
+
+    fig = px.scatter(
+        race_data,
+        x='morn_line_odds_if_available',
+        y='final_rating',
+        hover_name='horse_name',
+        title='Value Finder Matrix'
+    )
+    fig.update_layout(
+        template='plotly_dark',
+        height=400,
+        xaxis_title='Morning Line Odds',
+        yaxis_title='System Rating'
+    )
+    return dcc.Graph(figure=fig)
 
 # Run the app
 if __name__ == '__main__':
