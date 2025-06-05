@@ -17,13 +17,13 @@ from typing import Optional  # Added for type hinting
 try:
     PROJECT_ROOT: Path = Path(__file__).resolve().parent
     # Add PROJECT_ROOT to sys.path to allow imports like 'config.settings'
-    # and 'src.parsers...', 'src.transformers...'
+    # and 'horse_racing.parsers...', 'horse_racing.transformers...'
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
 except NameError:
     # Fallback if __file__ is not defined
     PROJECT_ROOT: Path = Path.cwd()
-    if not (PROJECT_ROOT / "config").exists() or not (PROJECT_ROOT / "src").exists():
+    if not (PROJECT_ROOT / "config").exists() or not (PROJECT_ROOT / "horse_racing").exists():
         print("Warning: PROJECT_ROOT might not be correctly set. Assuming current working directory.")
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
@@ -37,24 +37,24 @@ try:
         CACHE_DIR,
         DRF_PATTERN,
     )
-    # bris_spec_new.py is in src/parsers/
-    from src.parsers.bris_spec_new import main as parse_bris_main
+    # bris_spec_new.py is in horse_racing/parsers/
+    from horse_racing.parsers.bris_spec_new import main as parse_bris_main
 
-    from src.transformers.current_race_info import main as create_current_info_main
-    from src.transformers.transform_workouts import main as transform_workouts_main
-    from src.transformers.transform_past_starts import main as transform_past_starts_main
-    from src.transformers.feature_engineering import main as engineer_features_main
+    from horse_racing.transformers.current_race_info import main as create_current_info_main
+    from horse_racing.transformers.transform_workouts import main as transform_workouts_main
+    from horse_racing.transformers.transform_past_starts import main as transform_past_starts_main
+    from horse_racing.transformers.feature_engineering import main as engineer_features_main
 except ImportError as e:
     print(f"Error importing modules: {e}")
     print("Please ensure that:")
     print(f"1. The project root ({PROJECT_ROOT}) is correctly identified and added to sys.path.")
-    print("2. 'bris_spec_new.py' is in the 'src/parsers/' directory and is importable.")
-    print("3. Other 'src' script files (current_race_info.py, etc.) exist in their 'src/transformers/' subdirectories.")
+    print("2. 'bris_spec_new.py' is in the 'horse_racing/parsers/' directory and is importable.")
+    print("3. Other 'horse_racing' script files (current_race_info.py, etc.) exist in their 'horse_racing/transformers/' subdirectories.")
     print("4. Each of these scripts has a callable 'main()' function.")
     print(
         "5. 'config/settings.py' exists in the 'config/' directory and defines necessary variables (RAW_DATA_DIR, etc.).")
     print(
-        "6. Ensure necessary '__init__.py' files are present in 'src/', 'src/parsers/', and 'src/transformers/' to make them packages.")
+        "6. Ensure necessary '__init__.py' files are present in 'horse_racing/', 'horse_racing/parsers/', and 'horse_racing/transformers/' to make them packages.")
     sys.exit(1)
 
 # --- Logging Setup ---
@@ -109,7 +109,7 @@ def run_complete_pipeline():
     try:
         drf_to_process = find_latest_drf_file()
 
-        logger.info("--- Step 1: Parsing DRF file (using src/parsers/bris_spec_new.py) ---")
+        logger.info("--- Step 1: Parsing DRF file (using horse_racing/parsers/bris_spec_new.py) ---")
         # Assuming bris_spec_new.main (now parse_bris_main) can accept the DRF file path
         parse_bris_main(drf_file_path_arg=drf_to_process)
         logger.info("--- Step 1: Parsing DRF file completed ---")
@@ -131,27 +131,27 @@ def run_complete_pipeline():
         logger.info("--- Step 5: Engineering features completed ---")
 
         logger.info("Running advanced fitness metrics...")
-        from src.transformers.advanced_fitness_metrics import main as run_fitness_metrics
+        from horse_racing.transformers.advanced_fitness_metrics import main as run_fitness_metrics
         run_fitness_metrics()
 
         logger.info("Running sophisticated workout analysis...")
-        from src.transformers.sophisticated_workout_analysis import main as run_workout_analysis
+        from horse_racing.transformers.sophisticated_workout_analysis import main as run_workout_analysis
         run_workout_analysis()
 
         logger.info("Running advanced pace projection...")
-        from src.transformers.advanced_pace_projection import main as run_pace_analysis
+        from horse_racing.transformers.advanced_pace_projection import main as run_pace_analysis
         run_pace_analysis()
 
         logger.info("Running multi-dimensional class assessment...")
-        from src.transformers.multi_dimensional_class_assessment import main as run_class_assessment
+        from horse_racing.transformers.multi_dimensional_class_assessment import main as run_class_assessment
         run_class_assessment()
 
         logger.info("Running form cycle detection...")
-        from src.transformers.form_cycle_detector import main as run_form_cycle
+        from horse_racing.transformers.form_cycle_detector import main as run_form_cycle
         run_form_cycle()
 
         logger.info("Running integrated analytics system...")
-        from src.transformers.integrated_analytics_system import main as run_integrated_analytics
+        from horse_racing.transformers.integrated_analytics_system import main as run_integrated_analytics
         run_integrated_analytics()
 
         logger.info("=== Pipeline completed successfully! ===")
