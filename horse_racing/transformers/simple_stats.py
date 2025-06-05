@@ -5,14 +5,10 @@ import sys
 from pathlib import Path
 from typing import List, Final, Optional
 
-# --- Define standardized paths ---
-SCRIPT_DIR: Path = Path(__file__).parent.resolve() # .../src/transformers/
-PROJECT_ROOT: Path = SCRIPT_DIR.parent.parent    # .../horse_racing_project/
-PROCESSED_DATA_DIR: Path = PROJECT_ROOT / "data" / "processed"
-PROCESSED_DATA_DIR.mkdir(parents=True, exist_ok=True) # Ensure directory exists
+from config.settings import PARSED_RACE_DATA, PROCESSED_DATA_DIR
 
-# --- Input file path ---
-INPUT_PARQUET_PATH: Path = PROCESSED_DATA_DIR / "parsed_race_data_full.parquet"
+# --- Input file path from centralized settings ---
+INPUT_PARQUET_PATH: Path = PARSED_RACE_DATA
 
 def compute_fractional_splits(df: pd.DataFrame) -> pd.DataFrame:
     """
