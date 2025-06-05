@@ -343,7 +343,8 @@ horse_racing_project/
     ```
 3.  **Install dependencies**
     ```bash
-    pip install -r requirements.txt
+    # Install the project in editable mode
+    pip install -e .
 
     # For NLP features (optional)
     python -m spacy download en_core_web_sm
@@ -516,7 +517,7 @@ Check file extension is .DRF (uppercase)
 "Module not found" errors
 Make sure you're in the project root directory
 Activate your virtual environment
-Reinstall requirements: pip install -r requirements.txt
+Reinstall dependencies: pip install -e .
 Memory errors with large files
 Close other applications
 Process races individually if needed (if your scripts support this)
