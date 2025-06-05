@@ -16,6 +16,7 @@ from pathlib import Path
 import logging
 from typing import Dict, List, Tuple, Optional
 from config.settings import PROCESSED_DATA_DIR, CURRENT_RACE_INFO, PAST_STARTS_LONG
+from .long_format_transformer import convert_odds_to_decimal
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
@@ -28,42 +29,6 @@ warnings.filterwarnings('ignore')
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-def convert_odds_to_decimal(odds_value):
-    """
-    Convert various odds formats to decimal
-    
-    Args:
-        odds_value: Can be string (fractional like "9/2"), float, or int
-        
-    Returns:
-        float: Decimal odds value, or 0 if conversion fails
-    """
-    if pd.isna(odds_value) or odds_value == '':
-        return 0
-        
-    if isinstance(odds_value, (int, float)):
-        return float(odds_value)
-    
-    if isinstance(odds_value, str):
-        odds_value = odds_value.strip()
-        
-        try:
-            # Handle fractional odds like "9/2", "10/1"
-            if '/' in odds_value:
-                parts = odds_value.split('/')
-                if len(parts) == 2:
-                    num, denom = parts
-                    # Convert fractional to decimal odds
-                    # Note: In horse racing, "9/2" means 4.5-to-1, so we return 4.5
-                    return float(num) / float(denom)
-            # Handle decimal odds like "4.5"
-            else:
-                return float(odds_value)
-        except (ValueError, ZeroDivisionError, TypeError):
-            return 0
-    
-    return 0
 
 class IntegratedAnalyticsSystem:
     """Unified system combining all analytical components"""

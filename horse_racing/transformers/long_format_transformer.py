@@ -645,6 +645,31 @@ def calculate_jockey_performance(df: pd.DataFrame) -> pd.DataFrame:
 
     return df_jockey
 
+
+def convert_odds_to_decimal(odds_value):
+    """Convert various odds formats to decimal."""
+    if pd.isna(odds_value) or odds_value == "":
+        return 0
+
+    if isinstance(odds_value, (int, float)):
+        return float(odds_value)
+
+    if isinstance(odds_value, str):
+        odds_value = odds_value.strip()
+
+        try:
+            if "/" in odds_value:
+                parts = odds_value.split("/")
+                if len(parts) == 2:
+                    num, denom = parts
+                    return float(num) / float(denom)
+            else:
+                return float(odds_value)
+        except (ValueError, ZeroDivisionError, TypeError):
+            return 0
+
+    return 0
+
 # ---------------------------------------------------------------------------
 # High level transformation functions
 
