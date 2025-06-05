@@ -58,8 +58,19 @@ def load_all_data():
     data = {}
     
     # Core data
-    data['current'] = pd.read_parquet(CURRENT_RACE_INFO)
-    data['past'] = pd.read_parquet(PAST_STARTS_LONG)
+    if CURRENT_RACE_INFO.exists():
+        data['current'] = pd.read_parquet(CURRENT_RACE_INFO)
+        logger.info("Loaded current race info")
+    else:
+        logger.warning("Current race info file not found")
+        data['current'] = pd.DataFrame()
+
+    if PAST_STARTS_LONG.exists():
+        data['past'] = pd.read_parquet(PAST_STARTS_LONG)
+        logger.info("Loaded past starts data")
+    else:
+        logger.warning("Past starts file not found")
+        data['past'] = pd.DataFrame()
     
     # Component analyses
     files_to_load = {
@@ -214,8 +225,13 @@ def get_simple_pace_layout():
         'position': 'relative'
     })
 # Get unique races for dropdown
-RACE_OPTIONS = [{'label': f'Race {r}', 'value': r} 
-                for r in sorted(DATA['current']['race'].unique())]
+if not DATA['current'].empty and 'race' in DATA['current']:
+    RACE_OPTIONS = [
+        {'label': f'Race {r}', 'value': r}
+        for r in sorted(DATA['current']['race'].dropna().unique())
+    ]
+else:
+    RACE_OPTIONS = []
 
 # Layout
 app.layout = html.Div([
