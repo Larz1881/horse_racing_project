@@ -1,166 +1,176 @@
 #!/usr/bin/env python
-"""Run various stages of the horse racing data pipeline."""
-from __future__ import annotations
+"""
+Main pipeline orchestrator for the Horse Racing Analysis project.
+This script sequences the parsing, transformation, and feature engineering steps.
+It is intended to be run from the project root directory.
+"""
 
-import argparse
+import sys
 import logging
-from datetime import datetime
 from pathlib import Path
+from datetime import datetime
+from typing import Optional  # Added for type hinting
 
-from horse_racing_project.config.settings import (
-    RAW_DATA_DIR,
-    PROCESSED_DATA_DIR,
-    CACHE_DIR,
-    DRF_PATTERN,
-)
-from horse_racing_project.src.parsers.bris_spec_new import main as parse_bris_main
-from horse_racing_project.src.transformers.current_race_info import main as create_current_info_main
-from horse_racing_project.src.transformers.transform_workouts import main as transform_workouts_main
-from horse_racing_project.src.transformers.transform_past_starts import main as transform_past_starts_main
-from horse_racing_project.src.transformers.feature_engineering import main as engineer_features_main
+# --- Setup Project Root and System Path ---
+# This script (run_pipeline.py) is in the project root.
+# The PROJECT_ROOT is the directory containing this script.
+try:
+    PROJECT_ROOT: Path = Path(__file__).resolve().parent
+    # Add PROJECT_ROOT to sys.path to allow imports like 'config.settings'
+    # and 'src.parsers...', 'src.transformers...'
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
+except NameError:
+    # Fallback if __file__ is not defined
+    PROJECT_ROOT: Path = Path.cwd()
+    if not (PROJECT_ROOT / "config").exists() or not (PROJECT_ROOT / "src").exists():
+        print("Warning: PROJECT_ROOT might not be correctly set. Assuming current working directory.")
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
 
-PROJECT_ROOT = Path(__file__).resolve().parent
-LOG_DIR = PROJECT_ROOT / "logs"
-LOG_DIR.mkdir(parents=True, exist_ok=True)
-LOG_FILE_PATH = LOG_DIR / f"pipeline_{datetime.now():%Y%m%d_%H%M%S}.log"
+# --- Imports ---
+# These imports rely on PROJECT_ROOT being correctly added to sys.path.
+try:
+    from config.settings import (
+        RAW_DATA_DIR,
+        PROCESSED_DATA_DIR,
+        CACHE_DIR,
+        DRF_PATTERN,
+    )
+    # bris_spec_new.py is in src/parsers/
+    from src.parsers.bris_spec_new import main as parse_bris_main
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.FileHandler(LOG_FILE_PATH),
-        logging.StreamHandler(),
-    ],
-)
+    from src.transformers.current_race_info import main as create_current_info_main
+    from src.transformers.transform_workouts import main as transform_workouts_main
+    from src.transformers.transform_past_starts import main as transform_past_starts_main
+    from src.transformers.feature_engineering import main as engineer_features_main
+except ImportError as e:
+    print(f"Error importing modules: {e}")
+    print("Please ensure that:")
+    print(f"1. The project root ({PROJECT_ROOT}) is correctly identified and added to sys.path.")
+    print("2. 'bris_spec_new.py' is in the 'src/parsers/' directory and is importable.")
+    print("3. Other 'src' script files (current_race_info.py, etc.) exist in their 'src/transformers/' subdirectories.")
+    print("4. Each of these scripts has a callable 'main()' function.")
+    print(
+        "5. 'config/settings.py' exists in the 'config/' directory and defines necessary variables (RAW_DATA_DIR, etc.).")
+    print(
+        "6. Ensure necessary '__init__.py' files are present in 'src/', 'src/parsers/', and 'src/transformers/' to make them packages.")
+    sys.exit(1)
+
+# --- Logging Setup ---
+LOG_DIR: Path = PROJECT_ROOT / "logs"  # Logs directory in project root
+try:
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    LOG_FILE_PATH: Path = LOG_DIR / f'pipeline_{datetime.now():%Y%m%d_%H%M%S}.log'
+
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler(LOG_FILE_PATH),
+            logging.StreamHandler(sys.stdout)
+        ]
+    )
+except Exception as log_e:
+    print(f"Error setting up logging: {log_e}. Logging to console only.")
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        handlers=[logging.StreamHandler(sys.stdout)]
+    )
+
 logger = logging.getLogger(__name__)
 
 
+# --- Helper Function to Find DRF File ---
 def find_latest_drf_file() -> Path:
-    """Return the most recent DRF file in the raw data directory."""
-    logger.info("Searching for DRF files in %s with pattern %s", RAW_DATA_DIR, DRF_PATTERN)
+    """Finds the most recent DRF file in the raw data directory."""
+    logger.info(f"Searching for DRF files in: {RAW_DATA_DIR} with pattern: '{DRF_PATTERN}'")
+    if not RAW_DATA_DIR.exists():
+        msg = f"Raw data directory does not exist: {RAW_DATA_DIR}"
+        logger.error(msg)
+        raise FileNotFoundError(msg)
+
     drf_files = list(RAW_DATA_DIR.glob(DRF_PATTERN))
     if not drf_files:
-        raise FileNotFoundError(
-            f"No DRF files found matching {DRF_PATTERN} in {RAW_DATA_DIR}"
-        )
+        msg = f"No DRF files found matching pattern '{DRF_PATTERN}' in {RAW_DATA_DIR}"
+        logger.error(msg)
+        raise FileNotFoundError(msg)
+
     latest_file = max(drf_files, key=lambda p: p.stat().st_mtime)
-    logger.info("Using DRF file: %s", latest_file.name)
+    logger.info(f"Using DRF file: {latest_file.name}")
     return latest_file
 
 
-def stage_parse_drf():
-    parse_bris_main(drf_file_path_arg=find_latest_drf_file())
-
-
-def stage_current_info():
-    create_current_info_main()
-
-
-def stage_workouts():
-    transform_workouts_main()
-
-
-def stage_past_starts():
-    transform_past_starts_main()
-
-
-def stage_feature_engineering():
-    engineer_features_main()
-
-
-def stage_fitness_metrics():
-    from horse_racing_project.src.transformers.advanced_fitness_metrics import main as run_fitness_metrics
-
-    run_fitness_metrics()
-
-
-def stage_workout_analysis():
-    from horse_racing_project.src.transformers.sophisticated_workout_analysis import main as run_workout_analysis
-
-    run_workout_analysis()
-
-
-def stage_pace_projection():
-    from horse_racing_project.src.transformers.advanced_pace_projection import main as run_pace_analysis
-
-    run_pace_analysis()
-
-
-def stage_class_assessment():
-    from horse_racing_project.src.transformers.multi_dimensional_class_assessment import main as run_class_assessment
-
-    run_class_assessment()
-
-
-def stage_form_cycle():
-    from horse_racing_project.src.transformers.form_cycle_detector import main as run_form_cycle
-
-    run_form_cycle()
-
-
-def stage_integrated_analytics():
-    from horse_racing_project.src.transformers.integrated_analytics_system import main as run_integrated_analytics
-
-    run_integrated_analytics()
-
-
-STAGE_FUNCTIONS = {
-    "parse": stage_parse_drf,
-    "current_info": stage_current_info,
-    "workouts": stage_workouts,
-    "past_starts": stage_past_starts,
-    "feature_eng": stage_feature_engineering,
-    "fitness_metrics": stage_fitness_metrics,
-    "workout_analysis": stage_workout_analysis,
-    "pace_projection": stage_pace_projection,
-    "class_assessment": stage_class_assessment,
-    "form_cycle": stage_form_cycle,
-    "integrated_analytics": stage_integrated_analytics,
-}
-
-
+# --- Main Pipeline Function ---
 def run_complete_pipeline():
-    for name in [
-        "parse",
-        "current_info",
-        "workouts",
-        "past_starts",
-        "feature_eng",
-        "fitness_metrics",
-        "workout_analysis",
-        "pace_projection",
-        "class_assessment",
-        "form_cycle",
-        "integrated_analytics",
-    ]:
-        logger.info("--- Running stage: %s ---", name)
-        STAGE_FUNCTIONS[name]()
-    logger.info("=== Pipeline completed successfully! ===")
+    """Runs the complete data processing pipeline."""
+    logger.info("=== Starting Horse Racing Data Pipeline ===")
+    try:
+        drf_to_process = find_latest_drf_file()
 
+        logger.info("--- Step 1: Parsing DRF file (using src/parsers/bris_spec_new.py) ---")
+        # Assuming bris_spec_new.main (now parse_bris_main) can accept the DRF file path
+        parse_bris_main(drf_file_path_arg=drf_to_process)
+        logger.info("--- Step 1: Parsing DRF file completed ---")
 
-def main(argv: list[str] | None = None) -> None:
-    parser = argparse.ArgumentParser(description="Horse Racing Data Pipeline")
-    parser.add_argument(
-        "stages",
-        nargs="*",
-        default=["all"],
-        help=(
-            "Stages to run. Default 'all'. Available stages: "
-            + ", ".join(STAGE_FUNCTIONS.keys())
-        ),
-    )
-    args = parser.parse_args(argv)
+        logger.info("--- Step 2: Creating current race info ---")
+        create_current_info_main()
+        logger.info("--- Step 2: Creating current race info completed ---")
 
-    if args.stages == ["all"]:
-        run_complete_pipeline()
-    else:
-        for stage in args.stages:
-            func = STAGE_FUNCTIONS.get(stage)
-            if not func:
-                parser.error(f"Unknown stage: {stage}")
-            logger.info("--- Running stage: %s ---", stage)
-            func()
+        logger.info("--- Step 3: Transforming workouts ---")
+        transform_workouts_main()
+        logger.info("--- Step 3: Transforming workouts completed ---")
+
+        logger.info("--- Step 4: Transforming past starts ---")
+        transform_past_starts_main()
+        logger.info("--- Step 4: Transforming past starts completed ---")
+
+        logger.info("--- Step 5: Engineering features ---")
+        engineer_features_main()
+        logger.info("--- Step 5: Engineering features completed ---")
+
+        logger.info("Running advanced fitness metrics...")
+        from src.transformers.advanced_fitness_metrics import main as run_fitness_metrics
+        run_fitness_metrics()
+
+        logger.info("Running sophisticated workout analysis...")
+        from src.transformers.sophisticated_workout_analysis import main as run_workout_analysis
+        run_workout_analysis()
+
+        logger.info("Running advanced pace projection...")
+        from src.transformers.advanced_pace_projection import main as run_pace_analysis
+        run_pace_analysis()
+
+        logger.info("Running multi-dimensional class assessment...")
+        from src.transformers.multi_dimensional_class_assessment import main as run_class_assessment
+        run_class_assessment()
+
+        logger.info("Running form cycle detection...")
+        from src.transformers.form_cycle_detector import main as run_form_cycle
+        run_form_cycle()
+
+        logger.info("Running integrated analytics system...")
+        from src.transformers.integrated_analytics_system import main as run_integrated_analytics
+        run_integrated_analytics()
+
+        logger.info("=== Pipeline completed successfully! ===")
+
+    except FileNotFoundError as fnf_error:
+        logger.error(f"Pipeline aborted: A required file was not found. Details: {fnf_error}", exc_info=False)
+    except AttributeError as attr_error:
+        logger.error(
+            f"Pipeline aborted: An attribute error occurred (often due to missing or incorrectly named main function in a module). Details: {attr_error}",
+            exc_info=True)
+    except ImportError as import_err:
+        logger.error(f"Pipeline aborted: An import error occurred. Details: {import_err}", exc_info=True)
+    except Exception as e:
+        logger.error(f"Pipeline failed with an unexpected error: {e}", exc_info=True)
 
 
 if __name__ == "__main__":
-    main()
+    logger.info(f"Pipeline started. Project Root: {PROJECT_ROOT}")
+    logger.info(
+        f"Using settings: RAW_DATA_DIR={RAW_DATA_DIR}, PROCESSED_DATA_DIR={PROCESSED_DATA_DIR}, CACHE_DIR={CACHE_DIR}")
+
+    run_complete_pipeline()
