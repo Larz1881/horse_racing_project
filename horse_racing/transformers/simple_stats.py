@@ -6,43 +6,11 @@ from pathlib import Path
 from typing import List, Final, Optional
 
 from config.settings import PARSED_RACE_DATA, PROCESSED_DATA_DIR
+from horse_racing.transformers.long_format_transformer import compute_fractional_splits
 
 # --- Input file path from centralized settings ---
 INPUT_PARQUET_PATH: Path = PARSED_RACE_DATA
 
-def compute_fractional_splits(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Efficiently build all split columns for races 1–10 without fragmenting df.
-    Returns a NEW DataFrame, `splits_df`, containing only the split columns.
-    """
-    splits = {}
-    for i in range(1, 11):
-        # source columns
-        c2, c4, c6 = f"2f_fraction_if_any_{i}", f"4f_fraction_if_any_{i}", f"6f_fraction_if_any_{i}"
-        c8, c10, c12 = f"8f_fraction_if_any_{i}", f"10f_fraction_if_any_{i}", f"12f_fraction_if_any_{i}"
-        c5, c7, c9 = f"5f_fraction_if_any_{i}", f"7f_fraction_if_any_{i}", f"9f_fraction_if_any_{i}"
-
-        # coerce once
-        for col in (c2, c4, c6, c8, c10, c12, c5, c7, c9):
-            if col in df.columns:
-                df[col] = pd.to_numeric(df[col], errors="coerce")
-
-        # even splits
-        if c2 in df: splits[f"fraction_1_{i}"] = df[c2]
-        if c2 in df and c4 in df: splits[f"fraction_2_{i}"] = df[c4] - df[c2]
-        if c4 in df and c6 in df: splits[f"fraction_3_{i}"] = df[c6] - df[c4]
-        if c6 in df and c8 in df: splits[f"fraction_4_{i}"] = df[c8] - df[c6]
-        if c8 in df and c10 in df: splits[f"fraction_5_{i}"] = df[c10] - df[c8]
-        if c10 in df and c12 in df: splits[f"fraction_6_{i}"] = df[c12] - df[c10]
-
-        # odd‐furlong splits
-        if c5 in df and c4 in df: splits[f"fraction_5f_{i}"] = df[c5] - df[c4]
-        if c7 in df and c6 in df: splits[f"fraction_7f_{i}"] = df[c7] - df[c6]
-        if c9 in df and c8 in df: splits[f"fraction_9f_{i}"] = df[c9] - df[c8]
-
-    # one big concat
-    splits_df = pd.DataFrame(splits, index=df.index)
-    return splits_df
 
 
 def main():
