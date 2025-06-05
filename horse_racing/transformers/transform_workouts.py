@@ -22,24 +22,30 @@ import logging
 import sys
 from pathlib import Path
 from typing import List, Dict, Tuple, Any, Final, Optional, Set
-import numpy as np # For potential numeric cleaning
+import numpy as np  # For potential numeric cleaning
+
+from config.settings import (
+    PARSED_RACE_DATA,
+    BRIS_SPEC_CACHE,
+    WORKOUTS_LONG,
+)
+from horse_racing.utils.path_utils import get_project_root
 
 # --- Configuration ---
 
-# 1. Define paths relative to the script location
-SCRIPT_DIR: Final[Path] = Path(__file__).parent.resolve()
-PROJECT_ROOT: Final[Path] = SCRIPT_DIR.parent.parent    # .../horse_racing_project/
+# 1. Paths and filenames derived from project settings
+PROJECT_ROOT: Final[Path] = get_project_root()
 
 # 2. Input files
 WIDE_DATA_PARQUET_FILENAME: Final[str] = "parsed_race_data_full.parquet"
 SPEC_CACHE_FILENAME: Final[str] = "bris_spec.pkl"
 
-WIDE_DATA_FILE_PATH: Final[Path] = PROJECT_ROOT / "data" / "processed" / WIDE_DATA_PARQUET_FILENAME
-SPEC_CACHE_FILE_PATH: Final[Path] = PROJECT_ROOT / "data" / "cache" / SPEC_CACHE_FILENAME
+WIDE_DATA_FILE_PATH: Final[Path] = PARSED_RACE_DATA
+SPEC_CACHE_FILE_PATH: Final[Path] = BRIS_SPEC_CACHE
 
 # 3. Output file for the transformed "long" workout data
 LONG_WORKOUTS_FILENAME: Final[str] = "workouts_long_format.parquet"
-LONG_WORKOUTS_FILE_PATH: Final[Path] = PROJECT_ROOT / "data" / "processed" / LONG_WORKOUTS_FILENAME
+LONG_WORKOUTS_FILE_PATH: Final[Path] = WORKOUTS_LONG
 
 # 4. Define ID variables: Columns identifying the *current* horse/race entry.
 #    *** Updated based on your confirmation ***

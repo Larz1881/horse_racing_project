@@ -19,6 +19,8 @@ from sklearn.cluster import DBSCAN, KMeans
 from sklearn.preprocessing import StandardScaler
 from scipy import stats
 
+from config.settings import PROCESSED_DATA_DIR, PAST_STARTS_LONG, CURRENT_RACE_INFO
+
 # Setup logging
 logging.basicConfig(
     level=logging.INFO,
@@ -26,14 +28,12 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Setup paths
-# simple_pace.py is in src/transformers/, so we need to go up 3 levels to reach project root
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-DATA_DIR = PROJECT_ROOT / 'data' / 'processed'
+# Setup paths derived from project settings
+DATA_DIR = PROCESSED_DATA_DIR
 
 # File paths
-PAST_STARTS_FILE = DATA_DIR / 'past_starts_long_format.parquet'
-CURRENT_RACE_FILE = DATA_DIR / 'current_race_info.parquet'
+PAST_STARTS_FILE = PAST_STARTS_LONG
+CURRENT_RACE_FILE = CURRENT_RACE_INFO
 
 # Column mappings
 PAST_COLUMNS = {

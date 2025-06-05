@@ -41,8 +41,7 @@ try:
     from horse_racing.parsers.bris_spec_new import main as parse_bris_main
 
     from horse_racing.transformers.current_race_info import main as create_current_info_main
-    from horse_racing.transformers.transform_workouts import main as transform_workouts_main
-    from horse_racing.transformers.transform_past_starts import main as transform_past_starts_main
+    from horse_racing.transformers.transform_long_format import main as transform_long_format_main
     from horse_racing.transformers.feature_engineering import main as engineer_features_main
 except ImportError as e:
     print(f"Error importing modules: {e}")
@@ -118,13 +117,9 @@ def run_complete_pipeline():
         create_current_info_main()
         logger.info("--- Step 2: Creating current race info completed ---")
 
-        logger.info("--- Step 3: Transforming workouts ---")
-        transform_workouts_main()
-        logger.info("--- Step 3: Transforming workouts completed ---")
-
-        logger.info("--- Step 4: Transforming past starts ---")
-        transform_past_starts_main()
-        logger.info("--- Step 4: Transforming past starts completed ---")
+        logger.info("--- Step 3: Transforming long format data ---")
+        transform_long_format_main()
+        logger.info("--- Step 3: Transformations completed ---")
 
         logger.info("--- Step 5: Engineering features ---")
         engineer_features_main()
