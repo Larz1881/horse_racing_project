@@ -1,0 +1,25 @@
+# Default configuration for Horse Racing Analysis project
+
+# Base data directory (relative to project root)
+data_dir: data
+
+# Subdirectories for different stages
+raw_data_dir: data/raw
+processed_data_dir: data/processed
+cache_dir: data/cache
+
+# Pattern to locate DRF files in the raw data directory
+drf_pattern: "*DRF"
+
+# Output filenames placed in processed_data_dir
+parsed_race_data: parsed_race_data_full.parquet
+current_race_info: current_race_info.parquet
+workouts_long: workouts_long_format.parquet
+past_starts_long: past_starts_long_format.parquet
+
+# Reference files
+bris_dict: bris_dict.txt
+bris_spec_cache: bris_spec.pkl
+
+# Optional columns to drop when processing workouts
+workout_past_perf_columns: []

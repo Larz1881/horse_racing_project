@@ -10,7 +10,6 @@ A comprehensive data processing and analysis system for horse racing handicappin
 See [docs/features.md](docs/features.md) for the complete feature list.
 Installation and usage examples are provided in [docs/usage.md](docs/usage.md).
 
-## License
 This project is for personal/educational use. Brisnet data is proprietary and subject to their terms of service.
 
 ## Acknowledgments
