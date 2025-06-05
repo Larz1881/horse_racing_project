@@ -129,7 +129,7 @@ import sys
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
 # Import your feature engineering module
-from src.transformers.feature_engineering import HorseRacingFeatureEngineer
+from horse_racing.transformers.feature_engineering import HorseRacingFeatureEngineer
 from config.settings import PROCESSED_DATA_DIR
 
 warnings.filterwarnings('ignore')
