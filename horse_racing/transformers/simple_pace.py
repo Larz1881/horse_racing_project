@@ -716,7 +716,7 @@ app.layout = html.Div([
                     className="mb-3",
                     style={
                         'backgroundColor': 'rgb(50, 50, 50)',
-                        'color': 'black'
+                        'color': 'white'
                     }
                 )
             ], width=4),
@@ -752,57 +752,60 @@ app.layout = html.Div([
         ]),
         
         html.Hr(),
-        
-        # Pace Results
-        dbc.Row([
-            dbc.Col([
-                html.H3("Pace Analysis Results", className="mb-3"),
-                html.Div(id="pace-table-container")
-            ], width=12)
-        ]),
-        
-        html.Hr(),
-        
-        # Visualizations
-        dbc.Row([
-            dbc.Col([
-                html.H3("Visualizations", className="mb-3"),
-                dcc.Graph(id="pace-visualization")
-            ], width=12)
-        ]),
-        
-        html.Hr(),
-        
-        # Best Race Analysis
-        dbc.Row([
-            dbc.Col([
-                html.H3("Best Race Analysis", className="mb-3", id="best-race-header"),
-                dbc.Button(
-                    "Analyze Best Races", 
-                    id="analyze-best-races-btn", 
-                    color="success", 
-                    className="mb-3",
-                    style={
-                        'backgroundColor': '#28a745',
-                        'borderColor': '#28a745',
-                        'color': 'white',
-                        'fontWeight': 'bold',
-                        'padding': '10px 20px',
-                        'fontSize': '16px'
-                    }
-                ),
-                html.Div(
-                    id="best-race-container", 
-                    children=[
-                        html.P(
-                            "Click 'Analyze Best Races' to identify patterns in each horse's best performances.",
-                            className="text-muted"
+
+        dbc.Tabs([
+            dbc.Tab(label="Pace Results", tab_id="results-tab", children=[
+                dbc.Row([
+                    dbc.Col([
+                        html.H3("Pace Analysis Results", className="mb-3"),
+                        html.Div(id="pace-table-container")
+                    ], width=12)
+                ]),
+
+                html.Hr(),
+
+                dbc.Row([
+                    dbc.Col([
+                        html.H3("Best Race Analysis", className="mb-3", id="best-race-header"),
+                        dbc.Button(
+                            "Analyze Best Races",
+                            id="analyze-best-races-btn",
+                            color="success",
+                            className="mb-3",
+                            style={
+                                'backgroundColor': '#28a745',
+                                'borderColor': '#28a745',
+                                'color': 'white',
+                                'fontWeight': 'bold',
+                                'padding': '10px 20px',
+                                'fontSize': '16px'
+                            }
+                        ),
+                        html.Div(
+                            id="best-race-container",
+                            children=[
+                                html.P(
+                                    "Click 'Analyze Best Races' to identify patterns in each horse's best performances.",
+                                    className="text-muted"
+                                )
+                            ],
+                            style={'minHeight': '200px', 'paddingBottom': '100px'}
                         )
-                    ],
-                    style={'minHeight': '200px', 'paddingBottom': '100px'}
-                )
-            ], width=12)
-        ]),
+                    ], width=12)
+                ])
+            ]),
+
+            dbc.Tab(label="Pace Visualizations", tab_id="viz-tab", children=[
+                dbc.Row([
+                    dbc.Col([
+                        html.H3("Visualizations", className="mb-3"),
+                        dcc.Graph(id="pace-visualization")
+                    ], width=12)
+                ])
+            ])
+        ], id="main-tabs", active_tab="results-tab"),
+
+        html.Hr(),
         
         # Debug section to test scrolling
         dbc.Row([
@@ -991,13 +994,12 @@ def update_display(selected_race):
     
     # Create visualizations
     fig = make_subplots(
-        rows=2, cols=2,
+        rows=4, cols=1,
         subplot_titles=(
             'E1 Pace Analysis', 'Late Pace Analysis',
             'Energy Distribution Profile', 'Pace Trends'
         ),
-        specs=[[{"secondary_y": False}, {"secondary_y": False}],
-               [{"secondary_y": False}, {"secondary_y": False}]]
+        vertical_spacing=0.1
     )
     
     # Sort by post position for cleaner display
@@ -1038,7 +1040,7 @@ def update_display(selected_race):
             textposition='outside',
             marker_color='lightgreen'
         ),
-        row=1, col=2
+        row=2, col=1
     )
     
     # 3. Energy Distribution
@@ -1063,7 +1065,7 @@ def update_display(selected_race):
                 ),
                 name='Energy Profile'
             ),
-            row=2, col=1
+            row=3, col=1
         )
     
     # 4. Pace Trends
@@ -1086,28 +1088,28 @@ def update_display(selected_race):
                     ),
                     name='Pace Trends'
                 ),
-                row=2, col=2
+                row=4, col=1
             )
     
     # Update layout
     fig.update_layout(
         title=f"Race {selected_race} - Comprehensive Pace Analysis",
         template="plotly_dark",
-        height=700,
+        height=1600,
         showlegend=False,
         margin=dict(l=50, r=50, t=50, b=50)
     )
     
     # Update axes
     fig.update_xaxes(title_text="Post Position", row=1, col=1)
-    fig.update_xaxes(title_text="Post Position", row=1, col=2)
-    fig.update_xaxes(title_text="Acceleration %", row=2, col=1)
-    fig.update_xaxes(title_text="E1 Trend", row=2, col=2)
-    
+    fig.update_xaxes(title_text="Post Position", row=2, col=1)
+    fig.update_xaxes(title_text="Acceleration %", row=3, col=1)
+    fig.update_xaxes(title_text="E1 Trend", row=4, col=1)
+
     fig.update_yaxes(title_text="E1 Pace", row=1, col=1)
-    fig.update_yaxes(title_text="Late Pace", row=1, col=2)
-    fig.update_yaxes(title_text="Finish %", row=2, col=1)
-    fig.update_yaxes(title_text="LP Trend", row=2, col=2)
+    fig.update_yaxes(title_text="Late Pace", row=2, col=1)
+    fig.update_yaxes(title_text="Finish %", row=3, col=1)
+    fig.update_yaxes(title_text="LP Trend", row=4, col=1)
     
     # Add summary info
     lead_count = race_df['lead_abundance_flag'].iloc[0] if 'lead_abundance_flag' in race_df.columns else 0
