@@ -121,7 +121,10 @@ def get_simple_pace_layout():
                         options=[],
                         value=None,
                         className="mb-3",
-                        style={'backgroundColor': 'rgb(50, 50, 50)', 'color': 'white'}
+                        style={
+                            'backgroundColor': COLORS['card_bg'],
+                            'color': COLORS['text']
+                        }
                     )
                 ], width=4),
 
@@ -256,7 +259,12 @@ app.layout = html.Div([
                 id='race-selector',
                 options=RACE_OPTIONS,
                 value=RACE_OPTIONS[0]['value'] if RACE_OPTIONS else None,
-                style={'width': '200px', 'display': 'inline-block'}
+                style={
+                    'width': '200px',
+                    'display': 'inline-block',
+                    'backgroundColor': COLORS['card_bg'],
+                    'color': COLORS['text']
+                }
             )
         ], style={'display': 'inline-block', 'marginRight': '40px'}),
 
@@ -267,7 +275,12 @@ app.layout = html.Div([
                 options=[],
                 value=[],
                 multi=True,
-                style={'width': '200px', 'display': 'inline-block'}
+                style={
+                    'width': '200px',
+                    'display': 'inline-block',
+                    'backgroundColor': COLORS['card_bg'],
+                    'color': COLORS['text']
+                }
             )
         ], style={'display': 'inline-block'})
     ], style={'padding': '20px', 'backgroundColor': COLORS['background']}),
@@ -277,16 +290,46 @@ app.layout = html.Div([
 
     # Main Content Tabs
     dcc.Tabs([
-        dcc.Tab(label='Race Summary', children=[
-            html.Div(id='race-summary-content', style={'padding': '20px'})
-        ]),
-        dcc.Tab(label='Simple Pace', children=[
-            html.Div(id='simple-pace-content', children=get_simple_pace_layout(),
-                     style={'padding': '20px'})
-        ]),
-        dcc.Tab(label='Workout Analysis', children=[
-            html.Div(id='workout-content', style={'padding': '20px'})
-        ])
+        dcc.Tab(
+            label='Race Summary',
+            children=[
+                html.Div(id='race-summary-content', style={'padding': '20px'})
+            ],
+            style={'backgroundColor': COLORS['card_bg'], 'color': COLORS['text']},
+            selected_style={
+                'backgroundColor': COLORS['primary'],
+                'color': '#000000',
+                'fontWeight': 'bold'
+            }
+        ),
+        dcc.Tab(
+            label='Simple Pace',
+            children=[
+                html.Div(
+                    id='simple-pace-content',
+                    children=get_simple_pace_layout(),
+                    style={'padding': '20px'}
+                )
+            ],
+            style={'backgroundColor': COLORS['card_bg'], 'color': COLORS['text']},
+            selected_style={
+                'backgroundColor': COLORS['primary'],
+                'color': '#000000',
+                'fontWeight': 'bold'
+            }
+        ),
+        dcc.Tab(
+            label='Workout Analysis',
+            children=[
+                html.Div(id='workout-content', style={'padding': '20px'})
+            ],
+            style={'backgroundColor': COLORS['card_bg'], 'color': COLORS['text']},
+            selected_style={
+                'backgroundColor': COLORS['primary'],
+                'color': '#000000',
+                'fontWeight': 'bold'
+            }
+        )
     ], style={'backgroundColor': COLORS['background']})
 
 ], style={'backgroundColor': COLORS['background'], 'minHeight': '100vh'})
