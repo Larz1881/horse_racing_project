@@ -1,166 +1,120 @@
-race,horse_name,bounce_risk,bounce_tendency,recovery_ability,currently_recovering,freshening_success_rate,handles_layoffs_well,optimal_layoff_days,currently_freshening,races_to_peak,improvement_trajectory,recent_trend_slope,form_cycle_state,current_days_off,previous_bounce_magnitude,freshening_days,avg_recovery_points,avg_recovery_days,expected_recovery
-1,BOURBON SOCIETY,Low,0.0,Unproven,False,50.0,False,63.0,False,Past_peak,Declining,-1.3000000000000016,DECLINING,198.0,,,,,
-1,CROMWELL,Historical_bouncer,,Unproven,False,100.0,True,,False,Unknown,,,STABLE,77.0,8.0,,,,
-1,FOUNTAIN LAKE,Low,,Unproven,False,100.0,True,53.0,True,Developing,Unknown,,FRESHENING,25.0,,53.0,,,
-1,KICKING CLEAR,Historical_bouncer,,Unproven,False,100.0,True,79.0,False,Developing,Unknown,,STABLE,25.0,13.0,,,,
-1,MONEY MAN,Unknown,,,,100.0,True,,False,Unknown,,,STABLE,42.0,,,,,
-1,STURDY,Low,0.0,Unproven,False,100.0,True,51.0,True,At_peak,Stable,0.09999999999999122,FRESHENING,14.0,,51.0,,,
-2,BARBRATINA,Low,0.0,Strong,False,60.0,True,56.0,True,2-3,Ascending,6.299999999999994,FRESHENING,48.0,,288.0,14.0,56.0,
-2,DESERT RHAPSODY,Historical_bouncer,100.0,Unproven,False,100.0,True,51.0,True,2-3,Ascending,1.5999999999999956,FRESHENING,35.0,28.0,210.0,,,
-2,DON'T BRING CRAZY,Low,0.0,Unproven,False,100.0,True,47.0,False,0-1,Near_peak,0.6999999999999843,PEAKING,76.0,,,,,
-2,GENEROUS LOVER,Historical_bouncer,100.0,Strong,False,50.0,False,,False,Past_peak,Declining,-1.3000000000000078,DECLINING,189.0,13.0,,7.0,21.0,
-2,GRACE ON GRACE,Historical_bouncer,66.66666666666666,Strong,False,0.0,False,46.0,True,At_peak,Stable,0.199999999999994,FRESHENING,35.0,12.0,49.0,6.0,11.0,
-2,HOME GAME,Historical_bouncer,100.0,Strong,True,100.0,True,,True,0-1,Near_peak,0.9999999999999961,FRESHENING,45.0,18.0,109.0,16.0,76.0,16.0
-2,IZZY'S MONSTER,Low,0.0,Strong,False,100.0,True,,True,Past_peak,Declining,-4.100000000000012,FRESHENING,13.0,,160.0,9.0,21.0,
-2,LEMON MUFFIN,Low,0.0,Unproven,False,100.0,True,59.0,False,Past_peak,Declining,-0.900000000000014,DECLINING,27.0,,,,,
-2,NORMANDY QUEEN,Low,,Strong,False,0.0,False,48.0,False,Developing,Unknown,,STABLE,57.0,,,6.0,43.0,
-2,SECRET STATEMENT,Historical_bouncer,100.0,Strong,False,50.0,False,162.0,False,At_peak,Stable,-0.40000000000000385,ERRATIC,285.0,12.0,,14.0,162.0,
-2,TAPIT QUICK,Low,,Unproven,False,100.0,True,,False,Developing,Unknown,,STABLE,63.0,,,,,
-3,BRACKET BUSTER,Low,,Strong,False,100.0,True,,True,Developing,Unknown,,FRESHENING,21.0,,167.0,11.0,27.0,
-3,HYPNUS,Low,,Unproven,False,50.0,False,,False,Unknown,,,STABLE,21.0,,,,,
-3,RACING DRIVER,Low,,Strong,False,100.0,True,,False,Unknown,,,STABLE,35.0,,,10.0,48.0,
-3,RAPTURE,Unknown,,,,100.0,True,,True,Unknown,,,FRESHENING,49.0,,49.0,,,
-3,STRUMMIN,Historical_bouncer,33.33333333333333,Strong,False,100.0,True,,False,At_peak,Stable,-0.10000000000000299,STABLE,203.0,7.0,,17.0,50.0,
-3,VAMOS CARLITOS,Low,,Strong,False,100.0,True,59.0,False,Developing,Unknown,,STABLE,77.0,,,11.0,14.0,
-3,YINZER,Low,,Unproven,False,50.0,False,,False,Developing,Unknown,,STABLE,42.0,,,,,
-4,ACCRETIVE,Historical_bouncer,0.0,Strong,False,100.0,True,48.0,False,Past_peak,Declining,-1.3000000000000078,DECLINING,28.0,7.0,,8.0,47.0,
-4,ASHCROFT,Historical_bouncer,100.0,Strong,False,66.66666666666666,True,48.0,True,2-3,Ascending,1.2999999999999978,FRESHENING,25.0,12.0,103.0,11.0,168.0,
-4,BEST ACTOR,Historical_bouncer,0.0,Strong,True,25.0,False,63.0,True,2-3,Ascending,5.499999999999986,FRESHENING,25.0,6.0,339.0,6.0,44.0,6.0
-4,CASTLE CHAOS,Low,100.0,Strong,False,80.0,True,56.0,True,At_peak,Stable,0.09999999999999515,FRESHENING,29.0,,62.0,23.0,35.0,
-4,CHIRON,Historical_bouncer,60.0,Strong,False,100.0,True,50.0,False,Past_peak,Declining,-2.700000000000018,DECLINING,42.0,9.0,,10.5,46.0,
-4,IMPLEMENTATION,Low,0.0,Strong,False,60.0,True,77.0,True,At_peak,Stable,0.3999999999999903,FRESHENING,35.0,,63.0,11.0,56.0,
-4,INVEIGLED,Historical_bouncer,33.33333333333333,Strong,False,50.0,False,63.0,False,Past_peak,Declining,-1.3000000000000096,DECLINING,35.0,11.0,,24.0,63.0,
-4,KEEN CAT,Historical_bouncer,100.0,Strong,False,0.0,False,56.0,True,Past_peak,Declining,-2.400000000000011,FRESHENING,22.0,9.0,56.0,9.0,25.0,
-4,KUPUNA,Low,33.33333333333333,Strong,False,75.0,True,70.0,False,At_peak,Stable,0.09999999999998783,STABLE,28.0,,,19.0,231.0,
-4,LIBERAL ARTS,Historical_bouncer,0.0,Strong,False,40.0,False,207.0,True,Past_peak,Declining,-1.8999999999999968,FRESHENING,35.0,6.0,63.0,18.0,207.0,
-4,NEW KING,Historical_bouncer,100.0,Strong,True,100.0,True,,False,At_peak,Stable,-0.10000000000001241,RECOVERING,21.0,10.0,,19.0,42.0,19.0
-4,OSBOURNE,Historical_bouncer,0.0,Strong,False,75.0,True,196.0,False,2-3,Ascending,1.6999999999999995,IMPROVING,35.0,9.0,,9.0,196.0,
-4,PATRIOT SPIRIT,Historical_bouncer,50.0,Strong,False,50.0,False,139.0,True,2-3,Ascending,3.4999999999999862,FRESHENING,42.0,16.0,56.0,9.5,45.5,
-4,QUALITY CHIC,Low,50.0,Unproven,False,33.33333333333333,False,69.0,True,At_peak,Stable,0.39999999999999397,FRESHENING,35.0,,83.0,,,
-5,FIVE TOWNS,Low,100.0,Strong,True,100.0,True,189.0,True,At_peak,Stable,-0.40000000000000413,FRESHENING,35.0,,189.0,18.0,189.0,18.0
-5,MOVIN' ON UP,Low,0.0,Strong,False,83.33333333333334,True,50.0,False,Past_peak,Declining,-2.5000000000000195,DECLINING,35.0,,,6.0,120.5,
-5,PIN UP BETTY,Low,100.0,Unproven,False,50.0,False,85.0,True,At_peak,Stable,0.09999999999999176,FRESHENING,155.0,,48.0,,,
-5,POOLSIDE WITH SLIM,Historical_bouncer,50.0,Strong,False,66.66666666666666,True,92.0,False,Past_peak,Declining,-3.9000000000000035,DECLINING,21.0,10.0,,8.0,42.0,
-5,SACRED WISH,Low,0.0,Unproven,False,50.0,False,77.0,True,Past_peak,Declining,-2.8000000000000136,FRESHENING,21.0,,77.0,,,
-5,SERENE SERAPH,,,,,,,,,,,,INSUFFICIENT_DATA,27.0,,,,,
-5,SIMPLY IN FRONT,Low,0.0,Strong,False,66.66666666666666,True,61.0,False,2-3,Ascending,1.2999999999999943,IMPROVING,155.0,,,10.0,28.0,
-5,SPECIAL WAN,Unknown,,,,100.0,True,147.0,True,Unknown,,,FRESHENING,63.0,,147.0,,,
-5,TAX IMPLICATIONS,Historical_bouncer,0.0,Unproven,False,80.0,True,90.0,True,Past_peak,Declining,-2.100000000000006,FRESHENING,63.0,8.0,90.0,,,
-5,VENENCIA,Low,0.0,Unproven,False,66.66666666666666,True,83.0,False,2-3,Ascending,0.6999999999999834,IMPROVING,56.0,,,,,
-6,BUILT,Low,100.0,Unproven,False,100.0,True,,False,Past_peak,Declining,-0.6000000000000139,DECLINING,42.0,,,,,
-6,CALIFORNIA BURRITO,Low,0.0,Unproven,False,100.0,True,51.0,False,Past_peak,Declining,-2.7000000000000095,DECLINING,42.0,,,,,
-6,GAMING,Historical_bouncer,50.0,Strong,True,100.0,True,54.0,True,2-3,Ascending,4.19999999999999,FRESHENING,34.0,6.0,64.0,21.0,64.0,21.0
-6,GATE TO WIRE,Historical_bouncer,0.0,Unproven,False,100.0,True,,False,Past_peak,Declining,-4.000000000000008,DECLINING,63.0,18.0,,,,
-6,INNOVATOR,Historical_bouncer,50.0,Strong,True,100.0,True,,False,0-1,Near_peak,0.6999999999999879,RECOVERING,42.0,27.0,,11.5,23.5,11.5
-6,MACHO MUSIC,Low,0.0,Strong,False,50.0,False,57.0,True,Past_peak,Declining,-2.1000000000000125,FRESHENING,34.0,,57.0,10.0,28.0,
-6,MADAKET ROAD,Historical_bouncer,,Unproven,False,50.0,False,,False,Developing,Unknown,,STABLE,35.0,8.0,,,,
-6,PERFECT FORCE,Historical_bouncer,100.0,Strong,False,100.0,True,,False,Past_peak,Declining,-3.8000000000000034,DECLINING,34.0,6.0,,19.0,23.0,
-6,SMOKEN WICKED,Low,100.0,Strong,True,0.0,False,,False,2-3,Ascending,4.09999999999999,RECOVERING,26.0,,,20.0,37.333333333333336,20.0
-7,AMBIVALENT,Low,0.0,Unproven,False,66.66666666666666,True,56.0,False,At_peak,Stable,-0.30000000000001326,STABLE,45.0,,,,,
-7,ARREST ME RED,Low,100.0,Strong,False,83.33333333333334,True,46.0,True,Past_peak,Declining,-3.000000000000003,FRESHENING,56.0,,136.0,10.0,123.0,
-7,BOSS SULLY,Low,0.0,Strong,False,60.0,True,104.0,True,Past_peak,Declining,-1.6000000000000116,FRESHENING,49.0,,104.0,23.0,29.0,
-7,COPPOLA,Low,0.0,Strong,False,50.0,False,73.0,True,Past_peak,Declining,-0.8000000000000119,FRESHENING,25.0,,73.0,12.0,28.0,
-7,EAMONN,Low,0.0,Strong,False,100.0,True,,False,At_peak,Stable,0.3999999999999868,STABLE,25.0,,,18.0,136.0,
-7,MISCHIEVOUS ROGUE,Low,33.33333333333333,Strong,False,40.0,False,50.0,False,2-3,Ascending,1.3999999999999981,IMPROVING,25.0,,,9.0,67.5,
-7,NOBALS,Historical_bouncer,75.0,Strong,False,33.33333333333333,False,56.0,False,At_peak,Stable,0.09999999999998917,ERRATIC,56.0,8.0,,13.0,42.0,
-7,ONE TIMER,Low,100.0,Strong,True,66.66666666666666,True,264.0,True,At_peak,Stable,0.49999999999999045,FRESHENING,140.0,,70.0,7.0,70.0,7.0
-7,ROGUE LIGHTNING,,,,,,,,,,,,INSUFFICIENT_DATA,25.0,,,,,
-7,RUN CARSON,Historical_bouncer,50.0,Strong,False,50.0,False,115.0,True,Past_peak,Declining,-0.9000000000000027,FRESHENING,25.0,8.0,115.0,9.0,56.0,
-7,THINK BIG,Historical_bouncer,0.0,Strong,False,66.66666666666666,True,60.0,True,Past_peak,Declining,-2.500000000000013,FRESHENING,25.0,10.0,60.0,8.0,52.0,
-7,UNCONQUERABLE KEEN,Low,50.0,Strong,True,75.0,True,50.0,True,At_peak,Stable,0.3999999999999875,FRESHENING,76.0,,50.0,18.5,53.5,18.5
-8,BANISHING,Historical_bouncer,0.0,Unproven,False,100.0,True,55.0,False,Past_peak,Declining,-0.700000000000014,DECLINING,14.0,7.0,,,,
-8,BOOK'EM DANNO,Low,0.0,Moderate,False,60.0,True,97.0,True,0-1,Near_peak,0.5999999999999929,FRESHENING,50.0,,97.0,5.0,97.0,
-8,EXTRA ANEJO,Low,100.0,Strong,False,100.0,True,313.0,True,At_peak,Stable,-0.40000000000001146,FRESHENING,25.0,,208.0,12.0,35.0,
-8,GIANT MISCHIEF,Historical_bouncer,100.0,Unproven,False,83.33333333333334,True,291.0,True,Past_peak,Declining,-1.3999999999999988,FRESHENING,49.0,29.0,106.0,,,
-8,HERE MI SONG,Low,0.0,Strong,False,66.66666666666666,True,55.0,True,2-3,Ascending,4.599999999999992,FRESHENING,25.0,,186.0,15.0,56.0,
-8,HOIST THE GOLD,Historical_bouncer,100.0,Unproven,False,75.0,True,56.0,True,At_peak,Stable,-1.006400108490542e-14,FRESHENING,25.0,6.0,54.0,,,
-8,JUST STEEL,Low,33.33333333333333,Strong,False,0.0,False,,False,Past_peak,Declining,-3.800000000000016,DECLINING,35.0,,,32.0,14.0,
-8,MINDFRAME,Historical_bouncer,,Unproven,False,100.0,True,,True,Developing,Unknown,,FRESHENING,63.0,8.0,224.0,,,
-8,MULLIKIN,Historical_bouncer,0.0,Strong,False,50.0,False,49.0,False,Past_peak,Declining,-0.8000000000000171,DECLINING,147.0,15.0,,15.0,271.0,
-8,NYSOS,Unknown,,,,100.0,True,,True,Unknown,,,FRESHENING,455.0,,76.0,,,
-8,TEJANO TWIST,Historical_bouncer,0.0,Unproven,False,50.0,False,49.0,False,At_peak,Stable,0.19999999999998386,STABLE,21.0,7.0,,,,
-9,CHARLIE'S TO BLAME,Historical_bouncer,,Unproven,False,66.66666666666666,True,49.0,True,Developing,Unknown,,FRESHENING,42.0,8.0,49.0,,,
-9,CLASSIC OF COURSE,Historical_bouncer,50.0,Strong,False,66.66666666666666,True,65.0,True,2-3,Ascending,1.899999999999991,FRESHENING,35.0,17.0,51.0,12.0,42.5,
-9,DISCREET DANCER,Low,0.0,Strong,False,100.0,True,,True,Past_peak,Declining,-7.700000000000011,FRESHENING,35.0,,120.0,6.0,30.0,
-9,GIOCOSO,Low,0.0,Strong,True,0.0,False,,False,At_peak,Stable,0.49999999999998834,RECOVERING,42.0,,,32.0,35.0,32.0
-9,GOLDEN AFTERNOON,Low,0.0,Unproven,False,50.0,False,51.0,False,2-3,Ascending,1.199999999999996,IMPROVING,26.0,,,,,
-9,HAMMERHEAD,Historical_bouncer,100.0,Strong,False,100.0,True,,True,Past_peak,Declining,-1.9000000000000072,FRESHENING,26.0,8.0,96.0,14.0,26.0,
-9,IRON MAN CAL,Low,,Unproven,False,50.0,False,,False,Unknown,,,STABLE,183.0,,,,,
-9,MAUI STRONG,Historical_bouncer,0.0,Strong,False,50.0,False,65.0,True,Past_peak,Declining,-2.9000000000000097,FRESHENING,26.0,9.0,65.0,9.0,28.0,
-9,MAXIMUM PROMISE,Low,,Unproven,False,100.0,True,,False,Developing,Unknown,,STABLE,42.0,,,,,
-9,MEGALODON,Historical_bouncer,,Unproven,False,0.0,False,,False,Unknown,,,STABLE,42.0,18.0,,,,
-9,MI BAGO,Historical_bouncer,75.0,Strong,False,100.0,True,,False,Past_peak,Declining,-0.7000000000000077,DECLINING,26.0,13.0,,13.0,41.0,
-9,NEW CENTURY,,,,,,,,,,,,INSUFFICIENT_DATA,17.0,,,,,
-9,SCIPIO,Low,0.0,Unproven,False,100.0,True,50.0,True,Past_peak,Declining,-4.2000000000000135,FRESHENING,26.0,,50.0,,,
-9,SPIRIT RAGS,Historical_bouncer,33.33333333333333,Strong,False,100.0,True,,False,2-3,Ascending,1.4999999999999905,IMPROVING,58.0,10.0,,30.0,46.0,
-9,TEST SCORE,Low,0.0,Unproven,False,100.0,True,65.0,True,Past_peak,Declining,-2.000000000000017,FRESHENING,26.0,,65.0,,,
-9,WARLANDER,Low,,Unproven,False,0.0,False,,True,Unknown,,,FRESHENING,21.0,,188.0,,,
-9,ZULU KINGDOM,Low,,Unproven,False,100.0,True,127.0,True,Unknown,,,FRESHENING,56.0,,127.0,,,
-10,AWESOME TREAT,Historical_bouncer,66.66666666666666,Moderate,False,100.0,True,,False,2-3,Ascending,1.1999999999999902,IMPROVING,20.0,8.0,,5.0,49.0,
-10,BENEDETTA,Low,50.0,Strong,False,50.0,False,50.0,False,At_peak,Stable,-0.10000000000001126,STABLE,35.0,,,8.5,36.0,
-10,DORTH VADER,Low,100.0,Strong,False,100.0,True,57.0,True,0-1,Near_peak,0.6999999999999909,FRESHENING,36.0,,329.0,25.0,49.0,
-10,EMERY,Historical_bouncer,50.0,Strong,False,100.0,True,73.0,True,2-3,Ascending,0.6999999999999902,FRESHENING,25.0,8.0,73.0,16.0,195.0,
-10,GRAND JOB,Low,,Unproven,False,100.0,True,76.0,False,Unknown,,,STABLE,36.0,,,,,
-10,HAULIN ICE,Historical_bouncer,100.0,Strong,False,100.0,True,64.0,False,Past_peak,Declining,-6.100000000000013,DECLINING,35.0,10.0,,20.0,64.0,
-10,HOPE ROAD,Historical_bouncer,50.0,Strong,False,75.0,True,50.0,False,2-3,Ascending,1.099999999999998,IMPROVING,91.0,6.0,,34.0,280.0,
-10,KOPION,Low,0.0,Strong,False,50.0,False,264.0,False,Past_peak,Declining,-3.700000000000016,DECLINING,91.0,,,21.0,264.0,
-10,MISS SUSAN B,Historical_bouncer,100.0,Unproven,False,100.0,True,,False,Past_peak,Declining,-3.500000000000006,DECLINING,43.0,6.0,,,,
-10,MY MANE SQUEEZE,Historical_bouncer,33.33333333333333,Strong,False,100.0,True,171.0,True,Past_peak,Declining,-1.7000000000000115,FRESHENING,25.0,19.0,171.0,14.0,31.5,
-10,MYSTIC LAKE,Historical_bouncer,100.0,Unproven,False,50.0,False,48.0,True,Past_peak,Declining,-1.1000000000000167,FRESHENING,25.0,6.0,73.0,,,
-10,POSITANO SUNSET,Historical_bouncer,33.33333333333333,Strong,False,66.66666666666666,True,106.0,False,Past_peak,Declining,-3.0000000000000084,DECLINING,25.0,16.0,,16.0,106.0,
-10,SCYLLA,Historical_bouncer,50.0,Strong,False,66.66666666666666,True,70.0,True,Past_peak,Declining,-1.0000000000000078,FRESHENING,182.0,7.0,70.0,8.0,152.0,
-10,TAXED,Low,0.0,Strong,False,0.0,False,,False,Past_peak,Declining,-1.6000000000000096,DECLINING,55.0,,,6.0,36.0,
-10,VAHVA,Historical_bouncer,50.0,Unproven,False,42.857142857142854,False,49.0,True,2-3,Ascending,1.0999999999999956,FRESHENING,182.0,6.0,70.0,,,
-10,WAYS AND MEANS,Historical_bouncer,50.0,Strong,False,66.66666666666666,True,57.0,False,Past_peak,Declining,-2.9000000000000137,DECLINING,182.0,21.0,,21.0,34.0,
-11,BRILLIANT BERTI,Historical_bouncer,100.0,Unproven,False,66.66666666666666,True,48.0,True,2-3,Ascending,1.0000000000000004,FRESHENING,42.0,6.0,147.0,,,
-11,CAMEO PERFORMANCE,Historical_bouncer,100.0,Strong,False,100.0,True,203.0,True,Past_peak,Declining,-1.6000000000000174,FRESHENING,42.0,6.0,203.0,7.0,28.0,
-11,GIGANTE,Historical_bouncer,100.0,Unproven,False,0.0,False,201.0,False,At_peak,Stable,-0.4000000000000088,ERRATIC,42.0,9.0,,,,
-11,GOLD PHOENIX,Historical_bouncer,0.0,Strong,False,33.33333333333333,False,140.0,True,Past_peak,Declining,-2.500000000000011,FRESHENING,42.0,7.0,140.0,14.0,34.5,
-11,HIGHWAY ROBBER,Low,0.0,Strong,False,50.0,False,141.0,True,Past_peak,Declining,-4.000000000000004,FRESHENING,63.0,,141.0,8.0,41.0,
-11,IDRATHERBEBLESSED,Low,0.0,Unproven,False,0.0,False,,False,2-3,Ascending,1.5999999999999905,IMPROVING,14.0,,,,,
-11,INTEGRATION,Low,50.0,Strong,False,66.66666666666666,True,70.0,True,At_peak,Stable,0.2999999999999877,FRESHENING,22.0,,76.0,7.0,70.0,
-11,MERCANTE,Historical_bouncer,33.33333333333333,Strong,False,75.0,True,50.0,False,Past_peak,Declining,-4.500000000000008,DECLINING,42.0,10.0,,7.5,49.5,
-11,REDISTRICTING,Historical_bouncer,0.0,Strong,False,50.0,False,316.0,True,At_peak,Stable,-0.30000000000001054,FRESHENING,42.0,12.0,112.0,12.0,316.0,
-11,RUNNING BEE,Low,100.0,Moderate,False,100.0,True,91.0,True,At_peak,Stable,0.4999999999999903,FRESHENING,91.0,,91.0,5.0,34.0,
-11,SPIRIT OF ST LOUIS,Low,50.0,Strong,False,80.0,True,90.0,True,At_peak,Stable,0.399999999999995,FRESHENING,42.0,,56.0,9.5,111.5,
-11,TAKING CANDY,Historical_bouncer,0.0,Unproven,False,80.0,True,90.0,True,Past_peak,Declining,-1.2000000000000162,FRESHENING,77.0,11.0,90.0,,,
-12,ADMIRE DAYTONA,,,,,,,,,,,,INSUFFICIENT_DATA,28.0,,,,,
-12,AMERICAN PROMISE,Historical_bouncer,100.0,Unproven,False,50.0,False,,False,Past_peak,Declining,-3.3000000000000096,DECLINING,49.0,14.0,,,,
-12,BAEZA,Low,,Unproven,False,100.0,True,,True,Unknown,,,FRESHENING,28.0,,50.0,,,
-12,BURNHAM SQUARE,Historical_bouncer,0.0,Unproven,False,50.0,False,,False,Past_peak,Declining,-1.8000000000000127,DECLINING,25.0,7.0,,,,
-12,CHUNK OF GOLD,Low,,Strong,False,50.0,False,,False,Unknown,,,STABLE,42.0,,,11.0,28.0,
-12,CITIZEN BULL,Historical_bouncer,100.0,Strong,False,50.0,False,63.0,True,Past_peak,Declining,-0.8000000000000207,FRESHENING,28.0,7.0,63.0,9.0,27.0,
-12,COAL BATTLE,Historical_bouncer,100.0,Unproven,False,100.0,True,50.0,False,Past_peak,Declining,-2.2000000000000095,DECLINING,35.0,7.0,,,,
-12,EAST AVENUE,Low,,Strong,True,50.0,False,52.0,True,Developing,Unknown,,FRESHENING,25.0,,52.0,17.0,52.0,17.0
-12,FINAL GAMBIT,Low,,Unproven,False,100.0,True,,False,Unknown,,,STABLE,42.0,,,,,
-12,FLYING MOHAWK,Low,0.0,Strong,False,100.0,True,51.0,True,Past_peak,Declining,-4.5000000000000036,FRESHENING,42.0,,51.0,6.0,27.0,
-12,GRANDE,Unknown,,,,100.0,True,,False,Unknown,,,STABLE,28.0,,,,,
-12,JOURNALISM,Low,,Unproven,False,100.0,True,,False,Developing,Unknown,,STABLE,28.0,,,,,
-12,LUXOR CAFE,,,,,,,,,,,,INSUFFICIENT_DATA,35.0,,,,,
-12,NEOEQUOS,Historical_bouncer,100.0,Unproven,False,0.0,False,,False,At_peak,Stable,0.49999999999998895,ERRATIC,35.0,10.0,,,,
-12,OWEN ALMIGHTY,Historical_bouncer,0.0,Unproven,False,100.0,True,119.0,False,Past_peak,Declining,-0.9000000000000041,DECLINING,25.0,7.0,,,,
-12,PUBLISHER,Historical_bouncer,100.0,Unproven,False,50.0,False,56.0,False,Past_peak,Declining,-4.80000000000001,DECLINING,35.0,16.0,,,,
-12,RENDER JUDGMENT,Historical_bouncer,0.0,Unproven,False,100.0,True,,False,Past_peak,Declining,-3.500000000000013,DECLINING,25.0,12.0,,,,
-12,RODRIGUEZ,Historical_bouncer,,Unproven,False,50.0,False,,False,Developing,Unknown,,STABLE,28.0,8.0,,,,
-12,SANDMAN,Historical_bouncer,100.0,Unproven,False,100.0,True,,False,Past_peak,Declining,-3.20000000000001,DECLINING,35.0,22.0,,,,
-12,SOVEREIGNTY,Historical_bouncer,,Unproven,False,100.0,True,,False,Developing,Unknown,,STABLE,35.0,6.0,,,,
-12,TIZTASTIC,Low,0.0,Unproven,False,100.0,True,56.0,False,Past_peak,Declining,-2.800000000000012,DECLINING,42.0,,,,,
-13,CLASSIC TIME,Historical_bouncer,,Strong,False,100.0,True,189.0,False,Developing,Unknown,,STABLE,42.0,27.0,,27.0,189.0,
-13,DAPPER MOON,Historical_bouncer,75.0,Strong,False,50.0,False,,False,2-3,Ascending,2.499999999999993,IMPROVING,42.0,16.0,,16.0,21.0,
-13,FULLY VOLATILE,Historical_bouncer,,Strong,True,100.0,True,,True,Developing,Unknown,,FRESHENING,25.0,7.0,45.0,17.0,45.0,17.0
-13,FURIO,Low,,Unproven,False,100.0,True,,False,Unknown,,,STABLE,42.0,,,,,
-13,HAUNTED FLAME,Historical_bouncer,,Strong,False,100.0,True,120.0,False,Developing,Unknown,,STABLE,14.0,6.0,,13.0,94.0,
-13,JACK'S PROMISE,Historical_bouncer,100.0,Strong,False,33.33333333333333,False,68.0,False,Past_peak,Declining,-4.000000000000011,DECLINING,27.0,64.0,,7.0,35.0,
-13,JOEJOE GO,Historical_bouncer,,Moderate,True,50.0,False,,False,Unknown,,,RECOVERING,50.0,6.0,,4.0,25.0,4.0
-13,MULTIVERSE,Low,,Unproven,False,50.0,False,,False,Developing,Unknown,,STABLE,49.0,,,,,
-13,OPTICAL,Low,0.0,Strong,True,0.0,False,58.0,False,2-3,Ascending,2.399999999999992,RECOVERING,93.0,,,14.0,12.0,14.0
-13,PATCH ADAMS,Historical_bouncer,,Unproven,False,50.0,False,50.0,False,Unknown,,,STABLE,56.0,13.0,,,,
-13,SHAN,Historical_bouncer,0.0,Strong,False,50.0,False,,False,Past_peak,Declining,-0.8000000000000056,DECLINING,42.0,19.0,,17.0,41.0,
-13,TINY LAKE,Historical_bouncer,0.0,Unproven,False,100.0,True,,False,2-3,Ascending,1.0999999999999912,IMPROVING,8.0,11.0,,,,
-13,TOUCHY,Historical_bouncer,100.0,Moderate,False,75.0,True,74.0,True,At_peak,Stable,-1.2932531991146477e-14,FRESHENING,26.0,8.0,50.0,4.0,43.0,
-14,ARTHUR JR,Low,,Strong,True,100.0,True,,True,Unknown,,,FRESHENING,8.0,,140.0,16.0,140.0,16.0
-14,BON TEMPS,Low,0.0,Strong,False,50.0,False,,False,2-3,Ascending,0.8999999999999926,IMPROVING,35.0,,,25.0,14.0,
-14,EXCITE,Unknown,,,,50.0,False,49.0,True,Unknown,,,FRESHENING,25.0,,59.0,,,
-14,INTO THIN AIR,Unknown,,,,100.0,True,,False,Unknown,,,STABLE,36.0,,,,,
-14,LAMBO,Historical_bouncer,,Unproven,False,100.0,True,,False,Developing,Unknown,,STABLE,36.0,14.0,,,,
-14,SHALLUS,Low,0.0,Strong,False,100.0,True,,False,Past_peak,Declining,-2.100000000000013,DECLINING,24.0,,,9.0,27.0,
+race,horse_name,bounce_risk,freshening_success_rate,handles_layoffs_well,optimal_layoff_days,currently_freshening,freshening_days,races_to_peak,form_cycle_state,current_days_off,previous_bounce_magnitude,bounce_tendency,recovery_ability,avg_recovery_points,avg_recovery_days,currently_recovering,expected_recovery,improvement_trajectory,recent_trend_slope
+1,BELLACOSE,Unknown,50.0,False,78.0,True,78.0,Unknown,FRESHENING,201.0,,,,,,,,,
+1,CAPITAL GAL,Historical_bouncer,66.66666666666666,True,102.0,True,102.0,2-3,FRESHENING,217.0,20.0,50.0,Strong,15.0,62.5,True,15.0,Ascending,3.9999999999999933
+1,CAROL T,Historical_bouncer,100.0,True,48.0,False,,2-3,IMPROVING,41.0,25.0,100.0,Strong,14.0,51.5,False,,Ascending,0.8999999999999961
+1,FIRST CLASS CAT,Historical_bouncer,100.0,True,,False,,2-3,IMPROVING,69.0,9.0,100.0,Strong,9.0,36.0,False,,Ascending,0.9999999999999891
+1,GEOPOLITICS,Historical_bouncer,50.0,False,104.0,False,,2-3,RECOVERING,196.0,9.0,0.0,Strong,6.0,36.0,True,6.0,Ascending,0.9999999999999993
+1,PRINCESS MISCHIEF,Historical_bouncer,100.0,True,,False,,At_peak,ERRATIC,19.0,8.0,100.0,Unproven,,,False,,Stable,0.19999999999999366
+1,SASSY SHENANIGANS,Low,100.0,True,58.0,True,58.0,Unknown,FRESHENING,19.0,,,Unproven,,,False,,,
+1,SCARLET'S DREAM,Historical_bouncer,100.0,True,47.0,False,,2-3,IMPROVING,12.0,25.0,33.33333333333333,Strong,25.5,82.0,False,,Ascending,3.299999999999991
+2,ALL NIGHT REVIVAL,Low,100.0,True,,True,160.0,Unknown,FRESHENING,76.0,,,Unproven,,,False,,,
+2,SWEET MACKENZIE,Unknown,50.0,False,,False,,Unknown,STABLE,12.0,,,,,,,,,
+3,ANTARES,Low,100.0,True,79.0,True,79.0,Past_peak,FRESHENING,278.0,,0.0,Strong,5.5,37.0,False,,Declining,-2.6000000000000125
+3,BONUS MOVE,Historical_bouncer,66.66666666666666,True,64.0,False,,At_peak,ERRATIC,27.0,7.0,100.0,Unproven,,,False,,Stable,-0.20000000000000492
+3,FINAL VERDICT,Low,50.0,False,169.0,True,169.0,At_peak,FRESHENING,33.0,,100.0,Strong,13.0,169.0,True,13.0,Stable,0.29999999999998944
+3,FORE HARP,Historical_bouncer,66.66666666666666,True,168.0,False,,2-3,IMPROVING,20.0,15.0,33.33333333333333,Strong,15.0,77.0,False,,Ascending,1.9999999999999893
+3,LASER SHARP,Low,75.0,True,189.0,False,,At_peak,ERRATIC,22.0,,100.0,Unproven,,,False,,Stable,-2.0624460956456913e-14
+3,REFUEL,Low,100.0,True,,True,361.0,Developing,FRESHENING,40.0,,,Strong,15.0,361.0,True,15.0,Unknown,
+3,RUN CURTIS RUN,Low,100.0,True,150.0,True,150.0,Past_peak,FRESHENING,58.0,,0.0,Strong,7.0,34.0,False,,Declining,-2.200000000000006
+3,STEP FORWARD,Historical_bouncer,100.0,True,,False,,2-3,RECOVERING,251.0,14.0,33.33333333333333,Strong,14.0,259.0,True,14.0,Ascending,3.0999999999999948
+3,URBAN LEGEND,Historical_bouncer,33.33333333333333,False,105.0,False,,Past_peak,DECLINING,37.0,6.0,100.0,Unproven,,,False,,Declining,-0.6000000000000103
+3,WHAT'S UP BRO,Historical_bouncer,75.0,True,225.0,False,,Past_peak,DECLINING,44.0,6.0,50.0,Strong,12.5,122.0,False,,Declining,-1.0000000000000089
+3,WORKS FOR ME,Historical_bouncer,80.0,True,176.0,True,176.0,At_peak,FRESHENING,33.0,11.0,100.0,Strong,12.0,68.0,False,,Stable,0.2999999999999856
+4,ARMY GAL,Historical_bouncer,100.0,True,,True,50.0,Unknown,FRESHENING,40.0,22.0,,Strong,10.0,50.0,True,10.0,,
+4,CLOVER STREET,Low,50.0,False,48.0,False,,2-3,RECOVERING,21.0,,0.0,Strong,8.0,41.0,True,8.0,Ascending,2.9999999999999907
+4,ECHO IN ETERNITY,Historical_bouncer,100.0,True,,False,,Past_peak,DECLINING,35.0,23.0,50.0,Strong,16.0,35.0,False,,Declining,-4.20000000000001
+4,EMBRACEABLE GAL,Historical_bouncer,50.0,False,,False,,Past_peak,DECLINING,21.0,16.0,0.0,Strong,16.0,32.0,False,,Declining,-2.800000000000007
+4,JACKSON'S DIXIE,Historical_bouncer,0.0,False,,False,,2-3,IMPROVING,14.0,15.0,0.0,Strong,29.0,13.0,False,,Ascending,1.4999999999999976
+4,KRYSTALHEIR,Low,0.0,False,55.0,False,,2-3,RECOVERING,83.0,,0.0,Moderate,5.0,19.0,True,5.0,Ascending,2.8999999999999955
+4,NOLITA,Low,100.0,True,,False,,At_peak,STABLE,62.0,,33.33333333333333,Strong,18.0,44.0,False,,Stable,-0.20000000000000853
+4,SHORT SHIFT,Low,50.0,False,145.0,False,,Past_peak,DECLINING,35.0,,0.0,Strong,11.0,85.0,False,,Declining,-2.4000000000000052
+4,THIRTEEN RED FLAGS,Historical_bouncer,66.66666666666666,True,129.0,False,,Past_peak,DECLINING,19.0,46.0,0.0,Strong,26.5,88.5,False,,Declining,-0.7000000000000062
+4,VEHEMENTE,Historical_bouncer,100.0,True,79.0,False,,Past_peak,DECLINING,19.0,38.0,50.0,Strong,38.0,79.0,False,,Declining,-3.9000000000000075
+5,CAPITOL HILL,Unknown,50.0,False,,False,,Unknown,STABLE,44.0,,,,,,,,,
+5,COSTA TERRA,Low,100.0,True,,False,,2-3,IMPROVING,41.0,,50.0,Strong,33.0,19.0,False,,Ascending,0.9999999999999923
+5,DREAMLIKE,Historical_bouncer,33.33333333333333,False,97.0,True,295.0,2-3,FRESHENING,47.0,25.0,25.0,Strong,25.0,41.0,False,,Ascending,4.199999999999986
+5,FRIZZANTE,Historical_bouncer,100.0,True,,False,,2-3,IMPROVING,54.0,6.0,50.0,Unproven,,,False,,Ascending,1.099999999999989
+5,GOOD SKATE,Historical_bouncer,33.33333333333333,False,47.0,False,,Past_peak,DECLINING,28.0,101.0,0.0,Strong,101.0,27.0,False,,Declining,-0.8000000000000042
+5,MALARCHUK,Historical_bouncer,75.0,True,125.0,False,,2-3,IMPROVING,28.0,8.0,100.0,Unproven,,,False,,Ascending,0.8999999999999897
+5,SEEKING UNITY,Historical_bouncer,33.33333333333333,False,50.0,False,,2-3,IMPROVING,27.0,9.0,50.0,Strong,10.0,22.0,False,,Ascending,1.6
+5,UNBRIDLED BOMBER,Low,83.33333333333334,True,106.0,True,86.0,2-3,FRESHENING,27.0,,0.0,Moderate,4.0,50.0,True,4.0,Ascending,1.6999999999999973
+5,WAITLIST,Historical_bouncer,50.0,False,77.0,False,,Past_peak,DECLINING,14.0,10.0,0.0,Strong,10.0,39.0,False,,Declining,-3.7000000000000166
+6,IRISH MAXIMA,Historical_bouncer,50.0,False,46.0,True,49.0,2-3,FRESHENING,62.0,11.0,33.33333333333333,Strong,39.0,271.0,False,,Ascending,1.4999999999999931
+6,JODY'S PRIDE,Historical_bouncer,80.0,True,78.0,True,63.0,Past_peak,FRESHENING,27.0,15.0,100.0,Strong,12.0,63.0,True,12.0,Declining,-0.6000000000000091
+6,JUSTIQUE,Low,80.0,True,52.0,False,,2-3,IMPROVING,59.0,,0.0,Moderate,5.0,55.0,False,,Ascending,1.4999999999999862
+6,MISS JUSTIFY,Historical_bouncer,100.0,True,209.0,True,209.0,Past_peak,FRESHENING,49.0,8.0,100.0,Unproven,,,False,,Declining,-0.5000000000000042
+6,SCYLLA,Historical_bouncer,66.66666666666666,True,70.0,True,182.0,Past_peak,FRESHENING,34.0,7.0,100.0,Strong,9.0,15.0,False,,Declining,-0.5000000000000125
+6,ST. BENEDICTS PREP,Historical_bouncer,0.0,False,,False,,Past_peak,DECLINING,33.0,13.0,50.0,Strong,13.0,19.0,False,,Declining,-0.6000000000000094
+6,WAYS AND MEANS,Historical_bouncer,75.0,True,182.0,True,182.0,2-3,FRESHENING,34.0,21.0,50.0,Strong,21.0,34.0,False,,Ascending,0.6999999999999859
+7,ANY PORT,Historical_bouncer,60.0,True,68.0,False,,Past_peak,DECLINING,322.0,6.0,100.0,Unproven,,,False,,Declining,-1.000000000000014
+7,BEST IMPRESSION,Low,33.33333333333333,False,154.0,True,154.0,Developing,FRESHENING,48.0,,,Strong,16.0,154.0,True,16.0,Unknown,
+7,BIG BEAUTIFUL,Historical_bouncer,50.0,False,68.0,True,68.0,Unknown,FRESHENING,36.0,12.0,,Unproven,,,False,,,
+7,HOPE MISSION,Historical_bouncer,50.0,False,,False,,Developing,STABLE,37.0,21.0,,Strong,21.0,31.0,False,,Unknown,
+7,LADY RIVER LILY,Low,100.0,True,,False,,Past_peak,DECLINING,35.0,,50.0,Strong,12.0,25.5,False,,Declining,-2.000000000000008
+7,LOUISE PROCTER,,,,,,,,INSUFFICIENT_DATA,295.0,,,,,,,,,
+7,MYSTIFYING,Historical_bouncer,33.33333333333333,False,171.0,True,228.0,Unknown,FRESHENING,49.0,24.0,,Strong,24.0,171.0,False,,,
+7,NEXT ON STAGE,Historical_bouncer,100.0,True,,True,69.0,Past_peak,FRESHENING,34.0,6.0,0.0,Unproven,,,False,,Declining,-2.4000000000000097
+7,OUR LIBERTY BELLE,Historical_bouncer,0.0,False,,False,,Past_peak,DECLINING,11.0,7.0,0.0,Strong,7.0,36.0,False,,Declining,-1.1000000000000087
+7,SAVE US MELANIA,Historical_bouncer,33.33333333333333,False,65.0,False,,2-3,IMPROVING,11.0,9.0,66.66666666666666,Strong,37.0,46.0,False,,Ascending,1.7999999999999818
+7,SPOOL,Unknown,100.0,True,,True,125.0,Unknown,FRESHENING,35.0,,,,,,,,,
+7,STORM MIAMI,Low,75.0,True,72.0,True,53.0,2-3,FRESHENING,37.0,,0.0,Strong,15.0,53.0,True,15.0,Ascending,1.8999999999999913
+7,TEMPLE CITY TABOO,Low,50.0,False,,False,,Unknown,RECOVERING,35.0,,,Strong,28.0,8.0,True,28.0,,
+7,UNREASONABLE,,,,,,,,INSUFFICIENT_DATA,49.0,,,,,,,,,
+7,WRIGLEYVILLE,Historical_bouncer,50.0,False,47.0,True,142.0,2-3,FRESHENING,47.0,8.0,100.0,Unproven,,,False,,Ascending,1.99999999999999
+8,BOBBY BOB,Low,100.0,True,,False,,Developing,STABLE,57.0,,,Strong,13.0,28.0,False,,Unknown,
+8,KULAPAT,Historical_bouncer,50.0,False,,False,,Unknown,RECOVERING,33.0,8.0,,Strong,54.0,43.0,True,54.0,,
+8,LAIRD OF MAGNOLIA,Low,0.0,False,50.0,False,,Past_peak,RECOVERING,11.0,,33.33333333333333,Strong,27.0,26.0,True,27.0,Declining,-2.7000000000000037
+8,NOBLE CONFESSOR,Historical_bouncer,0.0,False,,True,184.0,Developing,FRESHENING,33.0,7.0,,Strong,14.0,30.0,False,,Unknown,
+8,RETEKO,Low,100.0,True,51.0,True,51.0,Past_peak,FRESHENING,33.0,,0.0,Strong,6.0,43.0,False,,Declining,-1.700000000000004
+8,THE HERO CODE,Unknown,0.0,False,,True,511.0,Unknown,FRESHENING,19.0,,,,,,,,,
+8,TOM COLLINS,Low,66.66666666666666,True,205.0,False,,Past_peak,DECLINING,35.0,,100.0,Strong,15.0,205.0,False,,Declining,-3.700000000000005
+9,CANDIED,Low,50.0,False,64.0,False,,At_peak,ERRATIC,21.0,,100.0,Unproven,,,False,,Stable,0.4999999999999902
+9,DAZZLING MOVE,Historical_bouncer,66.66666666666666,True,51.0,False,,Past_peak,DECLINING,21.0,9.0,50.0,Strong,10.0,30.0,False,,Declining,-1.7000000000000106
+9,DORTH VADER,Historical_bouncer,100.0,True,57.0,False,,0-1,PEAKING,35.0,25.0,50.0,Strong,25.0,49.0,False,,Near_peak,0.5999999999999884
+9,LESLIE'S ROSE,Low,66.66666666666666,True,288.0,True,288.0,Past_peak,FRESHENING,33.0,,100.0,Strong,31.0,34.5,False,,Declining,-4.300000000000012
+9,RAGING SEA,Low,50.0,False,46.0,True,181.0,At_peak,FRESHENING,35.0,,100.0,Unproven,,,False,,Stable,0.39999999999999786
+9,RANDOMIZED,Low,20.0,False,50.0,True,252.0,2-3,FRESHENING,35.0,,0.0,Strong,14.5,143.5,True,14.5,Ascending,1.6999999999999997
+9,TARIFA,Low,100.0,True,100.0,False,,At_peak,STABLE,49.0,,0.0,Strong,14.0,100.0,False,,Stable,0.3999999999999908
+10,ANGLOPHILE,Low,50.0,False,50.0,False,,At_peak,STABLE,27.0,,0.0,Strong,5.5,38.5,False,,Stable,0.09999999999998684
+10,CURBSTONE,Historical_bouncer,33.33333333333333,False,50.0,False,,At_peak,STABLE,62.0,8.0,50.0,Strong,11.0,59.0,False,,Stable,-0.1000000000000194
+10,FLATTEN THE CURVE,,,,,,,,INSUFFICIENT_DATA,26.0,,,,,,,,,
+10,GRAND SONATA,Historical_bouncer,66.66666666666666,True,56.0,True,49.0,2-3,FRESHENING,48.0,10.0,50.0,Strong,16.0,14.0,False,,Ascending,2.799999999999988
+10,LA MEHANA,Historical_bouncer,33.33333333333333,False,65.0,False,,At_peak,STABLE,35.0,10.0,50.0,Unproven,,,False,,Stable,0.09999999999999362
+10,LIMITED LIABILITY,Historical_bouncer,40.0,False,59.0,True,84.0,2-3,FRESHENING,48.0,7.0,0.0,Strong,24.0,23.0,False,,Ascending,0.6999999999999921
+10,LORD FLINTSHIRE,Low,80.0,True,133.0,True,133.0,Past_peak,FRESHENING,48.0,,0.0,Strong,9.0,78.0,False,,Declining,-4.800000000000008
+10,PADIDDLE,Historical_bouncer,50.0,False,54.0,False,,Past_peak,DECLINING,27.0,8.0,0.0,Strong,8.0,41.0,False,,Declining,-2.500000000000008
+10,PARCHMENT PARTY,Historical_bouncer,75.0,True,49.0,False,,Past_peak,DECLINING,20.0,6.0,50.0,Unproven,,,False,,Declining,-2.400000000000008
+10,TAWNY PORT,Historical_bouncer,0.0,False,49.0,True,169.0,2-3,FRESHENING,69.0,7.0,66.66666666666666,Strong,8.0,35.0,False,,Ascending,3.1999999999999944
+10,THE GINGER WIZARD,Low,0.0,False,83.0,True,83.0,Unknown,FRESHENING,69.0,,,Unproven,,,False,,,
+10,TIMEOUT,Low,33.33333333333333,False,50.0,False,,Past_peak,RECOVERING,37.0,,0.0,Strong,17.0,22.0,True,17.0,Declining,-0.7000000000000133
+10,YO DADDY,Historical_bouncer,100.0,True,,True,64.0,2-3,FRESHENING,33.0,6.0,33.33333333333333,Strong,12.5,50.0,True,12.5,Ascending,2.799999999999988
+11,BLESS THE BROKEN,Historical_bouncer,0.0,False,,False,,Past_peak,DECLINING,35.0,12.0,50.0,Strong,31.0,28.0,False,,Declining,-1.699999999999999
+11,GOOD CHEER,Historical_bouncer,100.0,True,54.0,False,,Past_peak,DECLINING,35.0,20.0,0.0,Unproven,,,False,,Declining,-0.6000000000000113
+11,LA CARA,Historical_bouncer,100.0,True,99.0,False,,At_peak,ERRATIC,35.0,17.0,100.0,Strong,23.0,28.0,False,,Stable,-0.10000000000000651
+11,LOOK FORWARD,Historical_bouncer,0.0,False,,False,,0-1,RECOVERING,35.0,9.0,0.0,Strong,15.0,25.0,True,15.0,Near_peak,0.9999999999999893
+11,QUICKICK,Historical_bouncer,0.0,False,,False,,2-3,IMPROVING,35.0,13.0,100.0,Unproven,,,False,,Ascending,1.1999999999999944
+11,SCOTTISH LASSIE,Historical_bouncer,0.0,False,,True,181.0,Unknown,FRESHENING,36.0,11.0,,Unproven,,,False,,,
+11,SHRED THE GNAR,Unknown,100.0,True,,True,47.0,Unknown,FRESHENING,35.0,,,,,,,,,
+12,BEACH BOMB,Low,0.0,False,119.0,False,,2-3,IMPROVING,35.0,,100.0,Unproven,,,False,,Ascending,2.8999999999999932
+12,BELLEZZA,,,,,,,,INSUFFICIENT_DATA,35.0,,,,,,,,,
+12,EDICT,Unknown,100.0,True,308.0,True,175.0,Unknown,FRESHENING,33.0,,,,,,,,,
+12,FOREVER AFTER ALL,Low,100.0,True,,True,55.0,2-3,FRESHENING,42.0,,0.0,Unproven,,,False,,Ascending,1.2999999999999894
+12,GIMME A NOTHER,,,,,,,,INSUFFICIENT_DATA,35.0,,,,,,,,,
+12,IMMENSITUDE,Low,33.33333333333333,False,73.0,True,55.0,2-3,FRESHENING,42.0,,50.0,Unproven,,,False,,Ascending,4.899999999999997
+12,MIWA,,,,,,,,INSUFFICIENT_DATA,42.0,,,,,,,,,
+12,SHE FEELS PRETTY,Historical_bouncer,71.42857142857143,True,56.0,True,127.0,Past_peak,FRESHENING,35.0,6.0,100.0,Unproven,,,False,,Declining,-2.800000000000016
+13,A LILAC ROLLA,,,,,,,,INSUFFICIENT_DATA,329.0,,,,,,,,,
+13,CHOISYA,,,,,,,,INSUFFICIENT_DATA,55.0,,,,,,,,,
+13,DO GOODER,Low,100.0,True,191.0,False,,Past_peak,DECLINING,27.0,,0.0,Strong,12.0,45.0,False,,Declining,-6.300000000000012
+13,DYNAMIC PRICING,Low,75.0,True,55.0,True,233.0,2-3,FRESHENING,33.0,,100.0,Strong,6.5,137.5,True,6.5,Ascending,1.6999999999999913
+13,EXCELLENT TRUTH,,,,,,,,INSUFFICIENT_DATA,55.0,,,,,,,,,
+13,HEREDIA,,,,,,,,INSUFFICIENT_DATA,33.0,,,,,,,,,
+13,KEHOE BEACH,Historical_bouncer,60.0,True,134.0,True,134.0,Past_peak,FRESHENING,55.0,17.0,50.0,Unproven,,,False,,Declining,-1.2000000000000086
+13,SACRED WISH,Low,33.33333333333333,False,77.0,False,,Past_peak,DECLINING,34.0,,50.0,Unproven,,,False,,Declining,-1.500000000000008
+13,SEGESTA,Low,100.0,True,300.0,True,300.0,Past_peak,FRESHENING,35.0,,0.0,Unproven,,,False,,Declining,-2.7000000000000104
+13,SIMPLY IN FRONT,Low,75.0,True,155.0,True,155.0,0-1,FRESHENING,34.0,,0.0,Strong,10.0,155.0,False,,Near_peak,0.6999999999999925
+13,SPECIAL WAN,Unknown,100.0,True,147.0,True,147.0,Unknown,FRESHENING,97.0,,,,,,,,,
+14,COUNTER MOVE,Unknown,100.0,True,,True,49.0,Unknown,FRESHENING,35.0,,,,,,,,,
+14,HIT THE POST,Unknown,50.0,False,,False,,Unknown,STABLE,231.0,,,,,,,,,
+14,IRON DOME,Unknown,100.0,True,,False,,Unknown,STABLE,43.0,,,,,,,,,
+14,SANZIO,Historical_bouncer,50.0,False,,False,,Unknown,STABLE,27.0,6.0,,Unproven,,,False,,,
