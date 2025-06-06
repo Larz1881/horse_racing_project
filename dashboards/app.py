@@ -248,15 +248,28 @@ app.layout = html.Div([
         html.Hr(style={'borderColor': COLORS['primary']})
     ], style={'padding': '20px', 'backgroundColor': COLORS['card_bg']}),
 
-    # Race Selector
+    # Race Selector and Scratch Selector
     html.Div([
-        html.Label("Select Race:", style={'color': COLORS['text'], 'marginRight': '10px'}),
-        dcc.Dropdown(
-            id='race-selector',
-            options=RACE_OPTIONS,
-            value=RACE_OPTIONS[0]['value'] if RACE_OPTIONS else None,
-            style={'width': '200px', 'display': 'inline-block'}
-        )
+        html.Div([
+            html.Label("Select Race:", style={'color': COLORS['text'], 'marginRight': '10px'}),
+            dcc.Dropdown(
+                id='race-selector',
+                options=RACE_OPTIONS,
+                value=RACE_OPTIONS[0]['value'] if RACE_OPTIONS else None,
+                style={'width': '200px', 'display': 'inline-block'}
+            )
+        ], style={'display': 'inline-block', 'marginRight': '40px'}),
+
+        html.Div([
+            html.Label("Scratch Horses:", style={'color': COLORS['text'], 'marginRight': '10px'}),
+            dcc.Dropdown(
+                id='scratch-selector',
+                options=[],
+                value=[],
+                multi=True,
+                style={'width': '200px', 'display': 'inline-block'}
+            )
+        ], style={'display': 'inline-block'})
     ], style={'padding': '20px', 'backgroundColor': COLORS['background']}),
 
     # Race Header Info
@@ -321,21 +334,45 @@ def update_race_header(selected_race):
 
 
 @app.callback(
-    Output('race-summary-content', 'children'),
+    [Output('scratch-selector', 'options'),
+     Output('scratch-selector', 'value')],
     Input('race-selector', 'value')
 )
-def update_race_summary(selected_race):
+def update_scratch_selector(selected_race):
+    """Update scratch selector options based on selected race"""
+    if not selected_race or DATA['current'].empty:
+        return [], []
+
+    horses = DATA['current'][DATA['current']['race'] == selected_race]['horse_name'].tolist()
+    options = [{'label': h, 'value': h} for h in horses]
+    return options, []
+
+
+@app.callback(
+    Output('race-summary-content', 'children'),
+    [Input('race-selector', 'value'),
+     Input('scratch-selector', 'value')]
+)
+def update_race_summary(selected_race, scratched_horses):
     """Update race summary and connections tables"""
     if not selected_race:
         return html.Div("No race selected")
 
-    # Get race data for all horses in the selected race
-    race_horses = DATA['current'][DATA['current']['race'] == selected_race].copy()
+    scratches = scratched_horses or []
+
+    # Get race data for all horses in the selected race excluding scratches
+    race_horses = DATA['current'][
+        (DATA['current']['race'] == selected_race) &
+        (~DATA['current']['horse_name'].isin(scratches))
+    ].copy()
 
     # --- Create Race Summary Table ---
 
     # Merge with past performance data for averages
-    past_data = DATA['past'][DATA['past']['race'] == selected_race].copy()
+    past_data = DATA['past'][
+        (DATA['past']['race'] == selected_race) &
+        (~DATA['past']['horse_name'].isin(scratches))
+    ].copy()
 
     # Calculate average pace figures by horse
     pace_avgs = past_data.groupby('horse_name').agg({
@@ -474,14 +511,20 @@ def update_race_summary(selected_race):
 
 @app.callback(
     Output('workout-content', 'children'),
-    Input('race-selector', 'value')
+    [Input('race-selector', 'value'),
+     Input('scratch-selector', 'value')]
 )
-def update_workout_view(selected_race):
+def update_workout_view(selected_race, scratched_horses):
     """Update workout analysis view"""
     if not selected_race or DATA['workout'].empty:
         return html.Div("No workout data available")
 
-    race_data = DATA['workout'][DATA['workout']['race'] == selected_race].copy()
+    scratches = scratched_horses or []
+
+    race_data = DATA['workout'][
+        (DATA['workout']['race'] == selected_race) &
+        (~DATA['workout']['horse_name'].isin(scratches))
+    ].copy()
 
     charts = []
 
