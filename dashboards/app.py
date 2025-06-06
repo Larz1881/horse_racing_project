@@ -261,31 +261,14 @@ app.layout = html.Div([
         dcc.Tab(label='Race Summary', children=[
             html.Div(id='race-summary-content', style={'padding': '20px'})
         ]),
-        dcc.Tab(label='Integrated Analytics', children=[
-            html.Div(id='integrated-content', style={'padding': '20px'})
-        ]),
-        dcc.Tab(label='Fitness Analysis', children=[
-            html.Div(id='fitness-content', style={'padding': '20px'})
-        ]),
-        dcc.Tab(label='Pace Projections', children=[
-            html.Div(id='pace-content', style={'padding': '20px'})
-        ]),
         dcc.Tab(label='Simple Pace', children=[
             html.Div(id='simple-pace-content', children=get_simple_pace_layout(),
                      style={'padding': '20px'})
         ]),
-        dcc.Tab(label='Class Assessment', children=[
-            html.Div(id='class-content', style={'padding': '20px'})
-        ]),
-        dcc.Tab(label='Form Cycles', children=[
-            html.Div(id='form-content', style={'padding': '20px'})
-        ]),
         dcc.Tab(label='Workout Analysis', children=[
             html.Div(id='workout-content', style={'padding': '20px'})
         ]),
-        dcc.Tab(label='Betting Intelligence', children=[
-            html.Div(id='betting-content', style={'padding': '20px'})
-        ])
+        
     ], style={'backgroundColor': COLORS['background']})
     
 ], style={'backgroundColor': COLORS['background'], 'minHeight': '100vh'})
