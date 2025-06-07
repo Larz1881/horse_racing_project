@@ -118,20 +118,6 @@ def get_simple_pace_layout():
 
             dbc.Row([
                 dbc.Col([
-                    html.Label("Select Race:", className="fw-bold"),
-                    dcc.Dropdown(
-                        id='race-dropdown',
-                        options=[],
-                        value=None,
-                        className="mb-3 dropdown-options",
-                        style={
-                            'backgroundColor': COLORS['card_bg'],
-                            'color': COLORS['text']
-                        }
-                    )
-                ], width=4),
-
-                dbc.Col([
                     dbc.Button(
                         "Load Data",
                         id="load-data-btn",
@@ -145,11 +131,11 @@ def get_simple_pace_layout():
                             'fontWeight': 'bold'
                         }
                     )
-                ], width=2),
+                ], width=4),
 
                 dbc.Col([
                     html.Div(id="data-status", className="mt-4")
-                ], width=3),
+                ], width=4),
 
                 dbc.Col([
                     html.A(
@@ -158,7 +144,7 @@ def get_simple_pace_layout():
                         className="btn btn-info mt-4",
                         style={'color': 'white', 'textDecoration': 'none'}
                     )
-                ], width=3)
+                ], width=4)
             ]),
 
             html.Hr(),
@@ -684,50 +670,45 @@ def update_workout_view(selected_race, scratched_horses):
 # ------- Simple Pace Callbacks -------
 
 @app.callback(
-    [Output('race-dropdown', 'options'),
-     Output('race-dropdown', 'value'),
-     Output('data-status', 'children')],
+    Output('data-status', 'children'),
     Input('load-data-btn', 'n_clicks'),
     prevent_initial_call=True
 )
 def load_data(n_clicks):
-    """Load data and populate race dropdown"""
+    """Load simple pace data"""
     if analyzer.load_data():
         if analyzer.validate_columns():
             races = analyzer.get_race_list()
-            options = [{'label': f'Race {r}', 'value': r} for r in races]
-            value = races[0] if races else None
-
             status = dbc.Alert(
                 f"Data loaded successfully! Found {len(races)} race{'s' if len(races) != 1 else ''}.",
                 color="success",
                 dismissable=True
             )
-
-            return options, value, status
+            return status
         else:
             status = dbc.Alert(
                 "Data loaded but some columns are missing. Check logs.",
                 color="warning",
                 dismissable=True
             )
-            return [], None, status
+            return status
     else:
         status = dbc.Alert(
             "Failed to load data. Check file paths.",
             color="danger",
             dismissable=True
         )
-        return [], None, status
+        return status
 
 
 @app.callback(
     [Output('pace-table-container', 'children'),
      Output('pace-visualization', 'figure')],
-    Input('race-dropdown', 'value'),
-    prevent_initial_call=True
+    [Input('race-selector', 'value'),
+     Input('scratch-selector', 'value')],
+    prevent_initial_call=False
 )
-def update_display(selected_race):
+def update_display(selected_race, scratched_horses):
     """Update table and visualization based on selected race"""
     if selected_race is None or analyzer.current_race_df is None:
         return html.Div("No race selected"), go.Figure()
@@ -737,6 +718,10 @@ def update_display(selected_race):
 
     # Filter for selected race
     race_df = results_df[results_df['race'] == selected_race].copy()
+
+    scratches = scratched_horses or []
+    if scratches:
+        race_df = race_df[~race_df['horse_name'].isin(scratches)]
 
     if race_df.empty:
         return html.Div("No data for selected race"), go.Figure()
@@ -963,10 +948,11 @@ def update_display(selected_race):
 @app.callback(
     Output('best-race-container', 'children'),
     Input('analyze-best-races-btn', 'n_clicks'),
-    State('race-dropdown', 'value'),
+    State('race-selector', 'value'),
+    State('scratch-selector', 'value'),
     prevent_initial_call=False
 )
-def analyze_best_races(n_clicks, selected_race):
+def analyze_best_races(n_clicks, selected_race, scratched_horses):
     """Analyze and display best race patterns"""
     if n_clicks is None:
         return html.P(
@@ -1002,13 +988,16 @@ def analyze_best_races(n_clicks, selected_race):
     if selected_race and selected_race in report['race_reports']:
         race_data = report['race_reports'][selected_race]
 
-        if race_data['patterns']:
+        scratches = scratched_horses or []
+        patterns = [p for p in race_data['patterns'] if p['horse_name'] not in scratches]
+
+        if patterns:
             race_div = html.Div([
                 html.Hr(),
                 html.H5(f"Race {selected_race} - Best Race Analysis", className="mb-3"),
                 html.Div([
                     create_horse_best_race_card(pattern)
-                    for pattern in race_data['patterns']
+                    for pattern in patterns
                 ])
             ])
             components.append(race_div)
