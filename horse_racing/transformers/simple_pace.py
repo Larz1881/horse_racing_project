@@ -18,6 +18,7 @@ import logging
 from sklearn.cluster import DBSCAN, KMeans
 from sklearn.preprocessing import StandardScaler
 from scipy import stats
+import warnings
 
 from config.settings import PROCESSED_DATA_DIR, PAST_STARTS_LONG, CURRENT_RACE_INFO
 
@@ -226,7 +227,18 @@ class ClusteringBestRaceAnalyzer:
                             
                             # Statistical significance test
                             if len(best_values) >= 3 and len(regular_values) >= 3:
-                                t_stat, p_value = stats.ttest_ind(best_values, regular_values)
+                                if best_values.std() == 0 and regular_values.std() == 0:
+                                    p_value = 1.0
+                                else:
+                                    with warnings.catch_warnings():
+                                        warnings.simplefilter("ignore", RuntimeWarning)
+                                        _, p_value = stats.ttest_ind(
+                                            best_values,
+                                            regular_values,
+                                            equal_var=False,
+                                            nan_policy="omit",
+                                        )
+
                                 factor_analysis['significant'] = p_value < 0.05
                                 factor_analysis['p_value'] = p_value
             
