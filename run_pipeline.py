@@ -24,7 +24,9 @@ except NameError:
     # Fallback if __file__ is not defined
     PROJECT_ROOT: Path = Path.cwd()
     if not (PROJECT_ROOT / "config").exists() or not (PROJECT_ROOT / "horse_racing").exists():
-        print("Warning: PROJECT_ROOT might not be correctly set. Assuming current working directory.")
+        logger.warning(
+            "PROJECT_ROOT might not be correctly set. Assuming current working directory."
+        )
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.insert(0, str(PROJECT_ROOT))
 
@@ -47,16 +49,17 @@ try:
     )
     from horse_racing.transformers.feature_engineering import main as engineer_features_main
 except ImportError as e:
-    print(f"Error importing modules: {e}")
-    print("Please ensure that:")
-    print(f"1. The project root ({PROJECT_ROOT}) is correctly identified and added to sys.path.")
-    print("2. 'bris_spec_new.py' is in the 'horse_racing/parsers/' directory and is importable.")
-    print("3. Other 'horse_racing' script files (current_race_info.py, etc.) exist in their 'horse_racing/transformers/' subdirectories.")
-    print("4. Each of these scripts has a callable 'main()' function.")
-    print(
-        "5. 'config/settings.py' exists in the 'config/' directory and defines necessary variables (RAW_DATA_DIR, etc.).")
-    print(
-        "6. Ensure necessary '__init__.py' files are present in 'horse_racing/', 'horse_racing/parsers/', and 'horse_racing/transformers/' to make them packages.")
+    logger.error(
+        "Error importing modules: %s\n" "Please ensure that:\n"
+        "1. The project root (%s) is correctly identified and added to sys.path.\n"
+        "2. 'bris_spec_new.py' is in the 'horse_racing/parsers/' directory and is importable.\n"
+        "3. Other 'horse_racing' script files (current_race_info.py, etc.) exist in their 'horse_racing/transformers/' subdirectories.\n"
+        "4. Each of these scripts has a callable 'main()' function.\n"
+        "5. 'config/settings.py' exists in the 'config/' directory and defines necessary variables (RAW_DATA_DIR, etc.).\n"
+        "6. Ensure necessary '__init__.py' files are present in 'horse_racing/', 'horse_racing/parsers/', and 'horse_racing/transformers/' to make them packages.",
+        e,
+        PROJECT_ROOT,
+    )
     sys.exit(1)
 
 # --- Logging Setup ---
@@ -74,7 +77,7 @@ try:
         ]
     )
 except Exception as log_e:
-    print(f"Error setting up logging: {log_e}. Logging to console only.")
+    logger.error("Error setting up logging: %s. Logging to console only.", log_e)
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
