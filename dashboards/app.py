@@ -135,15 +135,6 @@ def get_simple_pace_layout():
 
                 dbc.Col([
                     html.Div(id="data-status", className="mt-4")
-                ], width=4),
-
-                dbc.Col([
-                    html.A(
-                        "Go to Best Race Analysis ↓",
-                        href="#best-race-header",
-                        className="btn btn-info mt-4",
-                        style={'color': 'white', 'textDecoration': 'none'}
-                    )
                 ], width=4)
             ]),
 
@@ -158,37 +149,7 @@ def get_simple_pace_layout():
                         ], width=12)
                     ]),
 
-                    html.Hr(),
-
-                    dbc.Row([
-                        dbc.Col([
-                            html.H3("Best Race Analysis", className="mb-3", id="best-race-header"),
-                            dbc.Button(
-                                "Analyze Best Races",
-                                id="analyze-best-races-btn",
-                                color="success",
-                                className="mb-3",
-                                style={
-                                    'backgroundColor': '#28a745',
-                                    'borderColor': '#28a745',
-                                    'color': 'white',
-                                    'fontWeight': 'bold',
-                                    'padding': '10px 20px',
-                                    'fontSize': '16px'
-                                }
-                            ),
-                            html.Div(
-                                id="best-race-container",
-                                children=[
-                                    html.P(
-                                        "Click 'Analyze Best Races' to identify patterns in each horse's best performances.",
-                                        className="text-muted"
-                                    )
-                                ],
-                                style={'minHeight': '200px', 'paddingBottom': '100px'}
-                            )
-                        ], width=12)
-                    ])
+                    html.Hr()
                 ]),
 
                 dbc.Tab(label="Pace Visualizations", tab_id="viz-tab", children=[
@@ -213,6 +174,40 @@ def get_simple_pace_layout():
                 ], width=12)
             ])
 
+        ], fluid=True)
+    ], style={
+        'minHeight': '100vh',
+        'paddingBottom': '100px',
+        'overflow': 'visible',
+        'position': 'relative'
+    })
+
+
+# Layout for the Best Race Analysis tab
+def get_best_race_layout():
+    return html.Div([
+        dbc.Container([
+            dbc.Row([
+                dbc.Col([
+                    html.H1("Best Race Analysis", className="text-center mb-4"),
+                    html.Hr()
+                ], width=12),
+            ]),
+
+            dbc.Row([
+                dbc.Col([
+                    html.Div(
+                        id="best-race-container",
+                        children=[
+                            html.P(
+                                "Select a race to view best race analysis.",
+                                className="text-muted"
+                            )
+                        ],
+                        style={'minHeight': '200px', 'paddingBottom': '100px'}
+                    )
+                ], width=12)
+            ])
         ], fluid=True)
     ], style={
         'minHeight': '100vh',
@@ -308,6 +303,22 @@ app.layout = html.Div([
                 html.Div(
                     id='simple-pace-content',
                     children=get_simple_pace_layout(),
+                    style={'padding': '20px'}
+                )
+            ],
+            style={'backgroundColor': COLORS['card_bg'], 'color': COLORS['text']},
+            selected_style={
+                'backgroundColor': COLORS['primary'],
+                'color': '#000000',
+                'fontWeight': 'bold'
+            }
+        ),
+        dcc.Tab(
+            label='Best Race Analysis',
+            children=[
+                html.Div(
+                    id='best-race-content',
+                    children=get_best_race_layout(),
                     style={'padding': '20px'}
                 )
             ],
@@ -947,16 +958,15 @@ def update_display(selected_race, scratched_horses):
 
 @app.callback(
     Output('best-race-container', 'children'),
-    Input('analyze-best-races-btn', 'n_clicks'),
-    State('race-selector', 'value'),
-    State('scratch-selector', 'value'),
+    [Input('race-selector', 'value'),
+     Input('scratch-selector', 'value')],
     prevent_initial_call=False
 )
-def analyze_best_races(n_clicks, selected_race, scratched_horses):
+def analyze_best_races(selected_race, scratched_horses):
     """Analyze and display best race patterns"""
-    if n_clicks is None:
+    if selected_race is None:
         return html.P(
-            "Click 'Analyze Best Races' to identify patterns in each horse's best performances.",
+            "Select a race to view best race analysis.",
             className="text-muted"
         )
 
