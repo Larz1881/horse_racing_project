@@ -440,12 +440,15 @@ class PaceAnalyzer:
             
             # Lead-Abundance Flag for this specific race
             if 'bris_run_style_designation' in results.columns and 'quirin_style_speed_points' in results.columns:
-                lead_horses_in_race = results[
-                    race_mask &
-                    ((results['bris_run_style_designation'] == 'E') | 
-                     (results['bris_run_style_designation'] == 'E/P')) & 
-                    (results['quirin_style_speed_points'] >= 6)
-                ]
+                run_styles = results.loc[race_mask, 'bris_run_style_designation']
+                run_styles = run_styles.fillna('').astype(str).str.upper()
+
+                sp = pd.to_numeric(
+                    results.loc[race_mask, 'quirin_style_speed_points'], errors='coerce'
+                ).fillna(0)
+
+                lead_mask = run_styles.isin(['E', 'E/P']) & (sp >= 6)
+                lead_horses_in_race = results.loc[race_mask][lead_mask]
                 results.loc[race_mask, 'lead_abundance_flag'] = len(lead_horses_in_race)
             else:
                 results.loc[race_mask, 'lead_abundance_flag'] = 0
