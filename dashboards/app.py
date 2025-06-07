@@ -13,6 +13,9 @@ from plotly.subplots import make_subplots
 import pandas as pd
 import numpy as np
 import logging
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 from config.settings import PROCESSED_DATA_DIR, CURRENT_RACE_INFO, PAST_STARTS_LONG
 from horse_racing.transformers.simple_pace import PaceAnalyzer, create_horse_best_race_card
 
@@ -233,6 +236,15 @@ def get_simple_pace_layout():
     })
 
 
+# Layout for the Pace Clustering tab
+def get_clustering_layout():
+    return html.Div([
+        dbc.Container([
+            html.H1("Pace Clustering", className="text-center mb-4"),
+            html.Div(id='clustering-content')
+        ], fluid=True)
+    ])
+
 # Get unique races for dropdown
 if not DATA['current'].empty and 'race' in DATA['current']:
     RACE_OPTIONS = [
@@ -322,6 +334,18 @@ app.layout = html.Div([
             label='Workout Analysis',
             children=[
                 html.Div(id='workout-content', style={'padding': '20px'})
+            ],
+            style={'backgroundColor': COLORS['card_bg'], 'color': COLORS['text']},
+            selected_style={
+                'backgroundColor': COLORS['primary'],
+                'color': '#000000',
+                'fontWeight': 'bold'
+            }
+        ),
+        dcc.Tab(
+            label='Pace Clustering',
+            children=[
+                html.Div(id='pace-clustering-content', children=get_clustering_layout(), style={'padding': '20px'})
             ],
             style={'backgroundColor': COLORS['card_bg'], 'color': COLORS['text']},
             selected_style={
@@ -990,6 +1014,100 @@ def analyze_best_races(n_clicks, selected_race):
     components.append(html.Div(style={'height': '100px'}))
 
     return html.Div(components)
+
+
+# ------- Pace Clustering Callback -------
+
+@app.callback(
+    Output('clustering-content', 'children'),
+    [Input('race-selector', 'value'),
+     Input('scratch-selector', 'value')]
+)
+def update_clustering_view(selected_race, scratched_horses):
+    """Create clustering visualizations for the selected race."""
+    if not selected_race or DATA['past'].empty:
+        return html.Div("No data available")
+
+    scratches = scratched_horses or []
+
+    race_df = DATA['past'][
+        (DATA['past']['race'] == selected_race) &
+        (~DATA['past']['horse_name'].isin(scratches))
+    ].copy()
+
+    features = ['pp_e1_pace', 'pp_e2_pace', 'pp_turn_time', 'pp_bris_late_pace']
+    features = [f for f in features if f in race_df.columns]
+
+    X = race_df[features].dropna()
+    if len(X) < 3:
+        return html.Div("Not enough data for clustering")
+
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+
+    kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
+    labels = kmeans.fit_predict(X_scaled)
+
+    df_cluster = X.copy()
+    df_cluster['cluster'] = labels
+    df_cluster['horse_name'] = race_df.loc[X.index, 'horse_name']
+
+    pair_fig = px.scatter_matrix(
+        df_cluster,
+        dimensions=features,
+        color='cluster',
+        hover_name='horse_name',
+        title='Pair Plot - Pace Features'
+    )
+    pair_fig.update_layout(template='plotly_dark', height=600)
+
+    pca = PCA(n_components=2)
+    comps = pca.fit_transform(X_scaled)
+    pca_df = pd.DataFrame({
+        'PC1': comps[:, 0],
+        'PC2': comps[:, 1],
+        'cluster': labels,
+        'horse_name': race_df.loc[X.index, 'horse_name']
+    })
+
+    pca_fig = px.scatter(
+        pca_df, x='PC1', y='PC2', color='cluster',
+        hover_name='horse_name',
+        title='PCA Cluster Visualization'
+    )
+    pca_fig.update_layout(template='plotly_dark', height=600)
+
+    cluster_means = df_cluster.groupby('cluster')[features].mean()
+    radar_fig = go.Figure()
+    for cluster_id, row in cluster_means.iterrows():
+        radar_fig.add_trace(go.Scatterpolar(
+            r=row.values,
+            theta=features,
+            fill='toself',
+            name=f'Cluster {cluster_id}'
+        ))
+    radar_fig.update_layout(
+        template='plotly_dark',
+        polar=dict(radialaxis=dict(visible=True)),
+        title='Cluster Profiles',
+        height=600
+    )
+
+    par_fig = px.parallel_coordinates(
+        df_cluster,
+        dimensions=features,
+        color='cluster',
+        color_continuous_scale=px.colors.qualitative.Dark24,
+        title='Parallel Coordinates'
+    )
+    par_fig.update_layout(template='plotly_dark', height=600)
+
+    return html.Div([
+        dcc.Graph(figure=pair_fig),
+        dcc.Graph(figure=pca_fig),
+        dcc.Graph(figure=radar_fig),
+        dcc.Graph(figure=par_fig)
+    ])
 
 
 # Run the app
