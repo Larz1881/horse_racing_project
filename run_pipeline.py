@@ -135,30 +135,6 @@ def run_complete_pipeline():
         engineer_features_main()
         logger.info("--- Step 5: Engineering features completed ---")
 
-        logger.info("Running advanced fitness metrics...")
-        from horse_racing.transformers.advanced_fitness_metrics import main as run_fitness_metrics
-        run_fitness_metrics()
-
-        logger.info("Running sophisticated workout analysis...")
-        from horse_racing.transformers.sophisticated_workout_analysis import main as run_workout_analysis
-        run_workout_analysis()
-
-        logger.info("Running advanced pace projection...")
-        from horse_racing.transformers.advanced_pace_projection import main as run_pace_analysis
-        run_pace_analysis()
-
-        logger.info("Running multi-dimensional class assessment...")
-        from horse_racing.transformers.multi_dimensional_class_assessment import main as run_class_assessment
-        run_class_assessment()
-
-        logger.info("Running form cycle detection...")
-        from horse_racing.transformers.form_cycle_detector import main as run_form_cycle
-        run_form_cycle()
-
-        logger.info("Running integrated analytics system...")
-        from horse_racing.transformers.integrated_analytics_system import main as run_integrated_analytics
-        run_integrated_analytics()
-
         logger.info("=== Pipeline completed successfully! ===")
 
     except FileNotFoundError as fnf_error:
