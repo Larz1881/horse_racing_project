@@ -17,7 +17,7 @@ from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from config.settings import PROCESSED_DATA_DIR, CURRENT_RACE_INFO, PAST_STARTS_LONG
-from horse_racing.transformers.simple_pace import PaceAnalyzer, create_horse_best_race_card
+from horse_racing.transformers.simple_pace import PaceAnalyzer
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -105,7 +105,6 @@ DATA = load_all_data()
 analyzer = PaceAnalyzer()
 analyzer.load_data()
 analyzer.validate_columns()
-analyzer.analyze_best_races()
 
 
 # Layout for the Simple Pace tab
@@ -155,40 +154,6 @@ def get_simple_pace_layout():
                 ], width=12)
             ])
 
-        ], fluid=True)
-    ], style={
-        'minHeight': '100vh',
-        'paddingBottom': '100px',
-        'overflow': 'visible',
-        'position': 'relative'
-    })
-
-
-# Layout for the Best Race Analysis tab
-def get_best_race_layout():
-    return html.Div([
-        dbc.Container([
-            dbc.Row([
-                dbc.Col([
-                    html.H1("Best Race Analysis", className="text-center mb-4"),
-                    html.Hr()
-                ], width=12),
-            ]),
-
-            dbc.Row([
-                dbc.Col([
-                    html.Div(
-                        id="best-race-container",
-                        children=[
-                            html.P(
-                                "Select a race to view best race analysis.",
-                                className="text-muted"
-                            )
-                        ],
-                        style={'minHeight': '200px', 'paddingBottom': '100px'}
-                    )
-                ], width=12)
-            ])
         ], fluid=True)
     ], style={
         'minHeight': '100vh',
@@ -284,22 +249,6 @@ app.layout = html.Div([
                 html.Div(
                     id='simple-pace-content',
                     children=get_simple_pace_layout(),
-                    style={'padding': '20px'}
-                )
-            ],
-            style={'backgroundColor': COLORS['card_bg'], 'color': COLORS['text']},
-            selected_style={
-                'backgroundColor': COLORS['primary'],
-                'color': '#000000',
-                'fontWeight': 'bold'
-            }
-        ),
-        dcc.Tab(
-            label='Best Race Analysis',
-            children=[
-                html.Div(
-                    id='best-race-content',
-                    children=get_best_race_layout(),
                     style={'padding': '20px'}
                 )
             ],
@@ -903,67 +852,6 @@ def update_display(selected_race, scratched_horses):
     ])
 
     return [summary_div, table], fig
-
-
-@app.callback(
-    Output('best-race-container', 'children'),
-    [Input('race-selector', 'value'),
-     Input('scratch-selector', 'value')],
-    prevent_initial_call=False
-)
-def analyze_best_races(selected_race, scratched_horses):
-    """Analyze and display best race patterns"""
-    if selected_race is None:
-        return html.P(
-            "Select a race to view best race analysis.",
-            className="text-muted"
-        )
-
-    if analyzer.past_starts_df is None:
-        return html.Div("No data available", className="text-warning")
-
-    report = analyzer.best_race_report or analyzer.analyze_best_races()
-
-    if not report or not report['race_reports']:
-        return html.Div("No best race patterns found", className="text-warning")
-
-    components = []
-    components.append(html.H5("Analysis Complete!", className="text-success mb-3"))
-
-    if report['consistent_factors']:
-        insights_div = html.Div([
-            html.H5("Key Factors in Best Performances:", className="text-info mb-3"),
-            html.Ul([
-                html.Li([
-                    html.Strong(f"{factor['factor'].replace('pp_', '').replace('_', ' ').title()}: "),
-                    f"{factor['direction']} by {abs(factor['avg_change']):.1f} on average ",
-                    f"({factor['consistency']:.0%} of horses)"
-                ])
-                for factor in report['consistent_factors'][:5]
-            ])
-        ])
-        components.append(insights_div)
-
-    if selected_race and selected_race in report['race_reports']:
-        race_data = report['race_reports'][selected_race]
-
-        scratches = scratched_horses or []
-        patterns = [p for p in race_data['patterns'] if p['horse_name'] not in scratches]
-
-        if patterns:
-            race_div = html.Div([
-                html.Hr(),
-                html.H5(f"Race {selected_race} - Best Race Analysis", className="mb-3"),
-                html.Div([
-                    create_horse_best_race_card(pattern)
-                    for pattern in patterns
-                ])
-            ])
-            components.append(race_div)
-
-    components.append(html.Div(style={'height': '100px'}))
-
-    return html.Div(components)
 
 
 # ------- Pace Clustering Callback -------
