@@ -5,7 +5,7 @@ Visualizes all advanced handicapping metrics using Plotly Dash
 """
 
 import dash
-from dash import dcc, html, dash_table, Input, Output, State
+from dash import dcc, html, dash_table, Input, Output
 import dash_bootstrap_components as dbc
 import plotly.graph_objs as go
 import plotly.express as px
@@ -103,6 +103,8 @@ DATA = load_all_data()
 
 # Initialize simple pace analyzer for additional dashboard tab
 analyzer = PaceAnalyzer()
+analyzer.load_data()
+analyzer.validate_columns()
 
 
 # Layout for the Simple Pace tab
@@ -114,28 +116,6 @@ def get_simple_pace_layout():
                     html.H1("Simple Pace Analysis", className="text-center mb-4"),
                     html.Hr()
                 ], width=12)
-            ]),
-
-            dbc.Row([
-                dbc.Col([
-                    dbc.Button(
-                        "Load Data",
-                        id="load-data-btn",
-                        color="primary",
-                        size="lg",
-                        className="mt-4",
-                        style={
-                            'backgroundColor': '#007bff',
-                            'borderColor': '#007bff',
-                            'color': 'white',
-                            'fontWeight': 'bold'
-                        }
-                    )
-                ], width=4),
-
-                dbc.Col([
-                    html.Div(id="data-status", className="mt-4")
-                ], width=4)
             ]),
 
             html.Hr(),
@@ -679,38 +659,6 @@ def update_workout_view(selected_race, scratched_horses):
 
 
 # ------- Simple Pace Callbacks -------
-
-@app.callback(
-    Output('data-status', 'children'),
-    Input('load-data-btn', 'n_clicks'),
-    prevent_initial_call=True
-)
-def load_data(n_clicks):
-    """Load simple pace data"""
-    if analyzer.load_data():
-        if analyzer.validate_columns():
-            races = analyzer.get_race_list()
-            status = dbc.Alert(
-                f"Data loaded successfully! Found {len(races)} race{'s' if len(races) != 1 else ''}.",
-                color="success",
-                dismissable=True
-            )
-            return status
-        else:
-            status = dbc.Alert(
-                "Data loaded but some columns are missing. Check logs.",
-                color="warning",
-                dismissable=True
-            )
-            return status
-    else:
-        status = dbc.Alert(
-            "Failed to load data. Check file paths.",
-            color="danger",
-            dismissable=True
-        )
-        return status
-
 
 @app.callback(
     [Output('pace-table-container', 'children'),
