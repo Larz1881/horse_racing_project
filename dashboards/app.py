@@ -105,6 +105,7 @@ DATA = load_all_data()
 analyzer = PaceAnalyzer()
 analyzer.load_data()
 analyzer.validate_columns()
+analyzer.analyze_best_races()
 
 
 # Layout for the Simple Pace tab
@@ -919,9 +920,9 @@ def analyze_best_races(selected_race, scratched_horses):
         )
 
     if analyzer.past_starts_df is None:
-        return html.Div("Please load data first", className="text-warning")
+        return html.Div("No data available", className="text-warning")
 
-    report = analyzer.analyze_best_races()
+    report = analyzer.best_race_report or analyzer.analyze_best_races()
 
     if not report or not report['race_reports']:
         return html.Div("No best race patterns found", className="text-warning")
