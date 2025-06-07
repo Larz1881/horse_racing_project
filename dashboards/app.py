@@ -127,7 +127,8 @@ def get_simple_pace_layout():
                         style={
                             'backgroundColor': COLORS['card_bg'],
                             'color': COLORS['text']
-                        }
+                        },
+                        dropdownClassName="dropdown-options"
                     )
                 ], width=4),
 
@@ -276,7 +277,8 @@ app.layout = html.Div([
                     'display': 'inline-block',
                     'backgroundColor': COLORS['card_bg'],
                     'color': COLORS['text']
-                }
+                },
+                dropdownClassName="dropdown-options"
             )
         ], style={'display': 'inline-block', 'marginRight': '40px'}),
 
@@ -292,7 +294,8 @@ app.layout = html.Div([
                     'display': 'inline-block',
                     'backgroundColor': COLORS['card_bg'],
                     'color': COLORS['text']
-                }
+                },
+                dropdownClassName="dropdown-options"
             )
         ], style={'display': 'inline-block'})
     ], style={'padding': '20px', 'backgroundColor': COLORS['background']}),
