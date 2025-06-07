@@ -123,12 +123,11 @@ def get_simple_pace_layout():
                         id='race-dropdown',
                         options=[],
                         value=None,
-                        className="mb-3",
+                        className="mb-3 dropdown-options",
                         style={
                             'backgroundColor': COLORS['card_bg'],
                             'color': COLORS['text']
-                        },
-                        dropdownClassName="dropdown-options"
+                        }
                     )
                 ], width=4),
 
@@ -272,13 +271,13 @@ app.layout = html.Div([
                 id='race-selector',
                 options=RACE_OPTIONS,
                 value=RACE_OPTIONS[0]['value'] if RACE_OPTIONS else None,
+                className="dropdown-options",
                 style={
                     'width': '200px',
                     'display': 'inline-block',
                     'backgroundColor': COLORS['card_bg'],
                     'color': COLORS['text']
-                },
-                dropdownClassName="dropdown-options"
+                }
             )
         ], style={'display': 'inline-block', 'marginRight': '40px'}),
 
@@ -289,13 +288,13 @@ app.layout = html.Div([
                 options=[],
                 value=[],
                 multi=True,
+                className="dropdown-options",
                 style={
                     'width': '200px',
                     'display': 'inline-block',
                     'backgroundColor': COLORS['card_bg'],
                     'color': COLORS['text']
-                },
-                dropdownClassName="dropdown-options"
+                }
             )
         ], style={'display': 'inline-block'})
     ], style={'padding': '20px', 'backgroundColor': COLORS['background']}),
